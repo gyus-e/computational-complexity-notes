@@ -2,7 +2,7 @@
 
 \begin{itemize}
     \item $M = (Q, \Sigma, \delta, s)$: Macchina di Turing deterministica.
-    \item $N = (Q, \Sigma, \nu, s)$: Macchina di Turing non deterministica.
+%    \item $N = (Q, \Sigma, \nu, s)$: Macchina di Turing non deterministica.
     \item $k \in \mathbb{N}$: Numero di nastri.
 \end{itemize}
 
@@ -19,13 +19,12 @@
 \hrulefill
 
 \begin{itemize}
-    \item $\Sigma$: Alfabeto (insieme finito di simboli).
-    \item $\underline{\sigma} \in \Sigma$: Simbolo sotto la testina di un nastro.
+    \item $\Sigma$: Alfabeto (insieme finito di simboli) con cui viene rappresentato l'input.
     \item $\triangleright$: Start.
     \item $\sqcup$: Blank.
     \item $\Sigma_\sqcup = \Sigma \cup \{\sqcup\}$
-    \item $\Gamma = \Sigma \cup \{\triangleright, \sqcup\}$
-    %\item $L \subseteq \Sigma^*$: Linguaggio.
+    \item $\Gamma = \Sigma_\sqcup \cup \{\triangleright\}$ Alfabeto di lavoro che la macchina utilizza per letture e scritture.
+    \item $\underline{\sigma} \in \Gamma$: Simbolo sotto la testina di un nastro.
 \end{itemize}
 
 \hrulefill
@@ -56,7 +55,7 @@
 
 % \hrulefill
 
-\subsection{Definizione di configurazione}
+\subsection{Configurazione}
 Siano, $\forall i \in \{1, \dots, k\}$:
 \begin{itemize}
     \item $q \in Q$: Stato corrente.
@@ -84,7 +83,7 @@ Siano, $\forall i \in \{1, \dots, k\}$:
 
 \hrulefill
 
-\subsection{Definizione di computazione}
+\subsection{Computazione}
 \subsubsection{Computazione di un singolo passo}
 \[
 \configurazione{q}{w}{u}
@@ -130,7 +129,7 @@ Se $\forall j \in \{0, \dots, t-1\} :$
 
 \hrulefill
 
-\subsubsection{Computazione}
+\subsubsection{Computazione di un numero di passi indefinito}
 
 \[
 \configurazione{q}{w}{u}
@@ -161,110 +160,8 @@ Se $\exists t \in \mathbb{N} :$
         \]
         \item $M(x) = y \in \Sigma^*$ sse $\exists w, u :$
         \[
-        \configurazionestart{x} \xrightarrow{M^*} \configurazione{h}{w}{u} \land 
+        \configurazionestart{x} \xrightarrow{M^*} \configurazione{h}{w}{u} \qquad \land \qquad 
         y = "w_k u_k"
         \]
         \item $M(x) = \nearrow$ se la macchina diverge (la computazione non termina). Cioé se non vale nessuno dei casi precedenti.
 	\end{itemize}
-    
-\hrulefill
-
-\subsection{Linguaggi e funzioni}
-
-\subsubsection{Linguaggi ricorsivi}
- $L \subseteq \Sigma^*$ é \textbf{ricorsivo} sse \[\exists M :  M(x) =
-	\begin{cases}
-		"yes" \qquad se \qquad x \in L \\
-		"no" \qquad altrimenti
-    \end{cases}
-   \] \\
-   $M$ \textbf{decide} $L$. \\
-   
-   \subsubsection{Linguaggi ricorsivamente enumerabili}
-    $L \subseteq \Sigma^*$ é \textbf{ricorsivamente enumerabile} sse \[\exists M :  M(x) =
-   \begin{cases}
-   	"yes" \qquad se \qquad x \in L \\
-   	\nearrow \qquad altrimenti
-   \end{cases}
-   \] \\
-   $M$ \textbf{accetta} $L$. \\
-   
-   \subsubsection{Proposizione 2.1}
-   \boxed{L \quad \textbf{ricorsivo} \implies L \quad \textbf{ricorsivamente enumerabile}} \\
-   \textbf{Prova:} \\
-   \[\exists M :  M(x) =
-   \begin{cases}
-   	"yes" \qquad se \qquad x \in L \\
-   	"no" \qquad altrimenti
-   \end{cases}
-   \] \\
-   Costruiamo $M' = (Q', \Sigma, \delta', s)$ aggiungendo un nuovo stato $q'$ che, nella nuova funzione di transizione $\delta'$, prende il posto dello stato terminale $"no"$. La funzione di transizione é uguale a quella di M in tutti gli altri casi. Il nuovo stato $q'$ sposta la testina a destra all'infinito. Formalmente:
-   \begin{itemize}
-   		\item $Q' = Q \cup \{q'\}$ \quad dove \quad $q' \notin Q$
-   		\item $\delta(q, \sigma) = ("no",  \tau, d) \implies \delta'(q, \sigma) = (q', \tau, d)  \qquad \forall q \in Q;  \forall \sigma, \tau \in \Gamma;  \forall d \in D$
-   		\item $\delta(q, \sigma) = (p,  \tau, d) \implies \delta'(q, \sigma) = (p, \tau, d)  \quad \forall q, p \in Q \setminus \{"no"\};  \forall \sigma, \tau \in \Gamma;  \forall d \in D$
-   		\item $\delta'(q', \sigma) = (q', \sigma, \rightarrow) \qquad \forall \sigma \in \Sigma \cup \{\sqcup\}$
-   \end{itemize}
-      \[M'(x) =
-   \begin{cases}
-   	"yes" \qquad se \qquad x \in L \\
-   	\nearrow \qquad altrimenti
-   \end{cases}
-   \] \\
-   $QED$
-   
-   \subsubsection{Funzioni ricorsive}
-   La funzione totale $f : \Sigma^* \rightarrow {\Sigma_\sqcup}^*$ é \textbf{ricorsiva} sse \[\exists M :  \forall x \in \Sigma^* : M(x) = f(x) \] \\
-   $M$ \textbf{calcola} $f$. \\
-   
-      \subsubsection{Funzioni ricorsivamente enumerabili}
-   La funzione parziale $f : \Sigma^* \rightarrow {\Sigma_\sqcup}^*$ é \textbf{ricorsivamente enumerabile} sse \[\exists M :  \forall x \in \Sigma^* : \begin{cases}
-   	M(x) = y \qquad se \quad f(x) = y \\
-   	M(x) = \nearrow \qquad altrimenti
-   \end{cases}
-    \] \\
-    Ricordando che le funzioni parziali non sono definite su tutto il dominio, e dunque esistono stringhe $x \in \Sigma^*$ per cui $f$ non é definita.
-    
- \subsection{Complessitá di tempo}
- $M(x)$ richiede tempo $t$ sse:
- \[
-	 \configurazionestart{x} \xrightarrow{M^t} \configurazione{H}{w}{u}
- \]
- Dove $H \in \{h, "yes", "no"\}. $\\
- 
-\textbf{$M$ opera in tempo $f(n)$ sse $\forall x \in \Sigma^*$ $M(x)$ richiede tempo $t <= f(n)$}
-
-\subsection{Complessitá di spazio}
-
-Si potrebbe considerare la somma della lunghezza dei $k$ nastri: $\sum_{i=2}^{k-1} |w_i u_i|$ \\
-Ma possiamo scegliere anche la lunghezza del nastro piú lungo: $\max_{i \in \{1, \dots, k\}} |w_i u_i|$. \\
-Queste due quantitá sono asintoticamente equivalenti:\\
-$\max_{i \in \{1, \dots, k\}} |w_i u_i| \leq  \sum_{i=1}^{k} |w_i u_i| \leq k \cdot \max_{i \in \{1, \dots, k\}} |w_i u_i|$  \\
-
-\textbf{Attenzione:} lo spazio occupato dall'input verrá sempre considerato.
-Questo vuol dire che lo spazio é sempre almeno $n$.  Anche quando non usiamo variabili ausiliarie. \\
-A noi interessa considerare lo \textit{spazio ausiliario} utilizzato. Per farlo, occorre definire le macchine di Turing con input e output. \\
-
-\subsubsection{Macchine di Turing con input e output}
-Per definire la complessitá di spazio di memoria di un problema, occorre prima introdurre il concetto di macchine di Turing con input e output.
-\begin{itemize}
-	\item $k >= 2$
-	\item Il primo nastro non viene mai modificato (read only).
-	\item L'ultimo nastro viene scandito solo verso destra (write only).
-	\item Il cursore del primo nastro non supera mai il primo $\sqcup$ successivo all'input $x$.
-\end{itemize}
-
-\subsubsection{Teorema: potenza delle MdT con input e output}
-Per ogni macchina di Turing con $k$ nastri $M$ che opera in tempo $f(n)$, esiste una macchina di Turing con input e output e $k+2$ nastri $M'$ che ha lo stesso output e opera in tempo $O(f(n))$. \\
-\textbf{Prova:} M' copia l'input sul secondo nastro, simula M sui k nastri centrali, infine, se M ha un output, lo copia sull'ultimo nastro.
-
-\subsubsection{Complessitá di spazio ausiliario nelle MdT con input e output}
-$M(x)$ richiede spazio $z$ sse: \\
-Se:
-\[
-\configurazionestart{x} \xrightarrow{M^*} \configurazione{H}{w}{u}
-\]
-Dove $H \in \{h, "yes", "no"\}$, allora: \\
-$z = \sum_{i=2}^{k-1} |w_i u_i|$ \\
-
-\textbf{$M$ opera in spazio $g(n)$ sse $\forall x \in \Sigma^*$ $M(x)$ richiede spazio $z <= f(n)$} \\
