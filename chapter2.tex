@@ -1,0 +1,28 @@
+\section{Codifiche ragionevoli}
+
+Ci interessa misurare la complessità di un problema in funzione del tempo e spazio necessari a risolverlo al crescere della dimensione dell'input $n = |x|$. \\
+Ma lo stesso input puó essere codificato in modi diversi, con dimensioni diverse. \\
+
+\textbf{Esempio:} \\
+Se l'input è un array $x = (4, 79, 149)$, la dimensione dell'input è $n = 3$. \\
+Lo stesso array potrebbe essere codificato come un vettore one-hot di 150 elementi, settati tutti a 0 tranne che per x[4], x[79] e x[149], che sarebbero settati a 1. Questa codifica è estremamente ridondante. L'input $x$ è lo stesso, ma la sua lunghezza é $n = 150$. \\
+
+\textbf{Esempio:} \\
+Se l'input è un grafo $x = (V, E)$ rappresentato tramite liste di adiacenza la dimensione dell'input è $n = |V| + |E|$. \\
+Se invece il grafo viene codificato tramite matrice di adiacenza, la dimensione dell'input è $n = |V|^2$. \\
+
+\textbf{Esempio:} \\
+Se l'input é un numero, viene tipicamente codificato in notazione posizionale (di solito binaria, decimale o esadecimale).
+La lunghezza della rappresentazione posizionale di un numero richiede una quantità logaritmica di cifre. \\
+Di conseguenza, quando l'input $x$ é un numero rappresentato in notazione posizionale, $n = log(x)$. \\
+Se invece $x$ fosse rappresentato in unario, allora la lunghezza della sua codifica sarebbe lineare sulla sua rappresentazione: $n = x$. \\
+
+\textbf{La codifica dell'input puó alterare l'analisi di complessitá.} \\
+
+\textbf{Esempio:} \\
+Vogliamo calcolare il fattoriale di un numero naturale $x$. Consideriamo una versione naive che itera su tutti i numeri da 1 a x: $f(n) = f(log(x)) = x$. \\
+La soluzione trovata impiega tempo esponenziale su $n$: $f(n) = O(2^n)$. \\
+Si potrebbe codificare $x$ in unario: in quel caso avremmo che $x = n$ e il tempo risulterebbe essere una funzione lineare: $f(n) = O(n)$. \\
+
+
+\textbf{Perché la misura che effettuiamo sia corretta, la codifica dell'input deve essere ragionevole.} \\

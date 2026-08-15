@@ -1,0 +1,35 @@
+% configurazione.sty
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{configurazione}[.Configurazione q, w e u]
+
+\newcommand{\configurazione}[3]{%
+    #1
+    \begin{pmatrix}
+        {#2}_1 \\
+        \vdots \\
+        {#2}_k
+    \end{pmatrix}
+    % #1
+    \begin{pmatrix}
+        {#3}_1 \\
+        \vdots \\
+        {#3}_k
+    \end{pmatrix}%
+}
+
+\newcommand{\configurazionestart}[1]{%
+    s
+    \begin{pmatrix}
+        \triangleright \\
+        \triangleright \\
+        \vdots \\
+        \triangleright
+    \end{pmatrix}
+    % s
+    \begin{pmatrix}
+        {#1} \\
+        \epsilon \\
+        \vdots \\
+        \epsilon
+    \end{pmatrix}%
+}
