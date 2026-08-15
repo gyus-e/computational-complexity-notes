@@ -44,8 +44,6 @@
     \item $g(n)$: Spazio di memoria utilizzato dalla computazione.
 \end{itemize}
 
-\hrulefill
-
 % \begin{itemize}
 %     \item $U$: Macchina di Turing Universale
 %     \item $\underline{M}$: Codifica di $M$
@@ -53,7 +51,6 @@
 %     \item $N = |X|$
 % \end{itemize}
 
-% \hrulefill
 
 \subsection{Configurazione}
 Siano, $\forall i \in \{1, \dots, k\}$:
@@ -69,7 +66,6 @@ Siano, $\forall i \in \{1, \dots, k\}$:
 \]
 
 \subsubsection{Massimo numero di configurazioni possibili}
-
 \begin{itemize}
     \item Numero di stati: $|Q|$
     \item Massimo numero di stringhe possibili: $|\Sigma_\cup|^{g(n) \cdot k}$ \\
@@ -80,8 +76,6 @@ Siano, $\forall i \in \{1, \dots, k\}$:
 
 {\[|Q| \cdot |{\Sigma_\cup|}^{g(n) \cdot k} \cdot g(n)^k\]}
 
-
-\hrulefill
 
 \subsection{Computazione}
 \subsubsection{Computazione di un singolo passo}
@@ -110,10 +104,7 @@ Allora, $\forall i \in \{1, \dots, k\} :$
 \end{enumerate}
 }
 
-\hrulefill
-
 \subsubsection{Computazione di $t$ passi}
-
 \[
 \configurazione{q_0}{w_0}{u_0}
 \xrightarrow{M^t}
@@ -127,10 +118,7 @@ Se $\forall j \in \{0, \dots, t-1\} :$
 \configurazione{q_{j+1}}{w_{j+1}}{u_{j+1}}
 \]
 
-\hrulefill
-
 \subsubsection{Computazione di un numero di passi indefinito}
-
 \[
 \configurazione{q}{w}{u}
 \xrightarrow{M^*}
@@ -144,10 +132,7 @@ Se $\exists t \in \mathbb{N} :$
 \configurazione{q'}{w'}{u'}
 \]
 
-\hrulefill
-
 \subsection{Output}
-
     $M(x) \in \Sigma^* \cup \{"yes", "no",\nearrow$\}
     \begin{itemize}
         \item $M(x) = "yes"$ sse $\exists w, u :$
