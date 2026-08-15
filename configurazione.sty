@@ -33,3 +33,22 @@
         \epsilon
     \end{pmatrix}%
 }
+
+\newcommand{\configurazionepropria}[2]{%
+	h
+	\begin{pmatrix}
+		\triangleright \\
+		\triangleright \\
+		\vdots \\
+		\triangleright \\
+		\triangleright
+	\end{pmatrix}
+	% s
+	\begin{pmatrix}
+		{#1} \\
+		\sqcup^{z_2} \\
+		\vdots \\
+		\sqcup^{z_{k-1}} \\
+		\sqcap^{#2}
+	\end{pmatrix}%
+}

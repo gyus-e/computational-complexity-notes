@@ -55,5 +55,32 @@ La funzione parziale $f : \Sigma^* \rightarrow {\Sigma_\sqcup}^*$ é \textbf{ric
 \] \\
 Ricordando che le funzioni parziali non sono definite su tutto il dominio, e dunque esistono stringhe $x \in \Sigma^*$ per cui $f$ non é definita.
 
-%    \subsubsection{Gap Theorem}
-%    Esiste una funzione ricorsiva $f: \mathbb{N} \rightarrow \mathbb{N}$ tale che la classe di problemi risolvibili in tempo $f(n)$ coincide con quella di problemi risolvibili in tempo $2^{f(n)}$ .\\
+\subsection{Funzioni di complessitá proprie}
+Le funzioni di complessitá proprie sono funzioni sui naturali, non decrescenti e tali che una macchina di Turing puó calcolarne il valore in unario in base alla lunghezza dell'input. \\
+Cioé, dato un input $x$ lungo $n$, la macchina di Turing scrive tanti simboli $\sqcap$ ("quasi-blank") quanto vale $f(n)$. \\
+Il tempo impiegato deve essere $O(n + f(n))$. \\
+Lo spazio su ogni nastro deve essere $O(f(n))$. \\
+Formalmente: una funzione $f: \mathbb{N} \rightarrow \mathbb{N}$ é \textit{propria} sse:
+\begin{itemize}
+	\item $f$ non é decrescente: \quad $\forall n \in \mathbb{N} \quad f(n+1) > f(n)$
+	\item Esiste una MdT con input e output $M_f$ tale che, per ogni $n$: \\
+		\[
+		\configurazionestart{x} \xrightarrow{{M_f}^t} \configurazionepropria{x}{f(n)}
+		\]
+	\item $t = O(n + f(n))$
+	\item $z_i = O(f(n)) \quad \forall i \in \{2, \dots, k-1\}$
+\end{itemize}
+
+Alcune funzioni proprie che useremo sono:
+\begin{itemize}
+	\item Costanti
+	\item $\ceil{log(n)}$
+	\item Polinomi
+	\item Esponenziali
+\end{itemize}
+
+Le funzioni proprie sono le uniche funzioni che possono essere usate per misurare la complessitá di tempo e di spazio di un problema senza incorrere in problemi di misurazione.\\ 
+Ad esempio, il Gap Theorem dimostra che esistono funzioni che "rompono" l'analisi di complessitá.
+
+\subsubsection{Gap Theorem}
+Esiste una funzione ricorsiva $f: \mathbb{N} \rightarrow \mathbb{N}$ tale che la classe di problemi risolvibili in tempo $f(n)$ coincide con quella di problemi risolvibili in tempo $2^{f(n)}$. \footnote{Vedremo meglio l'enunciato una volta introdotta la classe di complessitá \TIME{}}
