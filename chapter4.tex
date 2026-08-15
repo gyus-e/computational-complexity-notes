@@ -9,31 +9,15 @@ Dove $H \in \{h, "yes", "no"\}. $\\
 
 \textbf{$M$ opera in tempo $f(n)$ sse $\forall x \in \Sigma^*$ $M(x)$ richiede tempo $t <= f(n)$} \\
 
-Se la codifica dell'input é ragionevole, ogni macchina di Turing deve almeno avere il tempo di scandirlo. Di conseguenza, $f(n)$ é sempre limitato inferiormente da $n$.
-
 \subsection{Complessitá di spazio}
-
 Si potrebbe considerare la somma della lunghezza dei $k$ nastri: $\sum_{i=2}^{k-1} |w_i u_i|$ \\
 Ma possiamo scegliere anche la lunghezza del nastro piú lungo: $\max_{i \in \{1, \dots, k\}} |w_i u_i|$. \\
 Queste due quantitá sono asintoticamente equivalenti:\\
 $\max_{i \in \{1, \dots, k\}} |w_i u_i| \leq  \sum_{i=1}^{k} |w_i u_i| \leq k \cdot \max_{i \in \{1, \dots, k\}} |w_i u_i|$  \\
 
 \textbf{Attenzione:} con queste definizioni naive, lo spazio occupato dall'input verrá sempre contato.
-Questo vuol dire che lo spazio é sempre almeno $n$, anche quando non usiamo variabili ausiliarie. \\
-A noi interessa considerare lo \textit{spazio ausiliario} utilizzato. Per farlo, occorre definire le macchine di Turing con input e output. \\
-
-\subsubsection{Macchine di Turing con input e output}
-Per definire la complessitá di spazio di memoria di un problema, occorre prima introdurre il concetto di macchine di Turing con input e output.
-\begin{itemize}
-	\item $k >= 2$
-	\item Il primo nastro non viene mai modificato (read only).
-	\item L'ultimo nastro viene scandito solo verso destra (write only).
-	\item Il cursore del primo nastro non supera mai il primo $\sqcup$ successivo all'input $x$.
-\end{itemize}
-
-\subsubsection{Teorema: potenza delle MdT con input e output}
-Per ogni macchina di Turing con $k$ nastri $M$ che opera in tempo $f(n)$, esiste una macchina di Turing con input e output e $k+2$ nastri $M'$ che ha lo stesso output e opera in tempo $O(f(n))$. \\
-\textbf{Prova:} M' copia l'input sul secondo nastro, simula M sui k nastri centrali, infine, se M ha un output, lo copia sull'ultimo nastro.  Il costo delle copie é $O(n)$: se $M$ opera in $f(n)$ passi, allora $M'$ opera in $f(n) + O(n) = O(f(n))$ passi. \textbf{QED}
+Questo vuol dire che lo spazio é sempre limitato inferiormente da $n$, anche quando non usiamo variabili ausiliarie. \\
+A noi interessa considerare lo \textit{spazio ausiliario} utilizzato. Per farlo, occorre considerare le macchine di Turing con input e output e contare solo i nastri interni. \\
 
 \subsubsection{Complessitá di spazio ausiliario nelle MdT con input e output}
 $M(x)$ richiede spazio $z$ sse: \\
@@ -44,4 +28,4 @@ Se:
 Dove $H \in \{h, "yes", "no"\}$, allora: \\
 $z = \sum_{i=2}^{k-1} |w_i u_i|$ \\
 
-\textbf{$M$ opera in spazio $g(n)$ sse $\forall x \in \Sigma^*$ $M(x)$ richiede spazio $z <= f(n)$} \\
+\textbf{$M$ opera in spazio $g(n)$ sse $\forall x \in \Sigma^*$ $M(x)$ richiede spazio $z <= g(n)$} \\
