@@ -87,7 +87,7 @@ $M' = (M_1, M_2)$ é la concatenazione di due macchine, e utilizza un nastro agg
 $M_1$ scrive sul nastro aggiuntivo una stringa che codifica la configurazione di $M$, fatta in questo modo: \\
 \[[\triangleright, q, \sqcap, \dots, \sqcap, 1, \dots, 1]\]
 \begin{itemize}
-	\item Il primo simbolo codifica lo stato corrente della macchina $M$ utilizzando $|K|$ nuovi simboli.
+	\item Il primo simbolo codifica lo stato corrente della macchina $M$ utilizzando $|Q|$ nuovi simboli.
 	\item I successivi $g(n)$ simboli $\sqcap$ codificano il contenuto del nastro di $M$, utilizzando i $|\Sigma|$ simboli dell'alfabeto di $M$.
 	\item Gli ultimi $g(n)$ simboli codificano la posizione della testina di $M$, rappresentata in unario tra le sue $g(n)$ posizioni possibili. \\
 \end{itemize}
@@ -98,13 +98,13 @@ $M_2$ legge la configurazione di $M$ e utilizza gli altri nastri per simularla. 
 Il nastro con la configurazione viene trattato come un contatore, che viene incrementato dopo ogni simulazione. \\
 Occorre solo fare attenzione al fatto che la base non é sempre la stessa:
 \begin{itemize}
-	\item La prima cella del contatore puó assumere $|K|$ valori.
+	\item La prima cella del contatore puó assumere $|Q|$ valori.
 	\item Le successive $g(n)$ celle del contatore possono assumere $|\Sigma|$ valori.
-	\item Le ultime $g(n)$ celle del contatore possono assumere $2$ valori.
+	\item Le ultime $g(n)$ celle del contatore sono in unario.
 \end{itemize}
 Se la simulazione di $M$ termina, allora anche $M_2$ termina. \\
 Se invece la simulazione non termina, il contatore prima o poi esaurirá le configurazioni possibili e $M_2$ terminerá comunque. \\
-Il massimo numero di configurazioni possibili é $|K| \cdot |\Sigma|^{g(n)} \cdot 2^{g(n)} = O(2^{g(n)})$. \\
+Il massimo numero di configurazioni possibili é $|Q| \cdot |\Sigma|^{g(n)} \cdot {g(n)} = O(2^{g(n)})$. \\
 \textbf{QED} \\
 
 Questo teorema ci mostra come forzare la terminazione di una MdT che opera in spazio limitato. \\
