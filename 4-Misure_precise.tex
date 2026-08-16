@@ -46,24 +46,24 @@ Esiste una funzione ricorsiva $f: \mathbb{N} \rightarrow \mathbb{N}$ tale che la
 \subsection{Teorema: soluzioni precise}
 \subsubsection{Versione tempo}
 Se una MdT $M$ \textit{decide} $L$ in tempo $f(n)$, ed $f$ é una funzione \textit{propria}, allora esiste una MdT \textit{precisa} $M'$ che decide $L$ in tempo $O(f(n))$. \\
-\textbf{Prova:} \\
+\begin{proof}
 Costruiamo $M'$ come una concatenazione di due macchine di Turing, tenendo i loro nastri separati. \\
 La prima MdT é $M_f$, cioé la macchina con input e output che calcola la funzione propria $f$. \\
 $M_f$ Scrive $\sqcap^{f(n)}$ sul nastro $k$  impiegando sempre tempo $O(n + f(n)) = O(f(n))$. \\
 Quando termina, si passa a una macchina $M_t$, che simula $M$ sul proprio set di nastri $\{k+1, \dots, 2k\}$, ma a ogni passo sposta anche la testina sul nastro $k$ verso destra. \\
 Sappiamo che $M$, e quindi anche $M_t$, termina entro $f(n)$ passi. Se dovesse terminare prima, basta aspettare che la testina sull'ultimo nastro finisca di scorrere tutti i $\sqcap$, impiegando esattamente $f(n)$ passi. \\
 In totale, quindi, $M' = (M_f, M_t)$ impiega sempre $O(f(n)) + f(n) = O(f(n))$ passi. \\
-\textbf{QED} \\
+\end{proof}
 
 \subsubsection{Versione spazio}
 Se una MdT $M$ \textit{decide} $L$ in spazio $g(n)$, e $g$ é una funzione \textit{propria}, allora esiste una MdT \textit{precisa} $M'$ che decide $L$ in spazio $O(g(n))$. \\
-\textbf{Prova:} \\
+\begin{proof}
 Costruiamo $M'$ come una concatenazione di due macchine di Turing, tenendo i loro nastri separati. \\
 La prima MdT é $M_g$, cioé la macchina con input e output che calcola la funzione propria $g$. \\
 $M_g$ Scrive $\sqcap^{g(n)}$ sul nastro $k$  usando spazio $O(g(n))$ \\
 Quando termina, si passa a una macchina $M_s$, che copia tutti gli $\sqcap$ sul nastro $k$ su ogniuno dei suoi nastri $\{k+1, \dots, 2k\}$ e poi simula $M$ usando $\sqcap$ al posto di $\sqcup$. \\
 $M$, e quindi $M_s$, non usano piú di $g(n)$ celle su ogni nastro. Se non sono stati tutti sovrascritti gli $\sqcap$ contano come celle occupate sul nastro, rendendo tutti i nastri lunghi $g(n)$. \\
-\textbf{QED} \\
+\end{proof}
 
 Questo teorema ci permette di usare macchine di Turing non precise per la misurazione della complessitá, a patto che le funzioni $f, g$ siano proprie.
 
@@ -74,15 +74,92 @@ Per ogni MdT $M$ a $k$ nastri che opera in tempo $f(n)$, esiste una MdT $M'$ a $
 	\item Opera in tempo $O(f(n)^2)$ 
 	\item $\forall x \in \Sigma^* \quad M(x) = M'(x)$ 
 \end{itemize}
-\textbf{Prova:} \\
-\textbf{QED} \\
+\begin{proof}
+Data $M = (Q, \Sigma, \delta, s)$. \\
+Costruiamo $M' = (Q', \Sigma', \delta', s)$ che simula i $k$ nastri di $M$ usando un solo nastro. \\
+Si separa il nastro di $M'$ in $k$ sezioni, introducendo nuovi simboli: 
+\begin{itemize}
+	\item $\blacktriangleright$: "pseudo-start", rappresenta gli $\triangleright$ dei $k$ nastri di $M$
+	\item $\blacktriangleleft$: separatore dei $k$ nastri di $M$
+	\item $\triangleleft$: rappresenta la fine della stringa di $M'$
+	\item I simboli sottolineati $\underline{\Sigma} = \{\underline{\sigma} : \sigma \in \Sigma \}$ indicano cosa c'é sotto le testine di $M$.
+\end{itemize}
+{
+Una configurazione di $M$:
+\[
+	\configurazione{q}{w}{u}
+\] 
+Corrisponde a una configurazione di $M'$:
+\[
+	q ({\triangleright}) (\blacktriangleright w_1 u_1 \blacktriangleleft \dots \blacktriangleright w_k u_k \blacktriangleleft \triangleleft )
+\]
+}
+{
+La lunghezza del nastro di $M'$ é al piú:
+\begin{itemize}
+	\item $k \cdot f(n)$ per i nastri di $M$ 
+		\subitem ($M$ ha $k$ nastri lunghi al piú $f(n)$)
+	\item $2k$ per i simboli $\blacktriangleright$ e $\blacktriangleleft$
+	\item $2$ per i simboli $\triangleright$ e $\triangleleft$
+\end{itemize}
+Cioé $O(f(n))$. \\
+}
+
+La configurazione iniziale di $M'$ é: \[s(\triangleright)(x)\]
+La preparazione del nastro si articola in:
+\begin{enumerate}
+	\item Traslare a destra di una posizione l'input $x$ e inserire $\blacktriangleright$ all'inizio.
+		\begin{itemize}
+			\item Per farlo si introducono $|\Sigma| + 1$ nuovi stati (vedere esempio \ref{example:shift})
+			\item Il tempo impiegato é $O(n)$.
+			\item Il nastro di $M'$ diventa: $\triangleright \blacktriangleright x$.
+		\end{itemize} 
+	\item Appendere la stringa che rappresenta gli altri nastri vuoti: $\blacktriangleleft ({\blacktriangleright \blacktriangleleft})^{k-1} \triangleleft$
+		\begin{itemize}
+			\item Si usano $2k$ nuovi stati, uno per ognuno dei due simboli, che tengono traccia del nastro corrente in modo da fermarsi a $k$. 
+			\begin{itemize}
+				\item Fa eccezione il primo nastro, per cui serve un solo stato che scriva $\blacktriangleleft$ e poi passi al nastro successivo. 
+				\item Ma a questi si aggiunge un ultimo stato che scrive $\triangleleft$.
+			\end{itemize}
+			\item Il tempo impiegato é $O(k)$.
+		\end{itemize}
+\end{enumerate}
+{
+Dopo aver preparato il nastro, si puó iniziare la simulazione. \\
+Ogni passo di $M$ richiede due step:
+\begin{enumerate}
+	\item Scansione del nastro per leggere i simboli sottolineati, cioé quelli sotto le testine di $M$, fino a $\triangleleft$.
+		\begin{itemize}
+			\item Servono stati che ricordano lo stato originale di $M$ e ogni simbolo letto finora. Per ogni stato $q \in Q$, aggiungo a $Q'$ tutti gli stati $q_{\sigma_1}; q_{\sigma_1, \sigma_2}; \dots; q_{\sigma_1, \dots, \sigma_k}$, per tutte le combinazioni di lunghezza minore o uguale a $k$ di simboli $\sigma_i \in \Sigma$. 
+			\item In totale, servono $|Q| \cdot |\Sigma|^{1 + \dots + k} = |Q| \cdot |\Sigma|^{k \cdot (k+1)/2}$ nuovi stati.
+			\item Il tempo	 impiegato é $O(f(n))$.
+		\end{itemize}
+	\item Modifica del nastro per applicare la transizione a partire da uno stato $q_{\sigma_1,\dots,\sigma_k}$.
+		\begin{itemize}
+			\item Si scandisce il nastro all'indietro fino a un simbolo sottolineato, che viene modificato come avrebbe fatto $M$, ed eventualmente effettuando un passo a sinistra o a destra e sottolineando il nuovo simbolo.
+			\item Se la testina si sposta a destra e si trova su $\blacktriangleleft$, allora bisogna effettuare uno shift di tutti i simboli a destra.
+				\begin{enumerate}
+					\item Si sovrascrive $\blacktriangleleft$ con $\underline{\blacktriangleleft}$
+					\item Si va a destra ino a $\triangleleft$
+					\item Tornando indietro, si effettua uno shift di tutti i simboli verso destra, fino a tornare a $\underline{\blacktriangleleft}$, che viene cancellato con un $\underline{\sqcup}$ e riportato a destra come $\blacktriangleleft$.
+					\item Il tempo dello shift é $O(f(n))$.
+				\end{enumerate}
+			\item Il tempo impiegato per la scansione é $O(f(n))$. Nel caso peggiore, bisogna effettuare uno shift per ogni passo, quindi il tempo totale é $O(f(n)^2)$.
+		\end{itemize}
+\end{enumerate}
+}
+
+Quando $M$ termina, $M'$ sposta il contenuto del nastro $k$ sul nastro $1$, cancellando tutto il resto. Questo spostamento impiega tempo $O(f(n))$. Poi termina.
+
+Il termine dominante del tempo é quello della modifica del nastro durante la simulazione: $O(f(n)^2)$. \\
+\end{proof}
 
 Questo teorema ci permette di usare quanti nastri vogliamo per la misurazione della complessitá, la classe di complessitá del problema non cambia perché lo speedup é al piú quadratico. \\
 
 
 \subsection{Teorema: Terminazione delle MdT space bounded}
 Se una MdT $M$ opera in spazio $g(n)$, allora esiste una MdT $M'$ che opera in spazio $O(g(n))$ e termina per ogni input entro $O(2^{g(n)})$ passi. \\
-\textbf{Prova:} \\
+\begin{proof}
 $M' = (M_1, M_2)$ é la concatenazione di due macchine, e utilizza un nastro aggiuntivo. \\
 $M_1$ scrive sul nastro aggiuntivo una stringa che codifica la configurazione di $M$, fatta in questo modo: \\
 \[[\triangleright, q, \sqcap, \dots, \sqcap, 1, \dots, 1]\]
@@ -103,8 +180,8 @@ Occorre solo fare attenzione al fatto che la base non é sempre la stessa:
 	\item Le ultime $g(n)$ celle del contatore sono in unario.
 \end{itemize}
 Se la simulazione di $M$ termina, allora anche $M_2$ termina. \\
-Se invece la simulazione non termina, il contatore prima o poi esaurirá le configurazioni possibili e $M_2$ terminerá comunque. \\
-Il massimo numero di configurazioni possibili é $|Q| \cdot |\Sigma|^{g(n)} \cdot {g(n)} = O(2^{g(n)})$. \\
-\textbf{QED} \\
+Se invece la simulazione non termina, il contatore prima o poi esaurirá le configurazioni possibili: a quel punto, faremo terminare $M_2$ anche se $M$ non termina. \\
+Il massimo numero di configurazioni possibili é $|Q| \cdot |\Sigma|^{g(n)} \cdot {g(n)} = O(c^{g(n)})$. \\
+\end{proof}
 
 Questo teorema ci mostra come forzare la terminazione di una MdT che opera in spazio limitato. \\

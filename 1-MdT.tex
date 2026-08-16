@@ -22,7 +22,6 @@
     \item $\sqcup$: Blank.
     \item $\Sigma_\sqcup = \Sigma \cup \{\sqcup\}$
     \item $\Gamma = \Sigma_\sqcup \cup \{\triangleright\}$ Alfabeto di lavoro che la macchina utilizza per letture e scritture.
-    \item $\underline{\sigma} \in \Gamma$: Simbolo sotto la testina di un nastro.
 \end{itemize}
 
 \hrulefill
@@ -54,8 +53,7 @@
 Siano, $\forall i \in \{1, \dots, k\}$:
 \begin{itemize}
     \item $q \in Q$: Stato corrente.
-    \item $w_i = "\triangleright w_{i,2} w_{i,3} \dots \underline{w_{i,{m_i}}}" \in \{\triangleright\} \times {\Sigma_\sqcup}^*$: Stringa sul nastro $i$ prima della testina, incluso il simbolo sotto la testina.
-    (Nota: all'inizio della computazione, $w_i = \underline{\triangleright}$).
+    \item $w_i = "\triangleright w_{i,2} w_{i,3} \dots {w_{i,{m_i}}}" \in \{\triangleright\} \times {\Sigma_\sqcup}^*$: Stringa sul nastro $i$ prima della testina, incluso il simbolo sotto la testina, $w_{i,m_i}$.
     \item $u_i = "u_{i,1} u_{i,2} \dots u_{i,{p_i}}" \in {\Sigma_\sqcup}^*$: Stringa sul nastro $i$ dopo la testina.
 \end{itemize}
 
@@ -85,9 +83,9 @@ Siano, $\forall i \in \{1, \dots, k\}$:
 
 Se e solo se: \\
 
-Se $\delta(q, [\underline{w}]) = (q', [\sigma], [d])$, dove:
+Se $\delta(q, [{w}]) = (q', [\sigma], [d])$, dove:
 \begin{itemize}
-	\item $[\underline{w}] = (\underline{w_{1,m_1}}, \dots, \underline{w_{k,m_k}})$: Simboli sotto le testine dei $k$ nastri.
+	\item $[{w}] = ({w_{1,m_1}}, \dots, {w_{k,m_k}})$: Simboli sotto le testine dei $k$ nastri.
     \item $q' \in Q$: Stato successivo della macchina.
     \item $[\sigma] = [\sigma_1, \dots, \sigma_k] \in {\Sigma_\sqcup}^k$: Vettore di $k$ caratteri, ognuno da scrivere su una delle $k$ celle sotto una testina.
     \item $[d] = [d_1, \dots, d_k] \in D^k$: Vettore di $k$ direzioni che ogni testina deve seguire.
@@ -96,10 +94,10 @@ Se $\delta(q, [\underline{w}]) = (q', [\sigma], [d])$, dove:
 Allora, $\forall i \in \{1, \dots, k\} :$
 {\small
 \begin{enumerate}
-    \item $(d_i = -) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \underline{\sigma_i}") \land (u'_i = u_i))$
-    \item $(d_i = \leftarrow) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \underline{w_{i,m_{i-1}}}") \land (u'_i = "\sigma_i u_{i,1} u_{i,2} \dots u_{i,p_i}"))$
-    \item $((d_i = \rightarrow) \land (u_i \neq \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i \underline{u_{i,1}}") \land (u'_i = "u_{i,2} \dots u_{i,p_i}")) $
-    \item $((d_i = \rightarrow) \land (u_i = \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i \underline{\sqcup}") \land (u'_i = \epsilon)) $
+    \item $(d_i = -) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots {\sigma_i}") \land (u'_i = u_i))$
+    \item $(d_i = \leftarrow) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots {w_{i,m_{i-1}}}") \land (u'_i = "\sigma_i u_{i,1} u_{i,2} \dots u_{i,p_i}"))$
+    \item $((d_i = \rightarrow) \land (u_i \neq \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i {u_{i,1}}") \land (u'_i = "u_{i,2} \dots u_{i,p_i}")) $
+    \item $((d_i = \rightarrow) \land (u_i = \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i {\sqcup}") \land (u'_i = \epsilon)) $
 \end{enumerate}
 }
 
@@ -108,7 +106,7 @@ Allora, $\forall i \in \{1, \dots, k\} :$
 \configurazione{q_0}{w_0}{u_0}
 \xrightarrow{M^t}
 \configurazione{q_t}{w_t}{u_t}
-\] \\
+\]
 
 Se $\forall j \in \{0, \dots, t-1\} :$
 \[
@@ -122,7 +120,7 @@ Se $\forall j \in \{0, \dots, t-1\} :$
 \configurazione{q}{w}{u}
 \xrightarrow{M^*}
 \configurazione{q'}{w'}{u'}
-\] \\
+\]
 
 Se $\exists t \in \mathbb{N} :$
 \[
@@ -190,3 +188,22 @@ La loro \textbf{composizione} é: $(M_1, M_2) =  (Q, \Sigma, \delta, s)$, dove:
 	\item Tutti gli altri casi restano uguali alle funzioni di transizione delle due macchine.
 	\item Le coppie $(q, \sigma)$ che per $\delta_1$ vanno nello stato $"no"$ non devono essere reindirizzate: \textbf{se $\mathbf{M_1}$ rigetta l'input, la computazione non deve continuare}.
 \end{itemize}
+
+\subsection{Esempi}
+Gli esempi possono essere testati su \url{https://morphett.info/turing/turing.html}
+
+\subsubsection{Traslazione di una stringa binaria}
+\label{example:shift}
+\[
+\begin{array}{c|c|c|c|c}
+\text{Stato} & \text{Letto} & \text{Scritto} & \text{Movimento} & \text{Nuovo stato} \\ \hline
+s   & \triangleright & \triangleright & \rightarrow & s \\
+s   & \sqcup         & \sqcup         & \leftarrow  & q \\
+s   & *              & *              & \rightarrow & s \\
+q   & \triangleright & \triangleright & \rightarrow & h \\
+q   & 1              & \sqcup         & \rightarrow & q_1 \\
+q   & 0              & \sqcup         & \rightarrow & q_0 \\
+q_1 & \sqcup         & 1              & \leftarrow  & s \\
+q_0 & \sqcup         & 0              & \leftarrow  & s
+\end{array}
+\]

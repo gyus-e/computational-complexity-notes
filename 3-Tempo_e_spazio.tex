@@ -39,20 +39,20 @@ Dove $q_H \in \{h, "yes", "no"\}$, allora: \\
 \subsection{Teorema: lo spazio é limitato superiormente dal tempo}
 \boxed{g(n) = O(f(n))} \\
 
-\textbf{Prova:} \\
+\begin{proof}
 Supponiamo che una macchina $M$ a 1 nastro operi in tempo $f(n)$ e che a ogni passo scriva sul nastro e sposti la testina a destra. \\
 Allora, dopo $f(n)$ passi, la testina avrá scritto esattamente $g(n) = f(n)$ simboli sul nastro. \\
 Qualsiasi altra macchina che operi in tempo $f(n)$ avrá eseguito dei passi sovrascrivendo celle giá utilizzate. In questo caso l'utilizzo di spazio é inferiore a quello di $M$. \\
-\textbf{QED} \\
+\end{proof}
 
 \subsection{Teorema: potenza delle MdT con input e output}
 Per ogni macchina di Turing con $k$ nastri $M$ che opera in tempo $f(n)$, esiste una macchina di Turing con input e output e $k+2$ nastri $M'$ che ha lo stesso output e opera in tempo $O(f(n))$. \\
-\textbf{Prova:} \\
+\begin{proof}
 M' copia l'input sul secondo nastro, simula M sui k nastri centrali, infine, se M ha un output, lo copia sull'ultimo nastro. \\
 Il costo dell copia dell'input sul secondo nastro é $O(n)$. \\
 Poiché sappiamo che $f(n)$ é limitato inferiormente da $n$, possiamo dire che il costo della copia dell'input é $O(f(n))$. \\
 Il costo della simulazione di M é $O(f(n))$. \\
 Poiché sappiamo che lo spazio é limitato superiormente da $f(n)$, il costo della copia dell'output sull'ultimo nastro é $O(f(n))$, . \\
 Quindi il costo complessivo é $O(f(n))$. \\
-\textbf{QED} \\
+\end{proof}
 Di conseguenza, le macchine di Turing con input e output sono equipotenti a quelle normali.
