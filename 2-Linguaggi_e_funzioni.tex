@@ -1,4 +1,8 @@
+
 \section{Linguaggi e funzioni}
+Esattamente come gli input sono codificati come stringhe su un alfabeto $\Sigma$, i problemi di decisione possono essere codificati come linguaggi, cioé sottoinsiemi di stringhe dell'alfabeto. \\
+Una macchina di Turing risponde $"yes"$ a una istanza di un problema se la codifica dell'istanza é una stringa che appartiene al linguaggio. \\
+Analogamente, i problemi che richiedono un output possono essere visti come funzioni. \\
 
 \subsection{Linguaggi ricorsivi}
 $L \subseteq \Sigma^*$ é \textbf{ricorsivo} sse \[\exists M :  M(x) =
@@ -48,10 +52,17 @@ La funzione totale $f : \Sigma^* \rightarrow {\Sigma_\sqcup}^*$ é \textbf{ricor
 $M$ \textbf{calcola} $f$. \\
 
 \subsection{Funzioni ricorsivamente enumerabili}
-La funzione parziale $f : \Sigma^* \rightarrow {\Sigma_\sqcup}^*$ é \textbf{ricorsivamente enumerabile} sse \[\exists M :  \forall x \in \Sigma^* : \begin{cases}
-	M(x) = y \qquad se \quad f(x) = y \\
+La funzione parziale\footnote{Ricordando che le funzioni parziali non sono definite su tutto il dominio, e dunque esistono stringhe $x \in \Sigma^*$ per cui $f$ non é definita.}  $f : \Sigma^* \rightarrow {\Sigma_\sqcup}^*$ é \textbf{ricorsivamente enumerabile} sse \[\exists M :  \forall x \in \Sigma^* : \begin{cases}
+	M(x) = y \qquad se \quad \exists y \in {\Sigma_\sqcup}^* : f(x) = y \\
 	M(x) = \nearrow \qquad altrimenti
 \end{cases}
 \] \\
-Ricordando che le funzioni parziali non sono definite su tutto il dominio, e dunque esistono stringhe $x \in \Sigma^*$ per cui $f$ non é definita. \\
-Chiaramente, se una funzione totale é ricorsivamente enumerabile, allora é ricorsiva.
+
+\subsection{Proposizione: una funzione é ricorsiva se e solo se é totale e ricorsivamente enumerabile}
+\boxed{f \text{ é ricorsiva} \iff (f \text{ é totale} \land f \text{ é ricorsivamente enumerabile} )} \\
+
+\textbf{Prova:} \\
+$\implies$: Per definizione, $f$ é totale e	$\exists M : \forall x \in \Sigma^* \exists y \in {\Sigma_\sqcup}^* : M(x) = f(x) = y$ \\
+$\impliedby$:  Siccome $f$ é totale,  $ \forall x \in \Sigma^* \exists y \in {\Sigma_\sqcup}^* : f(x) = y$.
+Quindi il caso $M(x) = \nearrow$ non si applica mai. \\
+\textbf{QED} \\

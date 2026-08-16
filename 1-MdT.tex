@@ -165,7 +165,7 @@ Date due MdT $M_1 = (Q_1, \Sigma, \delta_1, s_1)$ e $M_2 = (Q_2, \Sigma, \delta_
 	\item $Q_1 \cap Q_2 = \emptyset$ 
 	\subitem (Se gli insiemi di stati non sono disgiunti, basta rinominare gli stati di uno dei due).
 	\item $M_1$ termina con tutte le testine su $\triangleright$ 
-	\subitem (Se non accade, basta sostituire nella funzione di transizione agli stati $"yes"$ e $h$ uno stato che riporta le testine su $\triangleright$ e poi termina).
+	\subitem (Se non accade, basta cambiare la funzione di transizione $\delta_1$, redirezionando le coppie che portano verso gli stati $"yes"$ e $h$ in uno stato che riporta le testine su $\triangleright$ e poi termina).
 \end{itemize}
 
 La loro \textbf{composizione} é: $(M_1, M_2) =  (Q, \Sigma, \delta, s)$, dove: 
