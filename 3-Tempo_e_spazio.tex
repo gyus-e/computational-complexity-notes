@@ -11,7 +11,7 @@ Dove $q_H \in \{h, "yes", "no"\}. $\\
 \textbf{$M$ opera in tempo $f(n)$ sse $\forall x \in \Sigma^*$ $M(x)$ richiede tempo $t <= f(n)$} \\
 
 \subsection{Complessitá di spazio}
-Si potrebbe considerare la somma della lunghezza dei $k$ nastri: $\sum_{i=2}^{k-1} |w_i u_i|$ \\
+Si potrebbe considerare la somma della lunghezza dei $k$ nastri: $\sum_{i=1}^{k} |w_i u_i|$ \\
 Ma possiamo scegliere anche la lunghezza del nastro piú lungo: $\max_{i \in \{1, \dots, k\}} |w_i u_i|$. \\
 Queste due quantitá sono asintoticamente equivalenti:\\
 $\max_{i \in \{1, \dots, k\}} |w_i u_i| \leq  \sum_{i=1}^{k} |w_i u_i| \leq k \cdot \max_{i \in \{1, \dots, k\}} |w_i u_i|$  \\

@@ -25,7 +25,7 @@ Tutti i nastri devono usare sempre spazio $g(n) = O(\phi(n))$. \\
 
 Formalmente: una funzione $\phi: \mathbb{N} \rightarrow \mathbb{N}$ é \textit{propria} sse:
 \begin{itemize}
-	\item $\phi$ non é decrescente: \quad $\forall n \in \mathbb{N} \quad \phi(n+1) > \phi(n)$
+	\item $\phi$ non é decrescente: \quad $\forall n \in \mathbb{N} \quad \phi(n+1) \geq \phi(n)$
 	\item Esiste una MdT precisa con input e output $M_\phi$ tale che:\\ $\forall x \in \Sigma^* : |x| = n$ \\
 	\[
 	\begin{cases}
@@ -57,11 +57,11 @@ In totale, quindi, $M' = (M_f, M_t)$ impiega sempre $O(f(n)) + f(n) = O(f(n))$ p
 \textbf{QED}
 
 \subsubsection{Versione spazio}
-Se una MdT $M$ \textit{decide} $L$ in spazio $g(n)$, e $g$ é una funzione \textit{propria}, allora esiste una MdT \textit{precisa} $M'$ che decide $L$ in tempo $O(g(n))$. \\
+Se una MdT $M$ \textit{decide} $L$ in spazio $g(n)$, e $g$ é una funzione \textit{propria}, allora esiste una MdT \textit{precisa} $M'$ che decide $L$ in spazio $O(g(n))$. \\
 \textbf{Prova} \\
 Costruiamo $M'$ come una concatenazione di due macchine di Turing, tenendo i loro nastri separati. \\
-La prima MdT é $M_f$, cioé la macchina con input e output che calcola la funzione propria $f$. \\
-$M_f$ Scrive $\sqcap^{g(n)}$ sul nastro $k$  usando spazio $O(g(n))$ \\
+La prima MdT é $M_g$, cioé la macchina con input e output che calcola la funzione propria $g$. \\
+$M_g$ Scrive $\sqcap^{g(n)}$ sul nastro $k$  usando spazio $O(g(n))$ \\
 Quando termina, si passa a una macchina $M_s$, che copia tutti gli $\sqcap$ sul nastro $k$ su ogniuno dei suoi nastri $\{k+1, \dots, 2k\}$ e poi simula $M$ usando $\sqcap$ al posto di $\sqcup$. \\
 $M$, e quindi $M_s$, non usano piú di $g(n)$ celle su ogni nastro. Se non sono stati tutti sovrascritti gli $\sqcap$ contano come celle occupate sul nastro, rendendo tutti i nastri lunghi $g(n)$. \\
 \textbf{QED}
