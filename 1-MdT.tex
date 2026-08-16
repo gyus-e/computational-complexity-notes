@@ -1,0 +1,191 @@
+\section{Macchine di Turing}
+
+\begin{itemize}
+    \item $M = (Q, \Sigma, \delta, s)$: Macchina di Turing deterministica.
+%    \item $N = (Q, \Sigma, \nu, s)$: Macchina di Turing non deterministica.
+    \item $k \in \mathbb{N}$: Numero di nastri.
+\end{itemize}
+
+\hrulefill
+
+\begin{itemize}
+    \item $Q$: Insieme finito di stati.
+    \item $s \in Q$: Stato iniziale.
+    \item $H = \{h, "yes", "no"\} \subset Q$: Insieme di stati terminali.
+\end{itemize}
+
+\hrulefill
+
+\begin{itemize}
+    \item $\Sigma$: Alfabeto (insieme finito di simboli) con cui viene rappresentato l'input.
+    \item $\triangleright$: Start.
+    \item $\sqcup$: Blank.
+    \item $\Sigma_\sqcup = \Sigma \cup \{\sqcup\}$
+    \item $\Gamma = \Sigma_\sqcup \cup \{\triangleright\}$ Alfabeto di lavoro che la macchina utilizza per letture e scritture.
+    \item $\underline{\sigma} \in \Gamma$: Simbolo sotto la testina di un nastro.
+\end{itemize}
+
+\hrulefill
+
+\begin{itemize}
+    \item $\delta: Q \times \Sigma^k \rightarrow Q \times \Sigma^k \times D^k$ funzione di transizione: prende in input i simboli sotto le testine e lo stato corrente, restituisce simboli che sovrascrivono quelli letti, uno stato in cui transitare al passo successivo e gli spostamenti che ogni testina deve effettuare effettuare alla fine.
+    \item $D = \{\leftarrow, \rightarrow, -\}$ spostamenti della testina sul nastro: puó muoversi di una cella a sinistra o a destra, oppure restare ferma.
+    \item $\delta(q, \underline{\triangleright}) = (q', \triangleright, \rightarrow)$ (con $q, q' \in Q$) se la testina si trova su $\triangleright$, deve riscriverlo e spostarsi obbligatoriamente a destra.
+\end{itemize}
+
+\hrulefill
+
+\begin{itemize}
+    \item $x \in \Sigma^*$: Input scritto sul primo nastro all'inizio della computazione.
+    \item $n = |x| \in \mathbb{N}$
+    \item $f(n)$: Tempo utilizzato dalla computazione.
+    \item $g(n)$: Spazio di memoria utilizzato dalla computazione.
+\end{itemize}
+
+% \begin{itemize}
+%     \item $U$: Macchina di Turing Universale
+%     \item $\underline{M}$: Codifica di $M$
+%     \item $X = (\underline{M}, x)$: Input di $U$
+%     \item $N = |X|$
+% \end{itemize}
+
+
+\subsection{Configurazione}
+Siano, $\forall i \in \{1, \dots, k\}$:
+\begin{itemize}
+    \item $q \in Q$: Stato corrente.
+    \item $w_i = "\triangleright w_{i,2} w_{i,3} \dots \underline{w_{i,{m_i}}}" \in \Gamma^*$: Stringa sul nastro $i$ prima della testina, incluso il simbolo sotto la testina.
+    (Nota: all'inizio della computazione, $w_i = \underline{\triangleright}$).
+    \item $u_i = "u_{i,1} u_{i,2} \dots u_{i,{p_i}}" \in {\Sigma_\cup}^*$: Stringa sul nastro $i$ dopo la testina.
+\end{itemize}
+
+\[
+\configurazione{q}{w}{u}
+\]
+
+\subsubsection{Massimo numero di configurazioni possibili}
+\begin{itemize}
+    \item Numero di stati: $|Q|$
+    \item Massimo numero di stringhe possibili: $|\Sigma_\cup|^{g(n) \cdot k}$ \\
+    ($|\Sigma_\cup|^{g(n)}$ stringhe per ogni nastro)
+    \item Massimo numero di posizioni delle testine possibili: $g(n)^k$ \\
+    ($g(n)$ posizioni per ogni testina)
+\end{itemize}
+
+{\[|Q| \cdot |{\Sigma_\cup|}^{g(n) \cdot k} \cdot g(n)^k\]}
+
+
+\subsection{Computazione}
+\subsubsection{Computazione di un singolo passo}
+\[
+\configurazione{q}{w}{u}
+\xrightarrow{M}
+\configurazione{q'}{w'}{u'}
+\]
+
+Se e solo se: \\
+
+Se $\delta(q, [\underline{w_{i{m_i}}}]_{i=1 \dots k}) = (q', \overline{\sigma}, \overline{d})$, dove:
+\begin{itemize}
+    \item $q' \in Q$: Stato successivo della macchina.
+    \item $\overline{\sigma} = (\sigma_i, \dots, \sigma_k) \in {\Sigma_\cup}^k$: Vettore di k caratteri, ognuno da scrivere su una delle $k$ celle sotto una testina.
+    \item $\overline{d} = (d_i, \dots, d_k) \in D^k$: Vettore di k direzioni che ogni testina deve seguire.
+\end{itemize}
+
+Allora, $\forall i \in \{1, \dots, k\} :$
+{\small
+\begin{enumerate}
+    \item $(d_i = -) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \underline{\sigma_i}") \land (u'_i = u_i))$
+    \item $(d_i = \leftarrow) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \underline{w_{i,m-1}}") \land (u'_i = "\sigma_i u_{i,1} u_{i,2} \dots u_{i,p_i}"))$
+    \item $((d_i = \rightarrow) \land (u_i \neq \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i \underline{u_{i,1}}") \land (u'_i = "u_{i,2} \dots u_{i,p_i}")) $
+    \item $((d_i = \rightarrow) \land (u_i = \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i \underline{\sqcup}") \land (u'_i = \epsilon)) $
+\end{enumerate}
+}
+
+\subsubsection{Computazione di $t$ passi}
+\[
+\configurazione{q_0}{w_0}{u_0}
+\xrightarrow{M^t}
+\configurazione{q_t}{w_t}{u_t}
+\] \\
+
+Se $\forall j \in \{0, \dots, t-1\} :$
+\[
+\configurazione{q_j}{w_j}{u_j}
+\xrightarrow{M}
+\configurazione{q_{j+1}}{w_{j+1}}{u_{j+1}}
+\]
+
+\subsubsection{Computazione di un numero di passi indefinito}
+\[
+\configurazione{q}{w}{u}
+\xrightarrow{M^*}
+\configurazione{q'}{w'}{u'}
+\] \\
+
+Se $\exists t \in \mathbb{N} :$
+\[
+\configurazione{q}{w}{u}
+\xrightarrow{M^t}
+\configurazione{q'}{w'}{u'}
+\]
+
+\subsection{Terminazione}
+    $M(x) \in \Sigma^* \cup \{"yes", "no",\nearrow$\}
+    \begin{itemize}
+        \item $M(x) = "yes"$ sse $\exists w, u :$
+        \[
+        \configurazionestart{x} \xrightarrow{M^*} \configurazione{"yes"}{w}{u}
+        \]
+        \item $M(x) = "no"$ sse $\exists w, u :$
+        \[
+        \configurazionestart{x} \xrightarrow{M^*} \configurazione{"no"}{w}{u}
+        \]
+        \item $M(x) = y \in \Sigma^*$ sse $\exists w, u :$
+        \[
+        \configurazionestart{x} \xrightarrow{M^*} \configurazione{h}{w}{u} \qquad \land \qquad 
+        y = "w_k u_k"
+        \]
+        \item $M(x) = \nearrow$ se la macchina diverge (la computazione non termina). Cioé se non vale nessuno dei casi precedenti.
+	\end{itemize}
+
+\subsection{Macchine di Turing con input e output}
+\begin{itemize}
+	\item $k >= 2$
+	\item Il primo nastro non viene mai modificato (read only).
+	\item L'ultimo nastro viene scandito solo verso destra (write only).
+	\item Il cursore del primo nastro non supera mai il primo $\sqcup$ successivo all'input $x$.
+\end{itemize}
+
+\subsection{Composizione di Macchine di Turing}
+Date due MdT $M_1 = (Q_1, \Sigma, \delta_1, s_1)$ e $M_2 = (Q_2, \Sigma, \delta_2, s_2)$ tali che:
+\begin{itemize}
+	\item Hanno lo stesso alfabeto $\Sigma$ 
+	\subitem (Se gli alfabeti sono diversi, basta considerare la loro unione).
+	\item $Q_1 \cap Q_2 = \emptyset$ 
+	\subitem (Se gli insiemi di stati non sono disgiunti, basta rinominare gli stati di uno dei due).
+	\item $M_1$ termina con tutte le testine su $\triangleright$ 
+	\subitem (Se non accade, basta sostituire nella funzione di transizione agli stati $"yes"$ e $h$ uno stato che riporta le testine su $\triangleright$ e poi termina).
+\end{itemize}
+
+La loro \textbf{composizione} é: $(M_1, M_2) =  (Q, \Sigma, \delta, s)$, dove: 
+\begin{itemize}
+	\item $Q = Q_1 \cup Q_2$
+	\item $s = s_1$
+	\item $\forall \sigma \in \Sigma^k$:
+	\[
+	\delta(q, \sigma) =
+	\begin{cases} 
+		\delta_2(q, \sigma)  \quad se \quad q \in Q_2 \\
+		\delta_1(q, \sigma) \quad se \quad q \in Q_1 \land \delta_1(q, \sigma)  = (p, \tau, d) \land p \notin \{h, "yes"\} \\
+		(s_2, \tau, d) \quad se \quad q \in Q_1 \land  \delta_1(q, \sigma)  = (p, \tau, d) \land p \in \{h, "yes"\} \\
+	\end{cases}
+	\]
+	Dove $\tau \in \Sigma^k$ \quad $d \in \{\leftarrow, \rightarrow, -\}^k$
+\end{itemize}
+
+\begin{itemize}
+	\item La funzione di transizione modifica solo $\delta_1$, reindirizzando le coppie $(q, \sigma)$ che portano a uno stato terminale $h$ o $"yes"$ verso lo stato iniziale di $M_2$. 
+	\item Tutti gli altri casi restano uguali alle funzioni di transizione delle due macchine.
+	\item Le coppie $(q, \sigma)$ che per $\delta_1$ vanno nello stato $"no"$ non devono essere reindirizzate: \textbf{se $\mathbf{M_1}$ rigetta l'input, la computazione non deve continuare}.
+\end{itemize}

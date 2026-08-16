@@ -1,0 +1,70 @@
+\section{Tempo e spazio}
+
+\subsection{Complessitá di tempo}
+$M(x)$ richiede tempo $t$ sse:
+\[
+\configurazionestart{x} \xrightarrow{M^t} \configurazione{q_H}{w}{u}
+\]
+Dove $q_H \in \{h, "yes", "no"\}. $\\
+
+\textbf{$M$ opera in tempo $f(n)$ sse $\forall x \in \Sigma^*$ $M(x)$ richiede tempo $t <= f(n)$} \\
+
+\subsection{Complessitá di spazio}
+Si potrebbe considerare la somma della lunghezza dei $k$ nastri: $\sum_{i=2}^{k-1} |w_i u_i|$ \\
+Ma possiamo scegliere anche la lunghezza del nastro piú lungo: $\max_{i \in \{1, \dots, k\}} |w_i u_i|$. \\
+Queste due quantitá sono asintoticamente equivalenti:\\
+$\max_{i \in \{1, \dots, k\}} |w_i u_i| \leq  \sum_{i=1}^{k} |w_i u_i| \leq k \cdot \max_{i \in \{1, \dots, k\}} |w_i u_i|$  \\
+
+\textbf{Attenzione:} con queste definizioni naive, lo spazio occupato dall'input verrá sempre contato.
+Questo vuol dire che lo spazio é sempre limitato inferiormente da $n$, anche quando non usiamo variabili ausiliarie. \\
+A noi interessa considerare lo \textit{spazio ausiliario} utilizzato. \\
+Per farlo, occorre considerare le macchine di Turing con input e output e contare solo i nastri interni. \\
+
+\subsubsection{Complessitá di spazio ausiliario nelle MdT con input e output}
+$M(x)$ richiede spazio $z$ sse: \\
+Se:
+\[
+\configurazionestart{x} \xrightarrow{M^*} \configurazione{q_H}{w}{u}
+\]
+Dove $q_H \in \{h, "yes", "no"\}$, allora: \\
+\boxed{z = \sum_{i=2}^{k-1} |w_i u_i|} \\
+
+\textbf{$M$ opera in spazio $g(n)$ sse $\forall x \in \Sigma^*$ $M(x)$ richiede spazio $z <= g(n)$} \\
+
+
+\subsection{Teorema: tempo limitato inferiormente da n}
+
+\subsection{Teorema: spazio limitato superiormente da tempo}
+
+\subsection{Teorema: potenza delle MdT con input e output}
+Per ogni macchina di Turing con $k$ nastri $M$ che opera in tempo $f(n)$, esiste una macchina di Turing con input e output e $k+2$ nastri $M'$ che ha lo stesso output e opera in tempo $O(f(n))$. \\
+\textbf{Prova:} M' copia l'input sul secondo nastro, simula M sui k nastri centrali, infine, se M ha un output, lo copia sull'ultimo nastro. \\
+Il costo dell copia dell'input sul secondo nastro é $O(n)$. \\
+Poiché sappiamo che $f(n)$ é limitato inferiormente da $n$, dato che $M$ deve almeno scandire l'input, possiamo dire che é $O(f(n))$. \\
+Il costo della simulazione di M é $O(f(n))$. \\
+Il costo della copia dell'output sull'ultimo nastro é $O(f(n))$, perché lo spazio é limitato superiormente da $f(n)$. \\
+Quindi il costo complessivo é $O(f(n))$. \\
+\textbf{QED}
+
+\subsection{Teorema: soluzioni precise}
+\subsubsection{Versione tempo}
+Se una MdT $M$ \textit{decide} $L$ in tempo $f(n)$, ed $f$ é una funzione \textit{propria}, allora esiste una MdT \textit{precisa} $M'$ che decide $L$ in tempo $O(f(n))$. \\
+\textbf{Prova} \\
+Costruiamo $M'$ come una concatenazione di due macchine di Turing, tenendo i loro nastri separati. \\
+La prima MdT é $M_f$, cioé la macchina con input e output che calcola la funzione propria $f$. \\
+$M_f$ Scrive $\sqcap^{f(n)}$ sul nastro $k$  in tempo $O(n + f(n))$. \\
+Quando termina, si passa a una macchina $M_t$, che simula $M$ sul proprio set di nastri $\{k+1, \dots, 2k\}$, ma a ogni passo sposta anche la testina sul nastro $k$ verso destra. \\
+Sappiamo che $M$, e quindi anche $M_t$, termina entro $f(n)$ passi. Se dovesse terminare prima, basta aspettare che la testina sull'ultimo nastro finisca di scorrere tutti i $\sqcap$, impiegando esattamente $f(n)$ passi. \\
+In totale, quindi, $M' = (M_f, M_t)$ impiega $O(n + f(n)) + f(n)$ passi. \\
+$O(n + f(n)) + f(n) = O(n + 2f(n)) = O(f(n))$ \\
+\textbf{QED}
+
+\subsubsection{Versione spazio}
+Se una MdT $M$ \textit{decide} $L$ in spazio $g(n)$, e $g$ é una funzione \textit{propria}, allora esiste una MdT \textit{precisa} $M'$ che decide $L$ in tempo $O(g(n))$. \\
+\textbf{Prova} \\
+Costruiamo $M'$ come una concatenazione di due macchine di Turing, tenendo i loro nastri separati. \\
+La prima MdT é $M_f$, cioé la macchina con input e output che calcola la funzione propria $f$. \\
+$M_f$ Scrive $\sqcap^{g(n)}$ sul nastro $k$  usando spazio $O(g(n))$ \\
+Quando termina, si passa a una macchina $M_s$, che copia tutti gli $\sqcap$ sul nastro $k$ su ogniuno dei suoi nastri $\{k+1, \dots, 2k\}$ e poi simula $M$ usando $\sqcap$ al posto di $\sqcup$. \\
+$M$, e quindi $M_s$, non usano piú di $g(n)$ celle su ogni nastro. Se non sono stati tutti sovrascritti gli $\sqcap$ contano come celle occupate sul nastro, rendendo tutti i nastri lunghi $g(n)$.
+\textbf{QED}
