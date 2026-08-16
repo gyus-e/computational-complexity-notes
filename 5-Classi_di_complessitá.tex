@@ -1,0 +1,26 @@
+\section{Classi di complessitá}
+
+\subsection{TIME}
+Un linguaggio $L$ appartiene alla classe $\TIME(f(n))$ se esiste una macchina di Turing $M$ che decide $L$ e opera in tempo $f(n)$.
+\subsubsection{Teorema: Linear Time Speedup}
+Se $L \in \TIME(f(n))$ allora $\forall \varepsilon > 0 \quad L \in \TIME(f'(n))$ \\
+Dove $f'(n) = \varepsilon f(n) + n + 2$ \\
+
+\textbf{Prova:} \\
+
+\textbf{QED} \\
+
+Questo teorema ci permette di ignorare costanti moltiplicative nella misurazione della complessitá di tempo.
+
+
+\subsection{SPACE}
+Un linguaggio $L$ appartiene alla classe $\SPACE(f(n))$ se esiste una macchina di Turing $M$ che decide $L$ e opera in spazio $f(n)$.
+\subsubsection{Teorema: Linear Space Speedup}
+Se $L \in \SPACE(f(n))$ allora $\forall \varepsilon > 0 \quad L \in \SPACE(f'(n))$ \\
+Dove $f'(n) = \varepsilon f(n) + n + 2$ \\
+
+\textbf{Prova:} \\
+
+\textbf{QED} \\
+
+Questo teorema ci permette di ignorare costanti moltiplicative nella misurazione della complessitá di spazio.

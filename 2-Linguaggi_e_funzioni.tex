@@ -66,3 +66,12 @@ $\implies$: Per definizione, $f$ é totale e	$\exists M : \forall x \in \Sigma^*
 $\impliedby$:  Siccome $f$ é totale,  $ \forall x \in \Sigma^* \exists y \in {\Sigma_\sqcup}^* : f(x) = y$.
 Quindi il caso $M(x) = \nearrow$ non si applica mai. \\
 \textbf{QED} \\
+
+
+\subsection{Tesi di Church}
+Le funzioni calcolabili corrispondono a quelle ricorsive, cioé calcolabili da una macchina di Turing. \\
+Ogni tentativo ragionevole di formalizzare il concetto di funzione calcolabile (dove per ragionevole intendiamo numero di istruzioni finito e strutture dati finite) porta a una definizione equivalente a quella di macchina di Turing, con una perdita di efficienza al piú polinomiale. \\
+
+Non é dimostrata, ma sono dimostrabili risultati particolari, come ad esempio:
+\subsubsection*{Teorema: Equipotenza tra Macchine di Turing e RAM}
+Se una RAM calcola una funzione $\phi$ in tempo $f(n)$, allora esiste una MdT $M$ a 7 nastri che calcola $\phi$ in tempo $O(f(n)^3)$. \\

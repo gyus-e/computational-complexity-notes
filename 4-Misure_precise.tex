@@ -44,24 +44,67 @@ Ad esempio, il Gap Theorem dimostra che esistono funzioni che "rompono" l'analis
 Esiste una funzione ricorsiva $f: \mathbb{N} \rightarrow \mathbb{N}$ tale che la classe di problemi risolvibili in tempo $f(n)$ coincide con quella di problemi risolvibili in tempo $2^{f(n)}$. \footnote{Vedremo meglio l'enunciato una volta introdotta la classe di complessitá \TIME{f(n)}}
 
 \subsection{Teorema: soluzioni precise}
-Questo teorema ci permette di usare macchine di Turing non precise per la misurazione della complessitá, a patto che le funzioni $f, g$ siano proprie.
 \subsubsection{Versione tempo}
 Se una MdT $M$ \textit{decide} $L$ in tempo $f(n)$, ed $f$ é una funzione \textit{propria}, allora esiste una MdT \textit{precisa} $M'$ che decide $L$ in tempo $O(f(n))$. \\
-\textbf{Prova} \\
+\textbf{Prova:} \\
 Costruiamo $M'$ come una concatenazione di due macchine di Turing, tenendo i loro nastri separati. \\
 La prima MdT é $M_f$, cioé la macchina con input e output che calcola la funzione propria $f$. \\
 $M_f$ Scrive $\sqcap^{f(n)}$ sul nastro $k$  impiegando sempre tempo $O(n + f(n)) = O(f(n))$. \\
 Quando termina, si passa a una macchina $M_t$, che simula $M$ sul proprio set di nastri $\{k+1, \dots, 2k\}$, ma a ogni passo sposta anche la testina sul nastro $k$ verso destra. \\
 Sappiamo che $M$, e quindi anche $M_t$, termina entro $f(n)$ passi. Se dovesse terminare prima, basta aspettare che la testina sull'ultimo nastro finisca di scorrere tutti i $\sqcap$, impiegando esattamente $f(n)$ passi. \\
 In totale, quindi, $M' = (M_f, M_t)$ impiega sempre $O(f(n)) + f(n) = O(f(n))$ passi. \\
-\textbf{QED}
+\textbf{QED} \\
 
 \subsubsection{Versione spazio}
 Se una MdT $M$ \textit{decide} $L$ in spazio $g(n)$, e $g$ é una funzione \textit{propria}, allora esiste una MdT \textit{precisa} $M'$ che decide $L$ in spazio $O(g(n))$. \\
-\textbf{Prova} \\
+\textbf{Prova:} \\
 Costruiamo $M'$ come una concatenazione di due macchine di Turing, tenendo i loro nastri separati. \\
 La prima MdT é $M_g$, cioé la macchina con input e output che calcola la funzione propria $g$. \\
 $M_g$ Scrive $\sqcap^{g(n)}$ sul nastro $k$  usando spazio $O(g(n))$ \\
 Quando termina, si passa a una macchina $M_s$, che copia tutti gli $\sqcap$ sul nastro $k$ su ogniuno dei suoi nastri $\{k+1, \dots, 2k\}$ e poi simula $M$ usando $\sqcap$ al posto di $\sqcup$. \\
 $M$, e quindi $M_s$, non usano piú di $g(n)$ celle su ogni nastro. Se non sono stati tutti sovrascritti gli $\sqcap$ contano come celle occupate sul nastro, rendendo tutti i nastri lunghi $g(n)$. \\
-\textbf{QED}
+\textbf{QED} \\
+
+Questo teorema ci permette di usare macchine di Turing non precise per la misurazione della complessitá, a patto che le funzioni $f, g$ siano proprie.
+
+
+\subsection{Teorema: speedup multinastro}
+Per ogni MdT $M$ a $k$ nastri che opera in tempo $f(n)$, esiste una MdT $M'$ a $1$ nastro che: 
+\begin{itemize} 
+	\item Opera in tempo $O(f(n)^2)$ 
+	\item $\forall x \in \Sigma^* \quad M(x) = M'(x)$ 
+\end{itemize}
+\textbf{Prova:} \\
+\textbf{QED} \\
+
+Questo teorema ci permette di usare quanti nastri vogliamo per la misurazione della complessitá, la classe di complessitá del problema non cambia perché lo speedup é al piú quadratico. \\
+
+
+\subsection{Teorema: Terminazione delle MdT space bounded}
+Se una MdT $M$ opera in spazio $g(n)$, allora esiste una MdT $M'$ che opera in spazio $O(g(n))$ e termina per ogni input entro $O(2^{g(n)})$ passi. \\
+\textbf{Prova:} \\
+$M' = (M_1, M_2)$ é la concatenazione di due macchine, e utilizza un nastro aggiuntivo. \\
+$M_1$ scrive sul nastro aggiuntivo una stringa che codifica la configurazione di $M$, fatta in questo modo: \\
+\[[\triangleright, q, \sqcap, \dots, \sqcap, 1, \dots, 1]\]
+\begin{itemize}
+	\item Il primo simbolo codifica lo stato corrente della macchina $M$ utilizzando $|K|$ nuovi simboli.
+	\item I successivi $g(n)$ simboli $\sqcap$ codificano il contenuto del nastro di $M$, utilizzando i $|\Sigma|$ simboli dell'alfabeto di $M$.
+	\item Gli ultimi $g(n)$ simboli codificano la posizione della testina di $M$, rappresentata in unario tra le sue $g(n)$ posizioni possibili. \\
+\end{itemize}
+La macchina $M_1$ é simile a $M_g$, perché rappresenta due volte $g(n)$ in unario: una prima volta con $\sqcap^{g(n)}$ e una seconda con $1^{g(n)}$. \\
+Lo spazio utilizzato é $O(g(n))$. \\
+
+$M_2$ legge la configurazione di $M$ e utilizza gli altri nastri per simularla. \\
+Il nastro con la configurazione viene trattato come un contatore, che viene incrementato dopo ogni simulazione. \\
+Occorre solo fare attenzione al fatto che la base non é sempre la stessa:
+\begin{itemize}
+	\item La prima cella del contatore puó assumere $|K|$ valori.
+	\item Le successive $g(n)$ celle del contatore possono assumere $|\Sigma|$ valori.
+	\item Le ultime $g(n)$ celle del contatore possono assumere $2$ valori.
+\end{itemize}
+Se la simulazione di $M$ termina, allora anche $M_2$ termina. \\
+Se invece la simulazione non termina, il contatore prima o poi esaurirá le configurazioni possibili e $M_2$ terminerá comunque. \\
+Il massimo numero di configurazioni possibili é $|K| \cdot |\Sigma|^{g(n)} \cdot 2^{g(n)} = O(2^{g(n)})$. \\
+\textbf{QED} \\
+
+Questo teorema ci mostra come forzare la terminazione di una MdT che opera in spazio limitato. \\

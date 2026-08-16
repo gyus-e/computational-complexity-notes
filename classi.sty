@@ -2,14 +2,10 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{classi}[.Classi]
 
-\newcommand{\MYCLASS}[2]{%
-	$\mathbf{#1}({#2})$
-}
-
-\newcommand{\TIME}[1]{%
-    \MYCLASS{TIME}{#1}
+\newcommand{\TIME}[0]{%
+    \text{TIME}
 }
 
 \newcommand{\SPACE}[0]{%
-	\MYCLASS{SPACE}
+	\text{SPACE}
 }
