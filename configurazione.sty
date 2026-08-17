@@ -4,51 +4,51 @@
 
 \newcommand{\configurazione}[3]{%
     #1
-    \begin{pmatrix}
+    \begin{bmatrix}
         {#2}_1 \\
         \vdots \\
         {#2}_k
-    \end{pmatrix}
+    \end{bmatrix}
     % #1
-    \begin{pmatrix}
+    \begin{bmatrix}
         {#3}_1 \\
         \vdots \\
         {#3}_k
-    \end{pmatrix}%
+    \end{bmatrix}%
 }
 
 \newcommand{\configurazionestart}[1]{%
     s
-    \begin{pmatrix}
+    \begin{bmatrix}
         \triangleright \\
         \triangleright \\
         \vdots \\
         \triangleright
-    \end{pmatrix}
+    \end{bmatrix}
     % s
-    \begin{pmatrix}
+    \begin{bmatrix}
         {#1} \\
         \epsilon \\
         \vdots \\
         \epsilon
-    \end{pmatrix}%
+    \end{bmatrix}%
 }
 
 \newcommand{\configurazionepropria}[2]{%
 	h
-	\begin{pmatrix}
+	\begin{bmatrix}
 		\triangleright \\
 		\triangleright \\
 		\vdots \\
 		\triangleright \\
 		\triangleright
-	\end{pmatrix}
+	\end{bmatrix}
 	% s
-	\begin{pmatrix}
+	\begin{bmatrix}
 		{#1} \\
 		\sqcup^{z_2} \\
 		\vdots \\
 		\sqcup^{z_{k-1}} \\
 		\sqcap^{#2}
-	\end{pmatrix}%
+	\end{bmatrix}%
 }

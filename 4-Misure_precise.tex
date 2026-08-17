@@ -139,9 +139,9 @@ Ogni passo di $M$ richiede due step:
 			\item Si scandisce il nastro all'indietro fino a un simbolo sottolineato, che viene modificato come avrebbe fatto $M$, ed eventualmente effettuando un passo a sinistra o a destra e sottolineando il nuovo simbolo.
 			\item Se la testina si sposta a destra e si trova su $\blacktriangleleft$, allora bisogna effettuare uno shift di tutti i simboli a destra.
 				\begin{enumerate}
-					\item Si sovrascrive $\blacktriangleleft$ con $\underline{\blacktriangleleft}$
-					\item Si va a destra ino a $\triangleleft$
-					\item Tornando indietro, si effettua uno shift di tutti i simboli verso destra, fino a tornare a $\underline{\blacktriangleleft}$, che viene cancellato con un $\underline{\sqcup}$ e riportato a destra come $\blacktriangleleft$.
+					\item Si sovrascrive $\blacktriangleleft$ con $\overline{\blacktriangleleft}$
+					\item Si va a destra fino a $\triangleleft$
+					\item Tornando indietro, si effettua uno shift di tutti i simboli verso destra, fino a tornare a $\overline{\blacktriangleleft}$, che viene sovrascritto con $\underline{\sqcup}$ e riportato a destra come $\blacktriangleleft$.
 					\item Il tempo dello shift é $O(f(n))$.
 				\end{enumerate}
 			\item Il tempo impiegato per la scansione é $O(f(n))$. Nel caso peggiore, bisogna effettuare uno shift per ogni passo, quindi il tempo totale é $O(f(n)^2)$.
