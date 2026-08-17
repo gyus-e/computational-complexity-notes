@@ -1,5 +1,5 @@
 
-\section{Misure precise}
+\section{Misurazioni precise}
 
 \subsection{Macchine di Turing precise}
 Una macchina di Turing $M$ é \textbf{precisa} se esistono due funzioni $f$ e $g$ tali che:
@@ -158,7 +158,7 @@ Questo teorema ci permette di usare quanti nastri vogliamo per la misurazione de
 
 
 \subsection{Teorema: Terminazione delle MdT space bounded}
-Se una MdT $M$ opera in spazio $g(n)$, allora esiste una MdT $M'$ che opera in spazio $O(g(n))$ e termina per ogni input entro $O(2^{g(n)})$ passi. \\
+Se una MdT $M$ opera in spazio $g(n)$, allora esiste una MdT $M'$ che opera in spazio $O(g(n))$ e termina per ogni input entro $O(c^{g(n)})$ passi. \\
 \begin{proof}
 $M' = (M_1, M_2)$ é la concatenazione di due macchine, e utilizza un nastro aggiuntivo. \\
 $M_1$ scrive sul nastro aggiuntivo una stringa che codifica la configurazione di $M$, fatta in questo modo: \\
