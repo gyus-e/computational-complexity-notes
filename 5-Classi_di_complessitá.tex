@@ -2,11 +2,43 @@
 
 \subsection{TIME}
 Un linguaggio $L$ appartiene alla classe $\TIME(f(n))$ se esiste una macchina di Turing $M$ che decide $L$ e opera in tempo $f(n)$.
-\subsubsection{Teorema: Linear Time Speedup}
-Se $L \in \TIME(f(n))$ allora $\forall \varepsilon > 0 \quad L \in \TIME(f'(n))$ \\
-Dove $f'(n) = \varepsilon f(n) + n + 2$ \\
 
+\subsubsection{Teorema: Linear Speedup (Time)}
+Se $L \in \TIME(f(n))$ allora $\forall \varepsilon > 0 \quad L \in \TIME(f'(n))$ \\
+Dove $f'(n) = \varepsilon f(n) + n + 2$
 \begin{proof}
+Simuliamo $M=(Q, \Sigma, \delta, s)$ con una macchina $M'=(Q', \Sigma', \delta', s')$. \\
+L'idea é simulare $m$ passi di $M$ con $6$ passi di $M'$, scegliendo $m$ opportunamente. \\
+Per farlo, occorre utilizzare un numero di stati e di simboli dell'alfabeto esponenziale rispetto a quelli della macchina originale. \\ 
+$\Sigma' = \Sigma \cup \Sigma^m$: contiene tutti i simboli dell'alfabeto originale e tutte le $m$-uple di simboli su quell'alfabeto.
+Cioé consideriamo $(\sigma_1, \ldots, \sigma_m)$ come un \textit{unico} simbolo. \\
+
+La macchina comincia con una scansione del primo nastro per comprimere l'input: ogni sequenza di $m$ simboli di $x$ viene scritta con un solo simbolo di $\Sigma^m$ sul secondo nastro.\\
+Opzionalmente, si puó cancellare $x$ durante la scansione per avere un nastro in piú a disposizione. \\
+Notare che se $M$ ha un solo nastro, allora $M'$ ha bisogno di due nastri. In tutti gli altri casi possono avere lo stesso numero di nastri. \\
+\begin{itemize}
+    \item dallo stato iniziale $s'$ usiamo stati da ${s'}_{\sigma_1}$ a ${s'}_{\sigma_1, \ldots, \sigma_{m-1}}$ per ricordare ogni simbolo incontrato (inclusi i $\sqcup$ se $x$ non é divisibile per $m$).
+    \item in uno degli stati che ricordano $m-1$ simboli, leggiamo quello sotto la testina e scriviamo sul secondo nastro $(\sigma_1 \ldots, \sigma_m)$.
+    \item Tempo: $m \cdot \ceil{n/m} + 2$  passi sul primo nastro, piú $\ceil{n/m}$ sul secondo.
+\end{itemize}
+
+Ora la simulazione comincia usando la stringa del secondo nastro come input. \\
+Verranno utilizzati \textit{solo} simboli di $\Sigma^m$ per simulare $m$ passi alla volta. \\
+
+\textbf{Se la testina del nastro $i$ di $M$ si trova sulla cella $l_i$, allora la testina del nastro $i$ di $M'$ si trova sulla cella $\ceil{l_i/m}$.} \\
+Di conseguenza, per conoscere la posizione della testina di $M$ sul nastro $i$, basta ricordare solo in quale posizione sta tra le $m$ del simbolo corrente di $M'$. \\
+Il numero di stati richiesti per ricordare lo stato di $M$ e la posizione della testina é $|Q| \cdot m^k$. \\
+
+Se $M$ é nello stato $q$ e la testina del suo nastro $i$ si trova sulla cella $l_i$, allora chiamiamo ${l'}_i = l_i \mod m$. \\
+$M'$ é nello stato $q_{l'_1, \ldots, l'_k}$. .
+
+Simulando $m$ passi di $M$, il cursore potrebbe finire in una delle due caselle adiacenti a quella di partenza, e non oltre (lo spazio é limitato superiormente dal tempo).\\
+Per questo, si leggono i simboli a sinistra e a destra del cursore (1 passo a sinistra, 2 a destra e 1 a sinistra tornando alla posizione originaria: 4 in totale). \\
+$\delta'$ é definita in modo da applicare direttamente le modifiche al blocco centrale e, eventualmente, uno dei due adiacenti. Questo richiede al massimo 2 passi. \\
+
+In totale, quindi, ogni simulazione di $m$ passi di $M$ richiede $6$ passi di $M'$. \\
+$M'$ impiega $6 \cdot \ceil{f(n)/m} + n + 2$ passi per simulare $M$. \\
+Imponendo $m = \ceil{6/\varepsilon}$ otteniamo $\varepsilon f(n) + n + 2$. \\
 
 \end{proof}
 
@@ -15,12 +47,57 @@ Questo teorema ci permette di ignorare costanti moltiplicative nella misurazione
 
 \subsection{SPACE}
 Un linguaggio $L$ appartiene alla classe $\SPACE(f(n))$ se esiste una macchina di Turing $M$ che decide $L$ e opera in spazio $f(n)$.
-\subsubsection{Teorema: Linear Space Speedup}
+
+\subsubsection{Teorema: Linear Speedup (Space)}
 Se $L \in \SPACE(f(n))$ allora $\forall \varepsilon > 0 \quad L \in \SPACE(f'(n))$ \\
-Dove $f'(n) = \varepsilon f(n) + n + 2$ \\
-
-\begin{proof}
-
-\end{proof}
+Dove $f'(n) = \varepsilon f(n) + n + 2$
 
 Questo teorema ci permette di ignorare costanti moltiplicative nella misurazione della complessitá di spazio.
+
+\subsection{Classi di complessitá fondamentali}
+
+\subsubsection{P}
+$\P = \bigcup_{j>0} \TIME(n^j)$
+
+\subsubsection{NP}
+$\NP = \bigcup_{j>0} \NTIME(n^j)$
+
+\subsubsection{EXP}
+$\EXP = \bigcup_{j>0} \TIME(2^{n^j})$
+
+\subsubsection{NEXP}
+$\NEXP = \bigcup_{j>0} \NTIME(2^{n^j})$
+
+\subsubsection{L}
+$\L = \bigcup_{j>0} \SPACE(\log(n)^j)$
+
+\subsubsection{PSPACE}
+$\PSPACE = \bigcup_{j>0} \SPACE(n^j)$
+
+\subsection{Classi di complessitá complementari}
+Per ogni classe di complessitá $C$ definiamo la classe complementare $\co C$ come l'insieme dei linguaggi complementari a quelli di $C$. \\
+$\co C = \{ \overline{L} : L \in C \}$
+
+\subsection{Proposizione: chiusura delle classi di complessitá deterministiche rispetto al complemento}
+Se $C$ é una classe di complessitá deterministica, allora $\co C = C$ \\
+\begin{proof}
+Sia $L \in C$ e sia $M$ una macchina di Turing che decide $L$ e opera in tempo $f(n)$ e spazio $g(n)$. \\
+Allora possiamo costruire una macchina $M'$ che decide $\overline{L}$ e opera in tempo $f(n)$ e spazio $g(n)$, semplicemente invertendo gli stati $"yes"$ e $"no"$  di $M$. \\
+\end{proof}
+
+Con una macchina non deterministica non possiamo fare lo stesso ragionamento.
+Data una MdT non deterministica $N$ che accetta $L$:
+\begin{itemize}
+\item $x \in L$ sse $\exists$ un run di $N$ che accetta $x$.
+\item $x \notin L$ sse $\forall$ run di $N$, il run non accetta $x$.
+\end{itemize}
+Ma invertendo gli stati $"yes$ e $"no"$ non si otterrebbe una macchina che accetta il complemento del linguaggio. \\ 
+Invertire $"yes"$ e $"no"$ porta una macchina che accetta $x$ se un solo run di $N$ lo rifiutava. 
+Ma \textbf{un input accettato da una macchina non deterministica puó essere rifiutato da un run}, e quindi accettato anche dalla nuova macchina. \\
+Quello che vorremmo é una macchina $N'$ che accetta $\overline{L}$ perché:
+\begin{itemize}
+\item $x \in \overline{L}$ sse $\exists$ un run di $N'$ che accetta $x$.
+\item $x \notin \overline{L}$ sse $\forall$ run di $N'$, il run non accetta $x$.
+\end{itemize}
+Vedremo che é possibile dimostrare la chiusura delle classi di complessitá di spazio non deterministiche rispetto al complemento. \\
+Per quanto riguarda le classi di complessitá di tempo non deterministiche, invece, il problema è aperto. \\

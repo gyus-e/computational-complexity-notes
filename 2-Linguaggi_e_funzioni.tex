@@ -1,8 +1,26 @@
 
 \section{Linguaggi e funzioni}
-Esattamente come gli input sono codificati come stringhe su un alfabeto $\Sigma$, i problemi di decisione possono essere codificati come linguaggi, cioé sottoinsiemi di stringhe dell'alfabeto. \\
+Esattamente come gli input sono codificati come stringhe su un alfabeto $\Sigma$, i problemi di decisione possono essere codificati come linguaggi, cioé sottoinsiemi di stringhe dell'alfabeto: $L \in \Sigma^*$. \\
 Una macchina di Turing risponde $"yes"$ a una istanza di un problema se la codifica dell'istanza é una stringa che appartiene al linguaggio. \\
-Analogamente, i problemi che richiedono un output possono essere visti come funzioni. \\
+Analogamente, i problemi che richiedono un output possono essere visti come funzioni su $\Sigma^*$.
+\subsubsection*{Esempi}
+
+\begin{itemize}
+	\item $\REACHABILITY$ é il linguaggio di stringhe che codificano un grafo e due vertici raggiungibili. Formalmente: $(G, s, t)$ dove $G = (V, E) \quad s, t \in V$ tali che $s$ raggiunge $t$ in $G$. Le stringhe che codificano un grafo e due vertici non raggiungibili, come anche le stringhe malformate che non codificano un grafo e due vertici, non appartengono al linguaggio. \\
+	\item $\PALINDROME$ é il linguaggio di stringhe palindrome.
+	\item $\SAT$ é il linguaggio di formule della logica proposizionale soddisfacibili.
+\end{itemize}
+
+\subsection{Linguaggi complementari}
+Il linguaggio complementare di $L \subseteq \Sigma^*$ é definito come:
+\[\overline{L} = \Sigma^* \setminus L\]
+Se $L$ codifica le istanze di un problema, allora $\overline{L}$ contiene tutte le stringhe dell'alfabeto che non sono istanze del problema.
+\subsubsection*{Esempi}
+\begin{itemize}
+	\item $\overline{\REACHABILITY}$ é il linguaggio di stringhe che codificano un grafo e due vertici non raggiungibili, ma anche di tutte le stringhe malformate.
+	\item $\overline{\PALINDROME}$ é il linguaggio di stringhe non palindrome. In questo caso non ci sono stringhe malformate.
+	\item $\overline{\SAT}$ é il linguaggio di formule della logica proposizionale insoddisfacibili e di formule malformate.
+\end{itemize}
 
 \subsection{Linguaggi ricorsivi}
 $L \subseteq \Sigma^*$ é \textbf{ricorsivo} sse \[\exists M :  M(x) =
@@ -22,7 +40,7 @@ $L \subseteq \Sigma^*$ é \textbf{ricorsivamente enumerabile} sse \[\exists M : 
 \]
 $M$ \textbf{accetta} $L$. \\
 
-\subsection{Proposizione: i linguaggi ricorsivi sono ricorsivamente enumerabili}
+\subsection{Proposizione 2.1: i linguaggi ricorsivi sono ricorsivamente enumerabili}
 \boxed{L \quad \textbf{ricorsivo} \implies L \quad \textbf{ricorsivamente enumerabile}} \\
 
 \begin{proof}
