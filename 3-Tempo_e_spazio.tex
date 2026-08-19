@@ -81,6 +81,7 @@ Allora, dopo $f(n)$ passi, la testina avrá scritto esattamente $g(n) = f(n)$ si
 Qualsiasi altra macchina che operi in tempo $f(n)$ avrá eseguito dei passi sovrascrivendo celle giá utilizzate. In questo caso l'utilizzo di spazio é inferiore a quello di $M$.
 \end{proof}
 \subsubsection{Corollario: $\TIME(f(n)) \subseteq \SPACE(f(n))$}
+\subsubsection{Corollario: $\P \subseteq \PSPACE$}
 Qualunque linguaggio che puó essere deciso in tempo $f(n)$ puó essere deciso anche in spazio $f(n)$.
 
 
@@ -113,6 +114,7 @@ Il massimo numero di configurazioni possibili é $|Q| \cdot |\Sigma|^{g(n)} \cdo
 \end{proof}
 Questo teorema ci mostra come forzare la terminazione di una MdT che opera in spazio limitato.
 \subsubsection{Corollario: $\SPACE(g(n)) \subseteq \TIME(c^{g(n)})$}
+\subsubsection{Corollario: $\PSPACE \subseteq \EXP$}
 
 \subsection{Teorema: $\TIME(f(n)) \subseteq \NTIME(f(n))$}
 \begin{proof}
