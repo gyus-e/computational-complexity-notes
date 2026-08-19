@@ -1,8 +1,8 @@
 \section{Macchine di Turing}
-
+\subsection{Definizione}
 \begin{itemize}
     \item $M = (Q, \Sigma, \delta, s)$: Macchina di Turing deterministica.
-%    \item $N = (Q, \Sigma, \nu, s)$: Macchina di Turing non deterministica.
+    \item $N = (Q, \Sigma, \Delta, s)$: Macchina di Turing non deterministica
     \item $k \in \mathbb{N}$: Numero di nastri.
 \end{itemize}
 
@@ -27,9 +27,15 @@
 \hrulefill
 
 \begin{itemize}
-    \item $\delta: Q \times \Gamma^k \rightarrow Q \times \Gamma^k \times D^k$ funzione di transizione: prende in input i simboli sotto le testine e lo stato corrente, restituisce simboli che sovrascrivono quelli letti, uno stato in cui transitare al passo successivo e gli spostamenti che ogni testina deve effettuare effettuare alla fine.
     \item $D = \{\leftarrow, \rightarrow, -\}$ spostamenti della testina sul nastro: puó muoversi di una cella a sinistra o a destra, oppure restare ferma.
-    \item $\delta(q, [\dots, \triangleright_i, \dots]) = (q', [\dots, \triangleright_i, \dots], [\dots, \rightarrow_i, \dots])$ (con $q, q' \in Q$): se una qualsiasi testina $i$ si trova su $\triangleright$, deve riscriverlo e spostarsi obbligatoriamente a destra.
+    \item $\delta: Q \times \Gamma^k \rightarrow Q \times \Gamma^k \times D^k$ \underline{funzione} di transizione: prende in input i simboli sotto le testine e lo stato corrente, restituisce simboli che sovrascrivono quelli letti, uno stato in cui transitare al passo successivo e gli spostamenti che ogni testina deve effettuare effettuare alla fine.
+    \begin{itemize}
+        \item $\delta(q, [\dots, \triangleright_i, \dots]) = (q', [\dots, \triangleright_i, \dots], [\dots, \rightarrow_i, \dots])$ (con $q, q' \in Q$): se una qualsiasi testina $i$ si trova su $\triangleright$, deve riscriverlo e spostarsi obbligatoriamente a destra.
+    \end{itemize}
+    \item $\Delta \subseteq (Q \times \Gamma^k) \times (Q \times \Gamma^k \times D^k)$ \underline{relazione} di transizione: associa a ogni coppia di stato corrente e simboli sotto la testina, una o piú terne di nuovi stati, simboli da scrivere e direzioni verso cui spostare le testine.
+    \begin{itemize} 
+        \item $d$: Grado di non determinismo, é il piú alto numero di terne diverse associate alla stessa coppia stato-simboli in $N$.
+    \end{itemize}
 \end{itemize}
 
 \hrulefill
@@ -41,13 +47,13 @@
     \item $g(n)$: Spazio di memoria utilizzato dalla computazione.
 \end{itemize}
 
+% \hrulefill
 % \begin{itemize}
 %     \item $U$: Macchina di Turing Universale
 %     \item $\underline{M}$: Codifica di $M$
 %     \item $X = (\underline{M}, x)$: Input di $U$
 %     \item $N = |X|$
 % \end{itemize}
-
 
 \subsection{Configurazione}
 Siano, $\forall i \in \{1, \dots, k\}$:
@@ -81,26 +87,28 @@ Siano, $\forall i \in \{1, \dots, k\}$:
 \xrightarrow{M}
 \configurazione{q'}{w'}{u'}
 \]
-
-Se e solo se: \\
-
-Se $\delta(q, [{w}]) = (q', [\sigma], [d])$, dove:
+Se e solo se:
 \begin{itemize}
-	\item $[{w}] = ({w_{1,m_1}}, \dots, {w_{k,m_k}})$: Simboli sotto le testine dei $k$ nastri.
+\item Deterministiche: $\qquad \delta(q, [{w_m}]) = (q', [\sigma], [d])$.
+\item Non deterministiche: $(q, [w_m],\quad q', [\sigma], [d]) \in \Delta$.
+\item Dove:
+\begin{itemize}
+	\item $[{w_m}] = ({w_{1,m_1}}, \dots, {w_{k,m_k}})$: Simboli sotto le testine dei $k$ nastri.
     \item $q' \in Q$: Stato successivo della macchina.
     \item $[\sigma] = [\sigma_1, \dots, \sigma_k] \in {\Sigma_\sqcup}^k$: Vettore di $k$ caratteri, ognuno da scrivere su una delle $k$ celle sotto una testina.
     \item $[d] = [d_1, \dots, d_k] \in D^k$: Vettore di $k$ direzioni che ogni testina deve seguire.
 \end{itemize}
 
-Allora, $\forall i \in \{1, \dots, k\} :$
+\item $\forall i \in \{1, \dots, k\} :$
 {\small
-\begin{enumerate}
+\begin{itemize}
     \item $(d_i = -) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots {\sigma_i}") \land (u'_i = u_i))$
     \item $(d_i = \leftarrow) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots {w_{i,m_{i-1}}}") \land (u'_i = "\sigma_i u_{i,1} u_{i,2} \dots u_{i,p_i}"))$
     \item $((d_i = \rightarrow) \land (u_i \neq \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i {u_{i,1}}") \land (u'_i = "u_{i,2} \dots u_{i,p_i}")) $
     \item $((d_i = \rightarrow) \land (u_i = \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i {\sqcup}") \land (u'_i = \epsilon)) $
-\end{enumerate}
+\end{itemize}
 }
+\end{itemize}
 
 \subsubsection{Computazione di $t$ passi}
 \[

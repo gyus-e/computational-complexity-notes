@@ -22,26 +22,35 @@ Se $L$ codifica le istanze di un problema, allora $\overline{L}$ contiene tutte 
 	\item $\overline{\SAT}$ é il linguaggio di formule della logica proposizionale insoddisfacibili e di formule malformate.
 \end{itemize}
 
-\subsection{Linguaggi ricorsivi}
-$L \subseteq \Sigma^*$ é \textbf{ricorsivo} sse \[\exists M :  M(x) =
-\begin{cases}
-	"yes" \qquad se \qquad x \in L \\
-	"no" \qquad altrimenti
-\end{cases}
-\]
-$M$ \textbf{decide} $L$. \\
+\subsection{Linguaggi e macchine di Turing}
 
-\subsection{Linguaggi ricorsivamente enumerabili}
-$L \subseteq \Sigma^*$ é \textbf{ricorsivamente enumerabile} sse \[\exists M :  M(x) =
-\begin{cases}
-	"yes" \qquad se \qquad x \in L \\
-	\nearrow \qquad altrimenti
-\end{cases}
-\]
-$M$ \textbf{accetta} $L$. \\
+Una MdT deterministica $M$ \textbf{accetta} un linguaggio $L \subseteq \Sigma^*$ sse:
+\begin{itemize}
+	\item $x \in L$ sse $M(x) = "yes"$
+	\item $x \notin L$ sse $M(x) = \nearrow$.
+\end{itemize}
+
+Una MdT deterministica $M$ \textbf{decide} un linguaggio $L \subseteq \Sigma^*$ sse:
+\begin{itemize}
+	\item $x \in L$ sse $M(x) = "yes"$
+	\item $x \notin L$ sse $M(x) = "no"$.
+\end{itemize}
+
+\subsubsection*{}
+Una MdT non deterministica $N$ \textbf{decide} un linguaggio $L$ sse:
+\begin{itemize}
+	\item $x \in L$ sse $\exists$ un run di $N$ che accetta $x$.
+	\item $x \notin L$ sse $\forall$ run di $N$, il run rifiuta $x$.
+\end{itemize}
+
+\subsubsection{Linguaggi ricorsivamente enumerabili}
+$L \subseteq \Sigma^*$ é \textbf{ricorsivamente enumerabile} sse $\exists M : M$ \textbf{accetta} $L$.
+
+\subsubsection{Linguaggi ricorsivi}
+$L \subseteq \Sigma^*$ é \textbf{ricorsivo} sse $\exists M : M$ \textbf{decide} $L$.
 
 \subsection{Proposizione 2.1: i linguaggi ricorsivi sono ricorsivamente enumerabili}
-\boxed{L \quad \textbf{ricorsivo} \implies L \quad \textbf{ricorsivamente enumerabile}} \\
+\boxed{L \quad \textbf{ricorsivo} \implies L \quad \textbf{ricorsivamente enumerabile}}
 
 \begin{proof}
 \[\exists M :  M(x) =

@@ -1,0 +1,87 @@
+\section{Misure precise}
+
+\subsection{Macchine di Turing precise}
+Una macchina di Turing $M$ é \textbf{precisa} se esistono due funzioni $f$ e $g$ tali che:
+\begin{itemize}
+	\item Ogni computazione di $M$ termina \textit{esattamente} dopo $f(n)$ passi.
+	\item Al termine di ogni computazione, tutti i nastri di $M$ sono lunghi \textit{esattamente} $g(n)$ (eccetto primo e ultimo nastro se la macchina é con input e output).
+\end{itemize}
+Formalmente: $\exists f, g: \mathbb{N} \rightarrow \mathbb{N}  \quad \forall x \in \Sigma^* : |x| = n$
+\[
+\begin{cases}
+	\configurazionestart{x} \xrightarrow{{M}^t} \configurazione{q_H}{w}{u} \\
+	\\
+	t = f(n) \\
+	|w_i u_i|= g(n) \quad \forall i \in \{2, \dots, k-1\} \\
+	q_H \in \{h, "yes", "no"\}
+\end{cases}
+\]
+
+\subsection{Funzioni di complessitá proprie}
+Le funzioni di complessitá proprie sono funzioni $\phi$ sui naturali, non decrescenti e tali che una macchina di Turing precisa con input e output $M_\phi$ puó calcolarne il valore in unario, scrivendo sull'ultimo nastro tanti simboli $\sqcap$ ("quasi-blank") quanto vale $\phi(n)$. \\
+Per qualsiasi input, il tempo impiegato deve essere sempre $f(n) = O(n + \phi(n))$ \\
+Tutti i nastri devono usare sempre spazio $g(n) = O(\phi(n))$. \\
+
+Formalmente: una funzione $\phi: \mathbb{N} \rightarrow \mathbb{N}$ é \textit{propria} sse:
+\begin{itemize}
+	\item $\phi$ non é decrescente: \quad $\forall n \in \mathbb{N} \quad \phi(n+1) \geq \phi(n)$
+	\item Esiste una MdT precisa con input e output $M_\phi$ tale che:\\ $\forall x \in \Sigma^* : |x| = n$ \\
+	\[
+	\begin{cases}
+		\configurazionestart{x} \xrightarrow{{M_\phi}^t} \configurazionepropria{x}{\phi(n)} \\
+		\\
+		t = f(n) = O(n + \phi(n)) \\
+		z_i = g(n) = O(\phi(n)) \quad \forall i \in \{2, \dots, k-1\}
+	\end{cases}
+	\]
+\end{itemize}
+
+Le funzioni proprie sono le uniche funzioni che possono essere usate per misurare la complessitá di tempo e di spazio di un problema senza incorrere in problemi di misurazione.\\ 
+Ad esempio, il Gap Theorem afferma che esistono funzioni che "rompono" l'analisi di complessitá.
+
+\subsubsection*{Gap Theorem}
+Esiste una funzione ricorsiva $f: \mathbb{N} \rightarrow \mathbb{N}$ tale che {$\TIME({f(n)}) = \TIME({2^{f(n)}})$}
+
+
+\subsection{Teorema: potenza delle MdT con input e output}
+Per ogni macchina di Turing con $k$ nastri $M$ che opera in tempo $f(n)$, esiste una macchina di Turing con input e output e $k+2$ nastri $M'$ che ha lo stesso output e opera in tempo $O(f(n))$.
+\begin{proof}
+M' copia l'input sul secondo nastro, simula M sui k nastri centrali, infine, se M ha un output, lo copia sull'ultimo nastro. \\
+Il costo dell copia dell'input sul secondo nastro é $O(n)$. \\
+Poiché sappiamo che $f(n)$ é limitato inferiormente da $n$, possiamo dire che il costo della copia dell'input é $O(f(n))$. \\
+Il costo della simulazione di M é $O(f(n))$. \\
+Poiché sappiamo che lo spazio é limitato superiormente da $f(n)$, il costo della copia dell'output sull'ultimo nastro é $O(f(n))$, . \\
+Quindi il costo complessivo é $O(f(n))$.
+\end{proof}
+Di conseguenza, le macchine di Turing con input e output sono equipotenti a quelle normali.
+
+
+\subsection{Teorema: soluzioni precise}
+\subsubsection{Versione tempo}
+Se una MdT $M$ \textit{decide} $L$ in tempo $f(n)$, ed $f$ é una funzione \textit{propria}, allora esiste una MdT \textit{precisa} $M'$ che decide $L$ in tempo $O(f(n))$.
+\begin{proof}
+Costruiamo $M'$ come una concatenazione di due macchine di Turing, tenendo i loro nastri separati. \\
+La prima MdT é $M_f$, cioé la macchina con input e output che calcola la funzione propria $f$. \\
+$M_f$ Scrive $\sqcap^{f(n)}$ sul nastro $k$  impiegando sempre tempo $O(n + f(n)) = O(f(n))$. \\
+Quando termina, si passa a una macchina $M_t$, che simula $M$ sul proprio set di nastri $\{k+1, \dots, 2k\}$, ma a ogni passo sposta anche la testina sul nastro $k$ verso destra. \\
+Sappiamo che $M$, e quindi anche $M_t$, termina entro $f(n)$ passi. Se dovesse terminare prima, basta aspettare che la testina sull'ultimo nastro finisca di scorrere tutti i $\sqcap$, impiegando esattamente $f(n)$ passi. \\
+In totale, quindi, $M' = (M_f, M_t)$ impiega sempre $O(f(n)) + f(n) = O(f(n))$ passi.
+\end{proof}
+
+\subsubsection{Versione spazio}
+Se una MdT $M$ \textit{decide} $L$ in spazio $g(n)$, e $g$ é una funzione \textit{propria}, allora esiste una MdT \textit{precisa} $M'$ che decide $L$ in spazio $O(g(n))$.
+\begin{proof}
+Costruiamo $M'$ come una concatenazione di due macchine di Turing, tenendo i loro nastri separati. \\
+La prima MdT é $M_g$, cioé la macchina con input e output che calcola la funzione propria $g$. \\
+$M_g$ Scrive $\sqcap^{g(n)}$ sul nastro $k$  usando spazio $O(g(n))$ \\
+Quando termina, si passa a una macchina $M_s$, che copia tutti gli $\sqcap$ sul nastro $k$ su ogniuno dei suoi nastri $\{k+1, \dots, 2k\}$ e poi simula $M$ usando $\sqcap$ al posto di $\sqcup$. \\
+$M$, e quindi $M_s$, non usano piú di $g(n)$ celle su ogni nastro. Se non sono stati tutti sovrascritti gli $\sqcap$ contano come celle occupate sul nastro, rendendo tutti i nastri lunghi $g(n)$.
+\end{proof}
+
+Questo teorema ci permette di usare macchine di Turing non precise per la misurazione della complessitá, a patto che le funzioni $f, g$ siano proprie.
+
+
+\input{teoremi/Speedup_multinastro}
+
+
+\input{teoremi/Linear_speedup}

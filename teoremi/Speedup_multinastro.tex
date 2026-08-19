@@ -1,0 +1,88 @@
+\subsection{Teorema: speedup multinastro}
+\label{teorema:speedup_multinastro}
+Per ogni MdT $M$ a $k$ nastri che opera in tempo $f(n)$, esiste una MdT $M'$ a $1$ nastro che: 
+\begin{itemize} 
+	\item Opera in tempo $O(f(n)^2)$ 
+	\item $\forall x \in \Sigma^* \quad M(x) = M'(x)$ 
+\end{itemize}
+\begin{proof}
+Data $M = (Q, \Sigma, \delta, s)$. \\
+Costruiamo $M' = (Q', \Sigma', \delta', s)$ che simula i $k$ nastri di $M$ usando un solo nastro. \\
+Si separa il nastro di $M'$ in $k$ sezioni, introducendo nuovi simboli: 
+\begin{itemize}
+	\item $\blacktriangleright$: "pseudo-start", rappresenta gli $\triangleright$ dei $k$ nastri di $M$
+	\item $\blacktriangleleft$: separatore dei $k$ nastri di $M$
+	\item $\triangleleft$: rappresenta la fine della stringa di $M'$
+	\item I simboli sottolineati $\underline{\Sigma} = \{\underline{\sigma} : \sigma \in \Sigma \}$ indicano cosa c'é sotto le testine di $M$.
+\end{itemize}
+{
+Una configurazione di $M$:
+\[
+	\configurazione{q}{w}{u}
+\] 
+Corrisponde a una configurazione di $M'$:
+\[
+	q ({\triangleright}) (\blacktriangleright w_1 u_1 \blacktriangleleft \dots \blacktriangleright w_k u_k \blacktriangleleft \triangleleft )
+\]
+}
+{
+La lunghezza del nastro di $M'$ é al piú:
+\begin{itemize}
+	\item $k \cdot f(n)$ per i nastri di $M$ 
+		\subitem ($M$ ha $k$ nastri lunghi al piú $f(n)$)
+	\item $2k$ per i simboli $\blacktriangleright$ e $\blacktriangleleft$
+	\item $2$ per i simboli $\triangleright$ e $\triangleleft$
+\end{itemize}
+Cioé $O(f(n))$. \\
+}
+
+La configurazione iniziale di $M'$ é: \[s(\triangleright)(x)\]
+La preparazione del nastro si articola in:
+\begin{enumerate}
+	\item Traslare a destra di una posizione l'input $x$ e inserire $\blacktriangleright$ all'inizio.
+		\begin{itemize}
+			\item Per farlo si introducono $|\Sigma| + 1$ nuovi stati (vedere esempio \ref{example:shift})
+			\item Il tempo impiegato é $O(n)$.
+			\item Il nastro di $M'$ diventa: $\triangleright \blacktriangleright x$.
+		\end{itemize} 
+	\item Appendere la stringa che rappresenta gli altri nastri vuoti: $\blacktriangleleft ({\blacktriangleright \blacktriangleleft})^{k-1} \triangleleft$
+		\begin{itemize}
+			\item Si usano $2k$ nuovi stati, uno per ognuno dei due simboli, che tengono traccia del nastro corrente in modo da fermarsi a $k$. 
+			\begin{itemize}
+				\item Fa eccezione il primo nastro, per cui serve un solo stato che scriva $\blacktriangleleft$ e poi passi al nastro successivo. 
+				\item Ma a questi si aggiunge un ultimo stato che scrive $\triangleleft$.
+			\end{itemize}
+			\item Il tempo impiegato é $O(k)$.
+		\end{itemize}
+\end{enumerate}
+{
+Dopo aver preparato il nastro, si puó iniziare la simulazione. \\
+Ogni passo di $M$ richiede due step:
+\begin{enumerate}
+	\item Scansione del nastro per leggere i simboli sottolineati, cioé quelli sotto le testine di $M$, fino a $\triangleleft$.
+		\begin{itemize}
+			\item Servono stati che ricordano lo stato originale di $M$ e ogni simbolo letto finora. Per ogni stato $q \in Q$, aggiungo a $Q'$ tutti gli stati $q_{\sigma_1}; q_{\sigma_1, \sigma_2}; \dots; q_{\sigma_1, \dots, \sigma_k}$, per tutte le combinazioni di lunghezza minore o uguale a $k$ di simboli $\sigma_i \in \Sigma$. 
+			\item In totale, servono $|Q| \cdot |\Sigma|^{1 + \dots + k} = |Q| \cdot |\Sigma|^{k \cdot (k+1)/2}$ nuovi stati.
+			\item Il tempo	 impiegato é $O(f(n))$.
+		\end{itemize}
+	\item Modifica del nastro per applicare la transizione a partire da uno stato $q_{\sigma_1,\dots,\sigma_k}$.
+		\begin{itemize}
+			\item Si scandisce il nastro all'indietro fino a un simbolo sottolineato, che viene modificato come avrebbe fatto $M$, ed eventualmente effettuando un passo a sinistra o a destra e sottolineando il nuovo simbolo.
+			\item Se la testina si sposta a destra e si trova su $\blacktriangleleft$, allora bisogna effettuare uno shift di tutti i simboli a destra.
+				\begin{enumerate}
+					\item Si sovrascrive $\blacktriangleleft$ con $\overline{\blacktriangleleft}$
+					\item Si va a destra fino a $\triangleleft$
+					\item Tornando indietro, si effettua uno shift di tutti i simboli verso destra, fino a tornare a $\overline{\blacktriangleleft}$, che viene sovrascritto con $\underline{\sqcup}$ e riportato a destra come $\blacktriangleleft$.
+					\item Il tempo dello shift é $O(f(n))$.
+				\end{enumerate}
+			\item Il tempo impiegato per la scansione é $O(f(n))$. Nel caso peggiore, bisogna effettuare uno shift per ogni passo, quindi il tempo totale é $O(f(n)^2)$.
+		\end{itemize}
+\end{enumerate}
+}
+
+Quando $M$ termina, $M'$ sposta il contenuto del nastro $k$ sul nastro $1$, cancellando tutto il resto. Questo spostamento impiega tempo $O(f(n))$. Poi termina.
+
+Il termine dominante del tempo é quello della modifica del nastro durante la simulazione: $O(f(n)^2)$. \\
+\end{proof}
+
+Questo teorema ci permette di usare quanti nastri vogliamo per la misurazione della complessitá, la classe di complessitá del problema non cambia perché lo speedup é al piú quadratico. \\
