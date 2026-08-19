@@ -116,7 +116,7 @@ Questo teorema ci mostra come forzare la terminazione di una MdT che opera in sp
 
 \subsection{Teorema: $\TIME(f(n)) \subseteq \NTIME(f(n))$}
 \begin{proof}
-Le macchine di Turing deterministiche sono un caso particolare di quelle non deterministiche, in cui la relazione di transizione $\Delta$ associa a ogni coppia in $Q \times \Sigma$ una sola tripla di $Q \times \Sigma \times D$.
+Le macchine di Turing deterministiche sono un caso particolare di quelle non deterministiche, in cui la relazione di transizione $\Delta$ associa a ogni coppia in $Q \times \Sigma$ una sola tripla di $Q \times \Sigma \times \{\leftarrow, \rightarrow, -\}$.
 \end{proof}
 \subsubsection{Corollario: $\P \subseteq \NP$}
 \subsubsection{Corollario: $\EXP \subseteq \NEXP$}
@@ -126,13 +126,31 @@ Le macchine di Turing deterministiche sono un caso particolare di quelle non det
 \label{theorem:non_deterministic_to_deterministic}
 Data una MdT non deterministica $N$ che decide $L$ e opera in tempo $f(n)$. \\
 Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f(n)})$.
+\begin{figure}[h!]
+	\caption{\small Albero di computazione di una MdT non deterministica.}
+	\centering
+	\label{fig:albero_computazione}
+	\includegraphics[width=0.8\textwidth]{albero_computazione.png}
+\end{figure}
 \begin{proof}
+	Simuliamo $N$ con una MdT deterministica $M$. \\
+	Possiamo vedere la computazione di $N$ come un albero di altezza $f(n)$ (figura \ref{fig:albero_computazione}). \\
+	Ogni passo corrisponde a una \textit{scelta} tra al piú $d$ possibilitá. \\
+	Ogni sequenza di $t$ passi corrisponde a una sequenza di $t$ scelte. \\
+	Codifichiamo quindi un run con una stringa di $t$ numeri da $1$ a $d$. \\
+	$M$ tiene su un nastro la stringa che codifica una sequenza di $t$ scelte. \\
+	Per una sequenza di $t$ passi, $M$ simula le transizioni che avrebbe fatto $N$. \\
+	Poi incrementa la stringa e ripete la simulazione. \\
+	In questo modo esplora tutti i possibili run di $N$. \\
+	$M$ ha bisogno di un altro nastro per conservare sempre l'input $x$ e altri $k$ nastri per simulare quelli di $N$. \\
+	Se la simulazione di un run termina in $"yes"$, $M$ accetta. \\
+	Se tutte le simulazioni terminano in $"no"$, $M$ rifiuta. \\
+	Il numero di possibili run é $\sum_{i=1}^{f(n)} d^i $. \\	
+	Il tempo di una simulazione é $f(n)$, cioé quello che impiega $N$. \\
+	$f(n) \cdot \sum_{i=1}^{f(n)} d^i = O(d^{f(n)})$.
 \end{proof}
+Vedremo che invece il guadagno in spazio di una macchina non deterministica rispetto a una deterministica é limitato.
 \subsubsection{Corollario: $\NP \subseteq \EXP$}
-\begin{proof}
-    Ponendo $f(n) = n^j$, si ha: \\
-    $\NP = \bigcup_{j>0} \NTIME(n^j) \subseteq \bigcup_{j>0} \TIME(2^{n^j}) = \EXP$.
-\end{proof}
 
 
 \subsection{Proposizione: chiusura delle classi di complessitá deterministiche rispetto al complemento}

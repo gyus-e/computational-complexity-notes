@@ -27,14 +27,16 @@
 \hrulefill
 
 \begin{itemize}
-    \item $D = \{\leftarrow, \rightarrow, -\}$ spostamenti della testina sul nastro: puó muoversi di una cella a sinistra o a destra, oppure restare ferma.
-    \item $\delta: Q \times \Gamma^k \rightarrow Q \times \Gamma^k \times D^k$ \underline{funzione} di transizione: prende in input i simboli sotto le testine e lo stato corrente, restituisce simboli che sovrascrivono quelli letti, uno stato in cui transitare al passo successivo e gli spostamenti che ogni testina deve effettuare effettuare alla fine.
+    \item $\{\leftarrow, \rightarrow, -\}$ spostamenti della testina sul nastro: puó muoversi di una cella a sinistra o a destra, oppure restare ferma.
+    \item $\delta: Q \times \Gamma^k \rightarrow Q \times \Gamma^k \times \{\leftarrow, \rightarrow, -\}^k$ \underline{funzione} di transizione: prende in input i simboli sotto le testine e lo stato corrente, restituisce simboli che sovrascrivono quelli letti, uno stato in cui transitare al passo successivo e gli spostamenti che ogni testina deve effettuare effettuare alla fine.
     \begin{itemize}
         \item $\delta(q, [\dots, \triangleright_i, \dots]) = (q', [\dots, \triangleright_i, \dots], [\dots, \rightarrow_i, \dots])$ (con $q, q' \in Q$): se una qualsiasi testina $i$ si trova su $\triangleright$, deve riscriverlo e spostarsi obbligatoriamente a destra.
     \end{itemize}
-    \item $\Delta \subseteq (Q \times \Gamma^k) \times (Q \times \Gamma^k \times D^k)$ \underline{relazione} di transizione: associa a ogni coppia di stato corrente e simboli sotto la testina, una o piú terne di nuovi stati, simboli da scrivere e direzioni verso cui spostare le testine.
+    \item $\Delta \subseteq (Q \times \Gamma^k) \times (Q \times \Gamma^k \times \{\leftarrow, \rightarrow, -\}^k)$ \underline{relazione} di transizione: associa a ogni coppia di stato corrente e simboli sotto la testina, una o piú terne di nuovi stati, simboli da scrivere e direzioni verso cui spostare le testine.
     \begin{itemize} 
-        \item $d$: Grado di non determinismo, é il piú alto numero di terne diverse associate alla stessa coppia stato-simboli in $N$.
+        \item $C_{(q,\sigma)} = \{(q', \sigma', \textit{dir}) \mid (q, \sigma, \quad q', \sigma', \textit{dir}) \in \Delta\}$ insieme delle \textit{scelte} che $N$ puó fare a partire dal \textit{contesto} $(q, \sigma)$.
+        \item $d = \max_{(q, \sigma) \in Q \times \Gamma^k} |C_{(q,\sigma)}|$ grado di non determinismo di $N$.
+        \subitem Ovviamente $d$ é sempre finito perché $\Delta$ é un prodotto di insiemi finiti.
     \end{itemize}
 \end{itemize}
 
@@ -87,28 +89,27 @@ Siano, $\forall i \in \{1, \dots, k\}$:
 \xrightarrow{M}
 \configurazione{q'}{w'}{u'}
 \]
-Se e solo se:
+Se e solo se, dato:
 \begin{itemize}
-\item Deterministiche: $\qquad \delta(q, [{w_m}]) = (q', [\sigma], [d])$.
-\item Non deterministiche: $(q, [w_m],\quad q', [\sigma], [d]) \in \Delta$.
+\item MdT deterministiche: $\qquad \delta(q, [{w_m}]) = (q', [\sigma], [\textit{dir}])$.
+\item MdT non deterministiche: $(q, [w_m],\quad q', [\sigma], [\textit{dir}]) \in \Delta$.
 \item Dove:
 \begin{itemize}
 	\item $[{w_m}] = ({w_{1,m_1}}, \dots, {w_{k,m_k}})$: Simboli sotto le testine dei $k$ nastri.
     \item $q' \in Q$: Stato successivo della macchina.
     \item $[\sigma] = [\sigma_1, \dots, \sigma_k] \in {\Sigma_\sqcup}^k$: Vettore di $k$ caratteri, ognuno da scrivere su una delle $k$ celle sotto una testina.
-    \item $[d] = [d_1, \dots, d_k] \in D^k$: Vettore di $k$ direzioni che ogni testina deve seguire.
+    \item $[\textit{dir}] = [\textit{dir}_1, \dots, \textit{dir}_k] \in \{\leftarrow, \rightarrow, -\}^k$: Vettore di $k$ direzioni che ogni testina deve seguire.
 \end{itemize}
-
-\item $\forall i \in \{1, \dots, k\} :$
+\end{itemize}
+Vale che, $\forall i \in \{1, \dots, k\} :$
 {\small
 \begin{itemize}
-    \item $(d_i = -) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots {\sigma_i}") \land (u'_i = u_i))$
-    \item $(d_i = \leftarrow) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots {w_{i,m_{i-1}}}") \land (u'_i = "\sigma_i u_{i,1} u_{i,2} \dots u_{i,p_i}"))$
-    \item $((d_i = \rightarrow) \land (u_i \neq \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i {u_{i,1}}") \land (u'_i = "u_{i,2} \dots u_{i,p_i}")) $
-    \item $((d_i = \rightarrow) \land (u_i = \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i {\sqcup}") \land (u'_i = \epsilon)) $
+    \item $(\textit{dir}_i = -) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots {\sigma_i}") \land (u'_i = u_i))$
+    \item $(\textit{dir}_i = \leftarrow) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots {w_{i,m_{i-1}}}") \land (u'_i = "\sigma_i u_{i,1} u_{i,2} \dots u_{i,p_i}"))$
+    \item $((\textit{dir}_i = \rightarrow) \land (u_i \neq \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i {u_{i,1}}") \land (u'_i = "u_{i,2} \dots u_{i,p_i}")) $
+    \item $((\textit{dir}_i = \rightarrow) \land (u_i = \epsilon)) \implies ((w'_i = "\triangleright w_{i,2} w_{i,3} \dots \sigma_i {\sqcup}") \land (u'_i = \epsilon)) $
 \end{itemize}
 }
-\end{itemize}
 
 \subsubsection{Computazione di $t$ passi}
 \[
@@ -159,7 +160,7 @@ Se $\exists t \in \mathbb{N} :$
 
 \subsection{Macchine di Turing con input e output}
 \begin{itemize}
-	\item $k >= 2$
+	\item $k \geq 2$
 	\item Il primo nastro non viene mai modificato (read only).
 	\item L'ultimo nastro viene scandito solo verso destra (write only).
 	\item Il cursore del primo nastro non supera mai il primo $\sqcup$ successivo all'input $x$.
@@ -185,11 +186,11 @@ La loro \textbf{composizione} é: $(M_1, M_2) =  (Q, \Sigma, \delta, s)$, dove:
 	\delta(q, \sigma) =
 	\begin{cases} 
 		\delta_2(q, \sigma)  \quad se \quad q \in Q_2 \\
-		\delta_1(q, \sigma) \quad se \quad q \in Q_1 \land \delta_1(q, \sigma)  = (p, \tau, d) \land p \notin \{h, "yes"\} \\
-		(s_2, \tau, d) \quad se \quad q \in Q_1 \land  \delta_1(q, \sigma)  = (p, \tau, d) \land p \in \{h, "yes"\} \\
+		\delta_1(q, \sigma) \quad se \quad q \in Q_1 \land \delta_1(q, \sigma)  = (p, \tau, \textit{dir}) \land p \notin \{h, "yes"\} \\
+		(s_2, \tau, \textit{dir}) \quad se \quad q \in Q_1 \land  \delta_1(q, \sigma)  = (p, \tau, \textit{dir}) \land p \in \{h, "yes"\} \\
 	\end{cases}
 	\]
-	Dove $\tau \in \Sigma^k$ \quad $d \in \{\leftarrow, \rightarrow, -\}^k$
+	Dove $\tau \in \Sigma^k$ \quad $\textit{dir} \in \{\leftarrow, \rightarrow, -\}^k$
 \end{itemize}
 
 \begin{itemize}

@@ -62,8 +62,8 @@ $L \subseteq \Sigma^*$ é \textbf{ricorsivo} sse $\exists M : M$ \textbf{decide}
 Costruiamo $M' = (Q', \Sigma, \delta', s)$ aggiungendo un nuovo stato $q'$ che, nella nuova funzione di transizione $\delta'$, prende il posto dello stato terminale $"no"$. La funzione di transizione é uguale a quella di M in tutti gli altri casi. Il nuovo stato $q'$ sposta la testina a destra all'infinito. Formalmente:
 \begin{itemize}
 	\item $Q' = Q \cup \{q'\}$ \quad dove \quad $q' \notin Q$
-	\item $\delta(q, \sigma) = ("no",  \tau, d) \implies \delta'(q, \sigma) = (q', \tau, d)  \qquad \forall q \in Q;  \forall \sigma, \tau \in \Gamma;  \forall d \in D$
-	\item $\delta(q, \sigma) = (p,  \tau, d) \implies \delta'(q, \sigma) = (p, \tau, d)  \quad \forall q, p \in Q \setminus \{"no"\};  \forall \sigma, \tau \in \Gamma;  \forall d \in D$
+	\item $\delta(q, \sigma) = ("no",  \tau, \textit{dir}) \implies \delta'(q, \sigma) = (q', \tau, \textit{dir})  \qquad \forall q \in Q;  \forall \sigma, \tau \in \Gamma;  \forall \textit{dir} \in \{\leftarrow, \rightarrow, -\}$
+	\item $\delta(q, \sigma) = (p,  \tau, \textit{dir}) \implies \delta'(q, \sigma) = (p, \tau, \textit{dir})  \quad \forall q, p \in Q \setminus \{"no"\};  \forall \sigma, \tau \in \Gamma;  \forall \textit{dir} \in \{\leftarrow, \rightarrow, -\}$
 	\item $\delta'(q', \sigma) = (q', \sigma, \rightarrow) \qquad \forall \sigma \in \Sigma \cup \{\sqcup\}$
 \end{itemize}
 \[M'(x) =
