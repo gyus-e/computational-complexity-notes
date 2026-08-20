@@ -63,7 +63,7 @@ Ogni passo di $M$ richiede due step:
 		\begin{itemize}
 			\item Servono stati che ricordano lo stato originale di $M$ e ogni simbolo letto finora. Per ogni stato $q \in Q$, aggiungo a $Q'$ tutti gli stati $q_{\sigma_1}; q_{\sigma_1, \sigma_2}; \dots; q_{\sigma_1, \dots, \sigma_k}$, per tutte le combinazioni di lunghezza minore o uguale a $k$ di simboli $\sigma_i \in \Sigma$. 
 			\item In totale, servono $|Q| \cdot |\Sigma|^{1 + \dots + k} = |Q| \cdot |\Sigma|^{k \cdot (k+1)/2}$ nuovi stati.
-			\item Il tempo	 impiegato é $O(f(n))$.
+			\item Il tempo	 impiegato é $O(f(n))$ (teorema \ref{teorema:spazio_limitato_superiormente_dal_tempo}).
 		\end{itemize}
 	\item Modifica del nastro per applicare la transizione a partire da uno stato $q_{\sigma_1,\dots,\sigma_k}$.
 		\begin{itemize}

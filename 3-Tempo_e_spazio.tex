@@ -65,6 +65,7 @@ $\co C = \{ \overline{L} : L \in C \}$
 
 
 \subsection{Teorema: il tempo é limitato inferiormente dall'input}
+\label{teorema:tempo_limitato_inferiormente_dall_input}
 {$f(n) = \Omega(n)$} \\
 O, equivalentemente: \\
 {$n = O(f(n))$}
@@ -74,6 +75,7 @@ Se la codifica dell'input é \textit{ragionevole}, allora la macchina di Turing 
 
 
 \subsection{Teorema: lo spazio é limitato superiormente dal tempo}
+\label{teorema:spazio_limitato_superiormente_dal_tempo}
 {$g(n) = O(f(n))$}
 \begin{proof}
 Supponiamo che una macchina $M$ a 1 nastro operi in tempo $f(n)$ e che a ogni passo scriva sul nastro e sposti la testina a destra. \\
@@ -83,103 +85,3 @@ Qualsiasi altra macchina che operi in tempo $f(n)$ avrá eseguito dei passi sovr
 \subsubsection{Corollario: $\TIME(f(n)) \subseteq \SPACE(f(n))$}
 \subsubsection{Corollario: $\P \subseteq \PSPACE$}
 Qualunque linguaggio che puó essere deciso in tempo $f(n)$ puó essere deciso anche in spazio $f(n)$.
-
-
-\subsection{Teorema: Terminazione delle MdT space bounded}
-Se una MdT $M$ opera in spazio $g(n)$, allora esiste una MdT $M'$ che opera in spazio $O(g(n))$ e termina per ogni input entro $O(c^{g(n)})$ passi.
-\footnote{Questo teorema presuppone il teorema dello speedup multinastro (\ref{teorema:speedup_multinastro})}
-\begin{proof}
-$M' = (M_1, M_2)$ é la concatenazione di due macchine, e utilizza un nastro aggiuntivo. \\
-$M_1$ scrive sul nastro aggiuntivo una stringa che codifica la configurazione di $M$, fatta in questo modo: \\
-\[[\triangleright, q, \sqcap, \dots, \sqcap, 1, \dots, 1]\]
-\begin{itemize}
-	\item Il primo simbolo codifica lo stato corrente della macchina $M$ utilizzando $|Q|$ nuovi simboli.
-	\item I successivi $g(n)$ simboli $\sqcap$ codificano il contenuto del nastro di $M$, utilizzando i $|\Sigma|$ simboli dell'alfabeto di $M$.
-	\item Gli ultimi $g(n)$ simboli codificano la posizione della testina di $M$, rappresentata in unario tra le sue $g(n)$ posizioni possibili.
-\end{itemize}
-La macchina $M_1$ é simile a $M_g$, perché rappresenta due volte $g(n)$ in unario: una prima volta con $\sqcap^{g(n)}$ e una seconda con $1^{g(n)}$. \\
-Lo spazio utilizzato é $O(g(n))$. \\
-
-$M_2$ legge la configurazione di $M$ e utilizza gli altri nastri per simularla. \\
-Il nastro con la configurazione viene trattato come un contatore, che viene incrementato dopo ogni simulazione. \\
-Occorre solo fare attenzione al fatto che la base non é sempre la stessa:
-\begin{itemize}
-	\item La prima cella del contatore puó assumere $|Q|$ valori.
-	\item Le successive $g(n)$ celle del contatore possono assumere $|\Sigma|$ valori.
-	\item Le ultime $g(n)$ celle del contatore sono in unario.
-\end{itemize}
-Se la simulazione di $M$ termina, allora anche $M_2$ termina. \\
-Se invece la simulazione non termina, il contatore prima o poi esaurirá le configurazioni possibili: a quel punto, faremo terminare $M_2$ anche se $M$ non termina. \\
-Il massimo numero di configurazioni possibili é $|Q| \cdot |\Sigma|^{g(n)} \cdot {g(n)} = O(c^{g(n)})$.
-\end{proof}
-Questo teorema ci mostra come forzare la terminazione di una MdT che opera in spazio limitato.
-\subsubsection{Corollario: $\SPACE(g(n)) \subseteq \TIME(c^{g(n)})$}
-\subsubsection{Corollario: $\PSPACE \subseteq \EXP$}
-
-\subsection{Teorema: $\TIME(f(n)) \subseteq \NTIME(f(n))$}
-\begin{proof}
-Le macchine di Turing deterministiche sono un caso particolare di quelle non deterministiche, in cui la relazione di transizione $\Delta$ associa a ogni coppia in $Q \times \Sigma$ una sola tripla di $Q \times \Sigma \times \{\leftarrow, \rightarrow, -\}$.
-\end{proof}
-\subsubsection{Corollario: $\P \subseteq \NP$}
-\subsubsection{Corollario: $\EXP \subseteq \NEXP$}
-
-
-\subsection{Teorema: $\NTIME(f(n)) \subseteq \bigcup_{c>1} \TIME(c^{f(n)})$}
-\label{theorem:non_deterministic_to_deterministic}
-Data una MdT non deterministica $N$ che decide $L$ e opera in tempo $f(n)$. \\
-Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f(n)})$.
-\begin{figure}[h!]
-	\caption{\small Albero di computazione di una MdT non deterministica.}
-	\centering
-	\label{fig:albero_computazione}
-	\includegraphics[width=0.8\textwidth]{albero_computazione.png}
-\end{figure}
-\begin{proof}
-	Simuliamo $N$ con una MdT deterministica $M$. \\
-	Possiamo vedere la computazione di $N$ come un albero di altezza $f(n)$ (figura \ref{fig:albero_computazione}). \\
-	Ogni passo corrisponde a una \textit{scelta} tra al piú $d$ possibilitá. \\
-	Ogni sequenza di $t$ passi corrisponde a una sequenza di $t$ scelte. \\
-	Codifichiamo quindi un run con una stringa di $t$ numeri da $1$ a $d$. \\
-	$M$ tiene su un nastro la stringa che codifica una sequenza di $t$ scelte. \\
-	Per una sequenza di $t$ passi, $M$ simula le transizioni che avrebbe fatto $N$. \\
-	Poi incrementa la stringa e ripete la simulazione. \\
-	In questo modo esplora tutti i possibili run di $N$. \\
-	$M$ ha bisogno di un altro nastro per conservare sempre l'input $x$ e altri $k$ nastri per simulare quelli di $N$. \\
-	Se la simulazione di un run termina in $"yes"$, $M$ accetta. \\
-	Se tutte le simulazioni terminano in $"no"$, $M$ rifiuta. \\
-	Il numero di possibili run é $\sum_{i=1}^{f(n)} d^i $. \\	
-	Il tempo di una simulazione é $f(n)$, cioé quello che impiega $N$. \\
-	$f(n) \cdot \sum_{i=1}^{f(n)} d^i = O(d^{f(n)})$.
-\end{proof}
-Vedremo che invece il guadagno in spazio di una macchina non deterministica rispetto a una deterministica é limitato.
-\subsubsection{Corollario: $\NP \subseteq \EXP$}
-
-
-\subsection{Proposizione: chiusura delle classi di complessitá deterministiche rispetto al complemento}
-Se $C$ é una classe di complessitá deterministica, allora $\co C = C$
-\begin{proof}
-Sia $L \in C$ e sia $M$ una macchina di Turing che decide $L$ e opera in tempo $f(n)$ e spazio $g(n)$. \\
-Allora possiamo costruire una macchina $M'$ che decide $\overline{L}$ e opera in tempo $f(n)$ e spazio $g(n)$, semplicemente invertendo gli stati $"yes"$ e $"no"$  di $M$. \\
-\end{proof}
-
-\subsubsection*{Perché non é possibile fare lo stesso ragionamento per le classi non deterministiche?}
-Con una macchina non deterministica $N$ non basta invertire gli stati terminali. \\
-Quello che vorremmo é una macchina $N'$ che accetta $\overline{L}$ perché:
-\begin{itemize}
-\item $x \in \overline{L}$ sse $\exists$ un run di $N'$ che accetta $x$.
-\item $x \notin \overline{L}$ sse $\forall$ run di $N'$, il run non accetta $x$.
-\end{itemize}
-Invertendo gli stati $"yes$ e $"no"$ di $N$ non si otterrebbe una macchina che accetta il complemento del linguaggio. \\ 
-Invertire $"yes"$ e $"no"$ porta una macchina che accetta $x$ se un solo run di $N$ lo rifiutava. 
-\textbf{Un input accettato da una macchina non deterministica puó essere rifiutato da un run}, e quindi accettato anche dalla nuova macchina.
-
-\subsubsection*{}
-Vedremo che é possibile dimostrare la chiusura delle classi di complessitá di spazio non deterministiche rispetto al complemento. \\
-Per quanto riguarda le classi di complessitá di tempo non deterministiche, invece, il problema è aperto. \\
-
-\subsection{Domande aperte}
-\begin{itemize}
-    \item $\P = \NP$?
-    \item $\NP = \co\NP$?
-    \item $\NP = \PSPACE$?
-\end{itemize}

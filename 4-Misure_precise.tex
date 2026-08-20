@@ -48,9 +48,9 @@ Per ogni macchina di Turing con $k$ nastri $M$ che opera in tempo $f(n)$, esiste
 \begin{proof}
 M' copia l'input sul secondo nastro, simula M sui k nastri centrali, infine, se M ha un output, lo copia sull'ultimo nastro. \\
 Il costo dell copia dell'input sul secondo nastro é $O(n)$. \\
-Poiché sappiamo che $f(n)$ é limitato inferiormente da $n$, possiamo dire che il costo della copia dell'input é $O(f(n))$. \\
+Poiché sappiamo che $f(n)$ é limitato inferiormente da $n$ (teroema \ref{teorema:tempo_limitato_inferiormente_dall_input}), possiamo dire che il costo della copia dell'input é $O(f(n))$. \\
 Il costo della simulazione di M é $O(f(n))$. \\
-Poiché sappiamo che lo spazio é limitato superiormente da $f(n)$, il costo della copia dell'output sull'ultimo nastro é $O(f(n))$, . \\
+Poiché sappiamo che lo spazio é limitato superiormente da $f(n)$ (teorema \ref{teorema:spazio_limitato_superiormente_dal_tempo}), il costo della copia dell'output sull'ultimo nastro é $O(f(n))$, . \\
 Quindi il costo complessivo é $O(f(n))$.
 \end{proof}
 Di conseguenza, le macchine di Turing con input e output sono equipotenti a quelle normali.
@@ -62,7 +62,7 @@ Se una MdT $M$ \textit{decide} $L$ in tempo $f(n)$, ed $f$ é una funzione \text
 \begin{proof}
 Costruiamo $M'$ come una concatenazione di due macchine di Turing, tenendo i loro nastri separati. \\
 La prima MdT é $M_f$, cioé la macchina con input e output che calcola la funzione propria $f$. \\
-$M_f$ Scrive $\sqcap^{f(n)}$ sul nastro $k$  impiegando sempre tempo $O(n + f(n)) = O(f(n))$. \\
+$M_f$ Scrive $\sqcap^{f(n)}$ sul nastro $k$  impiegando sempre tempo $O(n + f(n)) = O(f(n))$. (teorema \ref{teorema:tempo_limitato_inferiormente_dall_input})\\
 Quando termina, si passa a una macchina $M_t$, che simula $M$ sul proprio set di nastri $\{k+1, \dots, 2k\}$, ma a ogni passo sposta anche la testina sul nastro $k$ verso destra. \\
 Sappiamo che $M$, e quindi anche $M_t$, termina entro $f(n)$ passi. Se dovesse terminare prima, basta aspettare che la testina sull'ultimo nastro finisca di scorrere tutti i $\sqcap$, impiegando esattamente $f(n)$ passi. \\
 In totale, quindi, $M' = (M_f, M_t)$ impiega sempre $O(f(n)) + f(n) = O(f(n))$ passi.

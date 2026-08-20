@@ -28,7 +28,7 @@ Il numero di stati richiesti per ricordare lo stato di $M$ e la posizione della 
 
 Se $M$ é nello stato $q$ e la testina del suo nastro $i$ si trova sulla cella $l_i$, allora chiamiamo ${l'}_i = (l_i \mod m)$ e diciamo che $M'$ é nello stato $q_{l'_1, \ldots, l'_k}$. .
 
-Simulando $m$ passi di $M$, il cursore di un nastro di $M'$ potrebbe finire in una delle due caselle adiacenti a quella attuale, e non oltre (perché lo spazio é limitato superiormente dal tempo).\\
+Simulando $m$ passi di $M$, il cursore di un nastro di $M'$ potrebbe finire in una delle due caselle adiacenti a quella attuale, e non oltre (teorema \ref{teorema:spazio_limitato_superiormente_dal_tempo}).\\
 Per questo, si leggono i simboli a sinistra e a destra del cursore (1 passo a sinistra, 2 a destra e 1 a sinistra tornando alla posizione originaria: 4 in totale). \\
 $\delta'$ é definita in modo da applicare direttamente le modifiche al blocco centrale e, eventualmente, uno dei due adiacenti. Questo richiede al massimo 2 passi. \\
 
