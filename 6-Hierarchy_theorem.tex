@@ -61,7 +61,10 @@ Trovatane una, legge i simboli sotto le testine dei $k$ nastri per verificare ch
 (se usiamo $k$ nastri, basta spostare tutte le testine a sinistra di una posizione, altrimenti deve scandire il nastro che contiene la configurazione di $M$). \\
 Se sono uguali, allora $U$ applica la transizione. \\
 Altrimenti, cerca la prossima quintupla. \\
-In caso di errori, la macchina si sposta a destra all'infinito.
+In caso di errori, la macchina si sposta a destra all'infinito. \\
+
+% \subsubsection*{}
+Va da sé che $|x| < N$, e quindi, per qualsiasi funzione propria, $f(|x|) = O(f(N))$.
 
 \subsection{Linguaggio $H_f$}
 \[H_f = \{\underline{M}, x \mid M \text{ accetta } x \text{ entro } f(|x|) \text{ passi} \} \]
