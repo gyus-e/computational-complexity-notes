@@ -64,7 +64,7 @@ Altrimenti, cerca la prossima quintupla. \\
 In caso di errori, la macchina si sposta a destra all'infinito.
 
 \subsection{Linguaggio $H_f$}
-\[H_f = \{\underline{M}, x \mid M \text{ accetta } x \text{ entro } f(n) \text{ passi} \} \]
+\[H_f = \{\underline{M}, x \mid M \text{ accetta } x \text{ entro } f(|x|) \text{ passi} \} \]
 Questo linguaggio é simile all'halting problem, ma con un limite di tempo che garantisce la terminazione della macchina che lo calcola, e quindi la decidibilitá 
 (in pratica, l'halting problem é l'unione di tutti i linguaggi $H_f$.)
 
@@ -72,11 +72,13 @@ Questo linguaggio é simile all'halting problem, ma con un limite di tempo che g
 \[H_f \in \TIME((f(N))^3)\]
 \begin{proof}
 Utilizziamo la macchina di Turing universale $U$ con input $X = (\underline{M}, x)$, usando un solo nastro per le configurazioni di $M$,
-ma aggiungendone uno per separare $x$ da $\underline{M}$ e un altro per avere un contatore che garantisca la terminazione in $f(n)$ passi. \\
+ma aggiungendone uno per separare $x$ da $\underline{M}$ 
+e un altro per avere un contatore che garantisca la terminazione 
+in $f(|x|)$ transizioni simulate di $M$. \\
 
-$f$ é propria: iniziamo ad applicare $M_f$ (sezione \ref{sec:funzioni_proprie}) per scrivere $\sqcap^{f(n)}$ su un nastro, 
+$f$ é propria: iniziamo ad applicare $M_f$ (sezione \ref{sec:funzioni_proprie}) per scrivere $\sqcap^{f(|x|)}$ su un nastro, 
 in modo da utilizzarlo come contatore del numero di passi durante la simulazione di $M$. \\
-Tempo: $O(n + f(n)) = O(f(n)) = O(f(N))$. \\
+Tempo: $O(|x| + f(|x|)) = O(f(|x|)) = O(f(N))$. \\
 
 Poi copia $\underline{M}$ su un altro nastro, cancellandola dal primo e lasciando solo $\triangleright x$. \\
 Controlla anche che $\underline{M}$ sia ben formata. \\
@@ -89,13 +91,13 @@ Se $M$ si trova nello stato $q$, $U$ comincia cercando sul nastro dove ha copiat
 Tempo per cercare la transizione: $O(|\Delta|) = O((\log(N))^2)$. \\
 Trovatane una, legge la configurazione di $M$, verificando che i simboli sotto le testine corrispondano a quelli richiesti dalla transizione. \\
 Se non corrispondono, deve cercare la prossima transizione e ripetere. \\
-La lunghezza del nastro su cui legge la configurazione di $M$ é $k \cdot \ell \cdot O(f(n))$.
-Di conseguenza, il tempo per leggere la configurazione é $O(f(n)) = O(f(N))$.\\
+La lunghezza del nastro su cui legge la configurazione di $M$ é $k \cdot \ell \cdot O(f(|x|))$.
+Di conseguenza, il tempo per leggere la configurazione é $O(f(|x|)) = O(f(N))$.\\
 Tempo complessivo per trovare la transizione da applicare: $O(f(N) \cdot (\log(N))^2) = O((f(N))^2)$.\\
 
 Dopo ogni transizione, sposta a destra la testina sul contatore. 
 Se il contatore termina, $U$ rigetta.
-In questo modo la terminazione é garantita entro $O(f(N))$ transizioni.\\
+In questo modo la terminazione é garantita entro $f(|x|) = O(f(N))$ transizioni.\\
 
 Chiaramente il fattore dominante é il tempo della simulazione: 
 per $O(f(N))$ volte, bisogna applicare una transizione in tempo $O((f(N))^2)$. 
