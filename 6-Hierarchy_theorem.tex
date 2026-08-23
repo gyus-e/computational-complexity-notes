@@ -1,1 +1,105 @@
 \section{Hierarchy theorem}
+
+\subsection{Codifica di una macchina di Turing}
+$\underline{M}$ é una stringa binaria che codifica una macchina di Turing $M$. \\
+I simboli dell'alfabeto, gli stati e gli spostamenti della testina sono codificati con un numero naturale.
+La relazione (o funzione) di transizione é codificata da una quintupla di numeri naturali.
+
+\[\underline{M} = (\underline{\Sigma}, \underline{Q}, \underline{\Delta})\]
+
+\begin{itemize}
+    \item $\sigma \in \Sigma \quad \rightsquigarrow \quad \underline{\sigma} \in \{1, \dots, |\Sigma|\}$
+    \item $q \in Q \quad \rightsquigarrow \quad \underline{q} \in \{|\Sigma| + 1, \dots, |\Sigma| + |Q|\}$
+    \begin{itemize}
+        \item $s     \quad \rightsquigarrow \quad \underline{s}     = |\Sigma| + 1$
+        \item $"yes" \quad \rightsquigarrow \quad "\underline{yes}" = |\Sigma| + |Q| - 2$
+        \item $"no"  \quad \rightsquigarrow \quad "\underline{no}"  = |\Sigma| + |Q| - 1$
+        \item $h     \quad \rightsquigarrow \quad \underline{h}     = |\Sigma| + |Q|$
+    \end{itemize}
+    \item $(q, [\sigma], \quad q', [\sigma'], [dir]) \in \Delta \rightsquigarrow (\underline{q}, [\underline{\sigma}], \quad \underline{q'}, [\underline{\sigma'}], [\underline{dir}]) \in \underline{\Delta}$
+    \subitem $dir \in \{ \leftarrow, \rightarrow, -\}$, dove:
+    \begin{itemize}
+        \item $"\leftarrow" \quad \rightsquigarrow \quad |\Sigma| + |Q| + 1$
+        \item $"\rightarrow" \quad \rightsquigarrow \quad |\Sigma| + |Q| + 2$
+        \item $"- " \quad \rightsquigarrow \quad |\Sigma| + |Q| + 3$
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Lunghezza della codifica}
+Servono $|\Sigma| + |Q| + 3$ valori per codificare tutti i simboli, stati o spostamenti. 
+La stringa binaria che ne codifica uno é lunga \footnote{Sulle slide é riportato il caso particolare con $k = 1$}:
+\[\ell = \lceil \log_2(|\Sigma| + |Q| + 3) \rceil\]
+Di conseguenza, la codifica di una transizione in $\underline{\Delta}$ é lunga:
+\begin{itemize}
+    \item $2$ per le parentesi
+    \item $\ell$ per lo stato di partenza
+    \item $k \ell$ per i simboli sotto le testine
+    \item $\ell$ per lo stato di arrivo
+    \item $k \ell$ per i simboli da scrivere
+    \item $k \ell$ per gli spostamenti delle testine
+\end{itemize}
+\[2 + 2\ell + 3k \ell\]
+E quindi $\underline{\Delta}$ é lungo:
+\[|\underline{\Delta}| = |\Delta| \cdot (2 + 2\ell + 3k \ell)\]
+
+Ma se $|\underline{\Delta}|$ é logaritmico in $N$, possiamo concludere, pessimisticamente, che: 
+\[|\Delta| = O((\log(N))^2)\]
+
+\subsection{Macchina di Turing Universale}
+\begin{itemize}
+    \item $U$: Macchina di Turing Universale
+    \item $X = (\underline{M}, x)$: Input di $U$
+    \item $N = |X| = |\Sigma| + |Q| + |\Delta| + n $
+\end{itemize}
+Se $M$ ha $k$ nastri, possiamo imporre che $U$ abbia $k+1$ nastri (ne serve uno per mantenere $X$ e altri $k$ per mantenere la configurazione di $M$), 
+oppure utilizzare la macchina di Turing vista nel teorema dello speedup multinastro (\ref{teorema:speedup_multinastro}) 
+per simulare tutti i nastri di $M$ in uno solo, garantendo che $U$ funzioni con 2 nastri. \\
+
+$U$ codifica un nastro di $M$ nella forma $[w]q[u]$ (lo stato fa da separatore tra $w$, i simboli fino alla testina, e $u$, i simboli subito dopo). \\
+Se $M$ é nello stato $q$, allora $U$ cerca nel primo nastro, dove c'é $\underline{M}$, le transizioni che iniziano per $q$. \\
+Trovatane una, legge i simboli sotto le testine dei $k$ nastri per verificare che siano uguali a quelli della transizione 
+(se usiamo $k$ nastri, basta spostare tutte le testine a sinistra di una posizione, altrimenti deve scandire il nastro che contiene la configurazione di $M$). \\
+Se sono uguali, allora $U$ applica la transizione. \\
+Altrimenti, cerca la prossima quintupla. \\
+In caso di errori, la macchina si sposta a destra all'infinito.
+
+\subsection{Linguaggio $H_f$}
+\[H_f = \{\underline{M}, x \mid M \text{ accetta } x \text{ entro } f(n) \text{ passi} \} \]
+Questo linguaggio é simile all'halting problem, ma con un limite di tempo che garantisce la terminazione della macchina che lo calcola, e quindi la decidibilitá 
+(in pratica, l'halting problem é l'unione di tutti i linguaggi $H_f$.)
+
+\subsection{Lemma 1: Limite superiore alla complessitá di $H_f$}
+\[H_f \in \TIME((f(N))^3)\]
+\begin{proof}
+Utilizziamo la macchina di Turing universale $U$ con input $X = (\underline{M}, x)$, usando un solo nastro per le configurazioni di $M$,
+ma aggiungendone uno per separare $x$ da $\underline{M}$ e un altro per avere un contatore che garantisca la terminazione in $f(n)$ passi. \\
+
+$f$ é propria: iniziamo ad applicare $M_f$ (sezione \ref{sec:funzioni_proprie}) per scrivere $\sqcap^{f(n)}$ su un nastro, 
+in modo da utilizzarlo come contatore del numero di passi durante la simulazione di $M$. \\
+Tempo: $O(n + f(n)) = O(f(n)) = O(f(N))$. \\
+
+Poi copia $\underline{M}$ su un altro nastro, cancellandola dal primo e lasciando solo $\triangleright x$. \\
+Controlla anche che $\underline{M}$ sia ben formata. \\
+Tempo: $O(N)$ per la copia di $\underline{M}$ e la traslazione di $x$. \\
+
+Per simulare $M$, utilizziamo la macchina di Turing vista nel teorema dello speedup multinastro (\ref{teorema:speedup_multinastro}) 
+per simulare tutti i nastri di $M$ in uno solo, garantendo che $U$ funzioni con 4 nastri. \\
+
+Se $M$ si trova nello stato $q$, $U$ comincia cercando sul nastro dove ha copiato $\underline{M}$ la codifica di una transizione che inizi con $\underline{q}$.\\
+Tempo per cercare la transizione: $O(|\Delta|) = O((\log(N))^2)$. \\
+Trovatane una, legge la configurazione di $M$, verificando che i simboli sotto le testine corrispondano a quelli richiesti dalla transizione. \\
+Se non corrispondono, deve cercare la prossima transizione e ripetere. \\
+La lunghezza del nastro su cui legge la configurazione di $M$ é $k \cdot \ell \cdot O(f(n))$.
+Di conseguenza, il tempo per leggere la configurazione é $O(f(n)) = O(f(N))$.\\
+Tempo complessivo per trovare la transizione da applicare: $O(f(N) \cdot (\log(N))^2) = O((f(N))^2)$.\\
+
+Dopo ogni transizione, sposta a destra la testina sul contatore. 
+Se il contatore termina, $U$ rigetta.
+In questo modo la terminazione é garantita entro $O(f(N))$ transizioni.\\
+
+Chiaramente il fattore dominante é il tempo della simulazione: 
+per $O(f(N))$ volte, bisogna applicare una transizione in tempo $O((f(N))^2)$. 
+Il tempo complessivo é:
+\[O((f(N))^3)\]
+\end{proof}
+

@@ -3,13 +3,13 @@
 \ProvidesPackage{configurazione}[.Configurazione q, w e u]
 
 \newcommand{\configurazione}[3]{%
-    #1
+    % #1
     \begin{bmatrix}
         {#2}_1 \\
         \vdots \\
         {#2}_k
     \end{bmatrix}
-    % #1
+    #1
     \begin{bmatrix}
         {#3}_1 \\
         \vdots \\
@@ -18,14 +18,14 @@
 }
 
 \newcommand{\configurazionestart}[1]{%
-    s
+    % s
     \begin{bmatrix}
         \triangleright \\
         \triangleright \\
         \vdots \\
         \triangleright
     \end{bmatrix}
-    % s
+    s
     \begin{bmatrix}
         {#1} \\
         \epsilon \\
@@ -35,7 +35,7 @@
 }
 
 \newcommand{\configurazionepropria}[2]{%
-	h
+	% h
 	\begin{bmatrix}
 		\triangleright \\
 		\triangleright \\
@@ -43,7 +43,7 @@
 		\triangleright \\
 		\triangleright
 	\end{bmatrix}
-	% s
+	h
 	\begin{bmatrix}
 		{#1} \\
 		\sqcup^{z_2} \\

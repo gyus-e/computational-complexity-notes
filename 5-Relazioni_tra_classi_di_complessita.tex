@@ -52,7 +52,7 @@ Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f
 \end{figure}
 \begin{proof}
 	Simuliamo $N$ con una MdT deterministica $M$. \\
-	Possiamo vedere la computazione di $N$ come un albero di altezza $f(n)$ (figura \ref{fig:albero_computazione}). \\
+	Possiamo vedere la computazione di $N$ come un albero di altezza $t = O(f(n))$ (figura \ref{fig:albero_computazione}). \\
 	Ogni passo corrisponde a una \textit{scelta} tra al piú $d$ possibilitá. \\
 	Ogni sequenza di $t$ passi corrisponde a una sequenza di $t$ scelte. \\
 	Codifichiamo quindi un run con una stringa di $t$ numeri da $1$ a $d$. \\
@@ -60,7 +60,7 @@ Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f
 	Per quel run, $M$ simula le transizioni che avrebbe eseguito $N$. \\
 	Poi incrementa la stringa che codifica il run e ripete la simulazione. \\
 	In questo modo esplora tutti i possibili run di $N$. \\
-	$M$ ha bisogno di un altro nastro per conservare sempre l'input $x$ e altri $k$ nastri per simulare quelli di $N$. (teorema: \ref{teorema:speedup_multinastro}) \\
+	$M$ ha bisogno di un altro nastro per conservare sempre l'input $x$ e altri $k$ nastri per simulare quelli di $N$. \\
 	Se la simulazione di un run termina in $"yes"$, $M$ accetta. \\
 	Se tutte le simulazioni terminano in $"no"$, $M$ rifiuta. \\
 	Il numero di possibili run é $\sum_{i=1}^{f(n)} d^i $. \\	
