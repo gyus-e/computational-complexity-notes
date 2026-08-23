@@ -42,9 +42,6 @@ Di conseguenza, la codifica di una transizione in $\underline{\Delta}$ é lunga:
 E quindi $\underline{\Delta}$ é lungo:
 \[|\underline{\Delta}| = |\Delta| \cdot (2 + 2\ell + 3k \ell)\]
 
-Ma se $|\underline{\Delta}|$ é logaritmico in $N$, possiamo concludere, pessimisticamente, che: 
-\[|\Delta| = O((\log(N))^2)\]
-
 \subsection{Macchina di Turing Universale}
 \begin{itemize}
     \item $U$: Macchina di Turing Universale
@@ -64,6 +61,9 @@ Altrimenti, cerca la prossima quintupla. \\
 In caso di errori, la macchina si sposta a destra all'infinito. \\
 
 % \subsubsection*{}
+Lavorando con $U$, per indicare la dimensione di $x$ utilizzeremo $|x|$,
+ in modo da non creare confusione.
+Utilizzeremo sempre $N$ per indicare la dimensione di $(\underline{M}, x)$. \\
 Va da sé che $|x| < N$, e quindi, per qualsiasi funzione propria, $f(|x|) = O(f(N))$.
 
 \subsection{Linguaggio $H_f$}
@@ -71,6 +71,7 @@ Va da sé che $|x| < N$, e quindi, per qualsiasi funzione propria, $f(|x|) = O(f
 Questo linguaggio é simile all'halting problem, ma con un limite di tempo che garantisce la terminazione della macchina che lo calcola, e quindi la decidibilitá 
 (in pratica, l'halting problem é l'unione di tutti i linguaggi $H_f$.)
 
+\newpage
 \subsection{Lemma 1: Limite superiore alla complessitá di $H_f$}
 \[H_f \in \TIME((f(N))^3)\]
 \begin{proof}
@@ -91,7 +92,10 @@ Per simulare $M$, utilizziamo la macchina di Turing vista nel teorema dello spee
 per simulare tutti i nastri di $M$ in uno solo, garantendo che $U$ funzioni con 4 nastri. \\
 
 Se $M$ si trova nello stato $q$, $U$ comincia cercando sul nastro dove ha copiato $\underline{M}$ la codifica di una transizione che inizi con $\underline{q}$.\\
-Tempo per cercare la transizione: $O(|\Delta|) = O((\log(N))^2)$. \\
+Tempo per cercare la transizione: $O(|\Delta|)$ \\
+Ma se $\ell$ é logaritmico in $N$, possiamo concludere, pessimisticamente, che 
+$O(|\Delta|) = O((\log(N))^2)$. \\
+
 Trovatane una, legge la configurazione di $M$, verificando che i simboli sotto le testine corrispondano a quelli richiesti dalla transizione. \\
 Se non corrispondono, deve cercare la prossima transizione e ripetere. \\
 La lunghezza del nastro su cui legge la configurazione di $M$ é $k \cdot \ell \cdot O(f(|x|))$.
@@ -108,3 +112,95 @@ Il tempo complessivo é:
 \[O((f(N))^3)\]
 \end{proof}
 
+\newpage
+\subsection{Lemma 2: Limite inferiore alla complessitá di $H_f$}
+\[H_f \notin \TIME(f(\lfloor N/2 \rfloor))\]
+\begin{proof}
+Supponiamo che esista una MdT $M_0$ che decide $H_f$ in tempo $f(\lfloor N/2 \rfloor)$. \\
+$M_0$ riceve in input la codifica di una MdT $\underline{M}$ e $x$,
+\begin{itemize}
+    \item accettando se $M$ accetta $x$ e termina in tempo $f(|x|)$,
+    \item rigettando se $M$ rigetta $x$ o se non termina in tempo $f(|x|)$. 
+        \footnote{Negazione dell'$\land$ con De Morgan}
+\end{itemize}
+
+La tecnica della diagonalizzazione consiste nel prendere $x = \underline{M}$, 
+cioé usare come input di $M$ la sua stessa codifica. 
+\footnote{Piú in generale, la diagonalizzazione consiste nel costruire un oggetto che fa riferimento a se stesso, come nella dimostrazione della non calcolabilitá dell'halting problem, nell'argomento diagonale di Cantor o nei teoremi di incompletezza di Gödel} \\
+Questo vuol dire che $N = 2 \cdot |\underline{M}|$. \\
+
+Vogliamo calcolare $M_0(\underline{M}, \underline{M})$, e per ipotesi, il tempo richiesto é:
+\[f(\lfloor N/2 \rfloor) = f(\lfloor 2 \cdot |\underline{M}|/2 \rfloor) = f( |\underline{M}| )\]
+
+Costruiamo una MdT $D_f$, che prende in input la codifica di una MdT $M$
+e calcola: 
+\[D_f(\underline{M}) = "yes" \iff M_0(\underline{M}, \underline{M}) = "no"\] 
+e viceversa, in tempo $f(|\underline{M}|)$. \\
+
+Applichiamo di nuovo la diagonalizzazione, questa volta a $D_f$.
+Consideriamo i due casi possibili \footnote{come nella regola di calcolo deduttivo naturale $\lor_e$}:
+\[ D_f(\underline{D_f}) = "yes" \iff M_0(\underline{D_f}, \underline{D_f}) = "no" \]
+Cioé: o $D_f$ rigetta $\underline{D_f}$, o non termina in tempo $f(|\underline{D_f}|)$. \\
+Ma come conseguenza diretta dell'ipotesi, $D_f$ termina in tempo $f(|\underline{D_f}|)$. 
+Quindi, resta solo la possibilitá che $D_f$ rigetti la sua stessa codifica entro quel numero di passi.
+\footnote{tautologia: $(A \lor B ) \land \neg A \rightarrow B$} \\
+\[ D_f(\underline{D_f}) = "yes" \iff D_f(\underline{D_f}) = "no" \]
+Assurdo. \\
+
+Analogamente, 
+\[ D_f(\underline{D_f}) = "no" \iff M_0(\underline{D_f}, \underline{D_f}) = "yes" \]
+Ma allora, proprio per come abbiamo definito $M_0$, $D_f$ \textbf{accetta} la sua stessa codifica (e termina in tempo $f(|\underline{D_f}|)$).
+\[D_f(\underline{D_f}) = "no" \iff D_f(\underline{D_f}) = "yes"\]
+Assurdo. \\
+
+Poiché entrambi i casi portano a $\bot$, possiamo scaricare l'ipotesi iniziale e concludere il contrario
+\footnote{come nella regola di calcolo deduttivo naturale $\neg_i$}: 
+non esiste alcuna MdT che decide $H_f$ in tempo $f(\lfloor N/2 \rfloor)$.
+\end{proof}
+
+\subsection{Time Hierarchy Theorem}
+Se $f(n) \geq n$ é una funzione propria, allora:
+\[\TIME(f(n)) \subset \TIME((f(2n + 1))^3)\]
+Dove l'inclusione é stretta, cioé esistono linguaggi che possono essere decisi in tempo $O((f(n))^3)$, ma non in tempo $O(f(n))$.
+\begin{proof}
+L'inclusione é facilmente verificata dal fatto che $f$ é propria, e quindi crescente: 
+\[f(n) \leq f(2n + 1) \leq (f(2n + 1))^3\]
+Da cui $\TIME(f(n)) \subseteq \TIME((f(n))^3)$ \\
+
+Per dimostrare che l'inclusione é stretta, cerchiamo una funzione $h$ tale per cui
+\[\TIME(h(\lfloor n/2 \rfloor)) \supseteq \TIME(f(n))\]
+cioé per cui valga che $h(n/2) \geq f(n)$. \\
+
+Considerando che:
+\[
+2 \cdot \lfloor n/2 \rfloor + 1 =
+\begin{cases}
+    n + 1 & \text{se $n$ é pari} \\
+    n     & \text{se $n$ é dispari}
+\end{cases}
+\quad \geq n
+\]
+La nostra $h$ sará semplicemente:
+\[h(n) = f(2n + 1)\]
+Dato che $h(\lfloor n/2 \rfloor) = f(2 \cdot \lfloor n/2 \rfloor + 1) \geq f(n)$. \\
+
+Provato questo:
+\begin{itemize}
+    \item dal Lemma 1 avremmo che $H_h \in \TIME((h(n))^3) = \TIME((f(2n + 1))^3)$, 
+    \item dal Lemma 2 avremmo che $H_h \notin \TIME(h(\lfloor n/2 \rfloor)) \supseteq \TIME(f(n))$
+\end{itemize}    
+\end{proof}
+
+\subsubsection{Raffinamento del Time Hierarchy Theorem}
+\[\TIME(f(n)) \subset \TIME(f(n) \cdot \log^2(f(n)))\]
+
+\subsubsection{Corollario: $\P \subset \EXP$}
+\begin{proof}
+    L'inclusione é facilmente verificata dal fatto che $\P \subseteq \TIME(2^n) \subseteq \EXP$ \\
+    Per dimostrare che l'inclusione é stretta, applichiamo il Time Hierarchy Theorem con $f(n) = 2^n$:
+    \[\P \subseteq \TIME(2^n) \subset \TIME({(2^{2n+1})}^3) = \TIME(2^{6n+3}) \subseteq \TIME(2^{(n^2)}) \subseteq \EXP\]
+\end{proof}
+
+\subsection{Space Hierarchy Theorem}
+Se $g$ é una funzione propria, allora:
+\[\SPACE(f(n)) \subset \SPACE(f(n) \cdot \log(f(n)))\]
