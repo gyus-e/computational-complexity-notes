@@ -67,29 +67,15 @@ Il \textbf{valore} di un flusso é definito come la somma degli archi uscenti da
 
 $\MAXFLOW$ é il problema di trovare un flusso $f$ in un network $G$ tale che il suo valore sia massimo.
 É un problema di ottimizzazione, rappresentato da una funzione 
-\[\MAXFLOW: x \in \Sigma^* \rightarrow (f: E \rightarrow \mathbb{N}) \in \mathbb{N}^E\]
+\[\MAXFLOW: (G, s, t, c) \in \Sigma^* \rightarrow (f: E \rightarrow \mathbb{N}) \in \mathbb{N}^E\]
 
 \subsubsection{$\MAXFLOW_D$}
 Consideriamo il problema decisionale che chiede se esiste un flusso di valore almeno $k$ in un network $G$.
 \[
-\MAXFLOW_D = \{ (G, k) \mid G \text{ ha un flusso di valore } \geq k \}
+\MAXFLOW_D = \{ (G, s, t, c, k) \mid G \text{ ha un flusso di valore } \geq k \}
 \]
-Si inizia prendendo un flusso $f(u, v) = 0$ per ognu arco $(u, v) \in E$. \\
-Verifichiamo se é possibile aumentare il flusso trovando un cammino di miglioramento da $s$ a $t$ 
-che permette di aumentarlo. L'aumento é pari all'arco di costo minimo lungo il cammino. \\
-Consideriamo ora se ci sono archi $(u, v)$ lungo il cammino di miglioramento che hanno giá flusso massimo, cioé $f(u, v) = c(u, v)$. \\
-In questo caso, possiamo invertire l'arco $(u, v)$, aggiungendo l'arco $(v, u)$ con capacitá $c(v, u) = f(u, v)$,
-Se il cammino di miglioramento passa per $(v, u)$, allora possiamo diminuire il flusso su $(u, v)$ di $f(u, v)$. \\
-L'algoritmo termina quando non é piú possibile trovare un cammino di miglioramento.
-
 
 \subsubsection{Da $\MAXFLOW_D$ a $\MAXFLOW$}
-Possiamo usare $\MAXFLOW_D$ per risolvere $\MAXFLOW$ tramite una ricerca sul valore del flusso massimo. \\
-Cerchiamo quindi $k$ tale che $\MAXFLOW_D(G, k) = "yes"$ e $\MAXFLOW_D(G, k+1) = "no"$. \\
-Il valore piú alto possibile di $k$ é determinato dal minimo tra la somma delle capacitá degli archi uscenti da $s$ e la somma delle capacitá degli archi entranti in $t$:
-\[C = \min{(\quad \sum_{v \in Adj[s]} c(s, v), \sum_{u \in Adj[t]} c(u, t) \quad)}\]
-Notare che questo valore massimo é esponenziale rispetto alla dimensione dell'input, poiché le capacitá degli archi sono rappresentate in binario. \\
-Si puó effettuare una ricerca binaria tra $0$ e il valore massimo, interrogando $\MAXFLOW_D$ per ogni valore di $k$.
 
 
 \subsection{$\TSP$}
@@ -103,13 +89,23 @@ associando ogni vertice a una posizione nel ciclo hamiltoniano. \\
 Il problema del commesso viaggiatore, o Traveling Salesman Problem, consiste nel trovare
 un ciclo hamiltoniano di costo minimo in un grafo pesato.
 Anche questo é un problema di ottimizzazione, rappresentato da una funzione:
-\[\TSP: x \in \Sigma^* \rightarrow \pi \in \{1,\dots,|V|\}^{\{1,\dots,|V|\}}\]
+\[\TSP: (G, w) \in \Sigma^* \rightarrow (\pi : V \rightarrow \{1,\dots,|V|\} \in V^{\{1,\dots,|V|\}}) \text{, con } \pi \text{ biettiva}\]
 
 \subsubsection{$\TSP_D$}
 Dati $G = (V, E, w)$ e un numero naturale $B \in \mathbb{N}$ detto \textit{budget}:
 \[
-\TSP_D = \{ (G, B) \mid G \text{ ha un ciclo hamiltoniano di costo } \leq B \}
+\TSP_D = \{ (G, w, B) \mid G \text{ ha un ciclo hamiltoniano di costo } \leq B \}
 \]
+
+\subsubsection{Da $\TSP_D$ a $\TSP$}
+Come per $\MAXFLOW$, anche in questo caso possiamo risolvere il problema di ottimizzazione $\TSP$ 
+interrogando $\TSP_D$ tramite una ricerca binaria sul budget $B$ nell'intervallo $[0, 2^n]$. \\
+Trovato il costo ottimo, $C$, continuiamo a interrogare $\TSP_D$ fissando il budget $C$ 
+eliminando un arco alla volta (per esempio settando il suo costo a $C + 1$). \\
+Se la risposta é $"yes"$, allora l'arco non fa parte del ciclo hamiltoniano ottimo, e possiamo lasciarlo fuori dalle interrogazioni successive. \\
+Altrimenti l'arco fa parte del ciclo hamiltoniano ottimo, e lo includiamo nella soluzione. \\
+In questo modo, interrogando $\TSP_D$ al massimo $n^2$ volte, possiamo ricostruire il ciclo hamiltoniano ottimo, e quindi risolvere $\TSP$ in tempo polinomiale.
+
 
 \subsection{Linguaggi complementari}
 Il linguaggio complementare di $L \subseteq \Sigma^*$ é definito come:
