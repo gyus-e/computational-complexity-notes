@@ -17,7 +17,7 @@
 \hrulefill
 
 \begin{itemize}
-    \item $\Sigma$: Alfabeto (insieme finito di simboli) con cui viene rappresentato l'input.
+    \item $\Sigma$: Alfabeto (insieme finito di simboli) con cui viene codificato l'input.
     \item $\triangleright$: Start.
     \item $\sqcup$: Blank.
     \item $\Sigma_\sqcup = \Sigma \cup \{\sqcup\}$
@@ -48,6 +48,27 @@
     \item $f(n)$: Tempo utilizzato dalla computazione.
     \item $g(n)$: Spazio di memoria utilizzato dalla computazione.
 \end{itemize}
+
+
+\subsubsection{Non determinismo}
+La differenza tra una macchina di Turing deterministica e una non deterministica 
+é che la prima, a ogni passo, ha una sola scelta possibile, mentre la seconda puó 
+avere piú scelte possibili e seguirle in maniera simultanea. \\
+Vedremo che la computazione di una MdT non deterministica puó essere rappresentata 
+come un albero. \\
+Il non determinismo non va confuso con il parallelismo, che é rappresentato dai $k$ nastri. 
+Il non determinismo non consiste in diverse unitá di computazione che eseguono 
+contemporaneamente istruzioni diverse, ma in diverse scelte che vengono fatte in maniera 
+simultanea e senza problemi di sincronizzazione. \\
+Un altro modo di vederlo é con l'idea di un oracolo, che "suggerisce" alla macchina la strada
+giusta da seguire per trovare la soluzione al problema. \\
+Ma forse il modo piú concreto é quello di vedere gli algoritmi non deterministici come 
+algoritmi che si limitano a controllare che una soluzione risolva il problema, senza 
+preoccuparsi di cercarla. \\
+Molti problemi infatti richiedono, per trovare la soluzione ottima, di esplorare uno spazio 
+di soluzioni molto grande, spesso esponenziale rispetto alla dimensione dell'input. \\
+Le macchine non deterministiche scorporano il costo richiesto dall'esplorazione delle soluzioni.
+
 
 \subsection{Configurazione}
 Siano, $\forall i \in \{1, \dots, k\}$:
@@ -191,6 +212,7 @@ La loro \textbf{composizione} é: $(M_1, M_2) =  (Q, \Sigma, \delta, s)$, dove:
 	\item Le coppie $(q, \sigma)$ che per $\delta_1$ vanno nello stato $"no"$ non devono essere reindirizzate: \textbf{se $\mathbf{M_1}$ rigetta l'input, la computazione non deve continuare}.
 \end{itemize}
 
+% \newpage
 \subsection{Esempi}
 Gli esempi possono essere testati su \url{https://morphett.info/turing/turing.html}
 

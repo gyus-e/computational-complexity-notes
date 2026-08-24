@@ -84,4 +84,6 @@ Qualsiasi altra macchina che operi in tempo $f(n)$ avrá eseguito dei passi sovr
 \end{proof}
 \subsubsection{Corollario: $\TIME(f(n)) \subseteq \SPACE(f(n))$}
 \subsubsection{Corollario: $\P \subseteq \PSPACE$}
-Qualunque linguaggio che puó essere deciso in tempo $f(n)$ puó essere deciso anche in spazio $f(n)$.
+Qualunque linguaggio che puó essere deciso in tempo $f(n)$ puó essere deciso anche in spazio $f(n)$. \\
+Viceversa, non é possibile risolvere un problema in tempo inferiore allo spazio richiesto.
+\footnote{Sappiamo che strutture dati come le hash table o tecniche di programmazione dinamica scaricano sullo spazio la complessitá di tempo. Ma dal punto di vista della teoria della complessitá, queste tecniche cambiano il problema alla radice.}

@@ -1,7 +1,7 @@
 \section{Relazioni tra classi di complessità}
 Ora che non siamo piú limitati a MdT precise, con input e output e con un solo nastro, e che possiamo usare la notazione asintotica, possiamo confrontare le classi di complessitá simulando le macchine di Turing tra loro. \\
 
-\subsection{Teorema: Terminazione delle MdT space bounded}
+\subsection{Teorema: terminazione delle MdT a spazio limitato}
 Se una MdT $M$ opera in spazio $g(n)$, allora esiste una MdT $M'$ che opera in spazio $O(g(n))$ e termina per ogni input entro $O(c^{g(n)})$ passi.
 \begin{proof}
 $M' = (M_1, M_2)$ é la concatenazione di due macchine, e utilizza un nastro aggiuntivo. \\
@@ -31,19 +31,20 @@ Questo teorema ci mostra come forzare la terminazione di una MdT che opera in sp
 \subsubsection{Corollario: $\SPACE(g(n)) \subseteq \TIME(c^{g(n)})$}
 \subsubsection{Corollario: $\PSPACE \subseteq \EXP$}
 
-\subsection{Teorema: simulazione di una MdT deterministica con una MdT non deterministica in tempo lineare}
+\subsection{Teorema: simulazione di una MdT deterministica con una MdT non deterministica}
 \begin{proof}
 Le macchine di Turing deterministiche sono un caso particolare di quelle non deterministiche, in cui la relazione di transizione $\Delta$ associa a ogni coppia in $Q \times \Sigma$ una sola tripla di $Q \times \Sigma \times \{\leftarrow, \rightarrow, -\}$.
 \end{proof}
 \subsubsection{Corollario: $\TIME(f(n)) \subseteq \NTIME(f(n))$}
+\subsubsection{Corollario: $\SPACE(g(n)) \subseteq \NSPACE(g(n))$}
 \subsubsection{Corollario: $\P \subseteq \NP$}
 \subsubsection{Corollario: $\EXP \subseteq \NEXP$}
 
 
-\subsection{Teorema: simulazione di una MdT non deterministica con una MdT deterministica in tempo esponenziale}
+\subsection{Teorema: simulazione di una MdT non deterministica con una MdT deterministica}
 \label{theorem:non_deterministic_to_deterministic}
 Data una MdT non deterministica $N$ che decide $L$ e opera in tempo $f(n)$. \\
-Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f(n)})$.
+Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f(n)})$ e spazio $O(f(n))$.
 \begin{figure}[h!]
 	\caption{\small Albero di computazione di una MdT non deterministica.}
 	\centering
@@ -63,12 +64,19 @@ Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f
 	$M$ ha bisogno di un altro nastro per conservare sempre l'input $x$ e altri $k$ nastri per simulare quelli di $N$. \\
 	Se la simulazione di un run termina in $"yes"$, $M$ accetta. \\
 	Se tutte le simulazioni terminano in $"no"$, $M$ rifiuta. \\
+	
 	Il numero di possibili run é $\sum_{i=1}^{f(n)} d^i $. \\	
 	Il tempo di una simulazione é $f(n)$, cioé quello che impiega $N$. \\
-	$f(n) \cdot \sum_{i=1}^{f(n)} d^i = O(d^{f(n)})$.
+	Tempo: $f(n) \cdot \sum_{i=1}^{f(n)} d^i = O(d^{f(n)})$. \\
+	
+	Da \ref{teorema:spazio_limitato_superiormente_dal_tempo} possiamo anche dire che ogni simulazione usa spazio $O(f(n))$. \\
+	E ogni simulazione puó sovrascrivere lo spazio usato dalla precedente. \\
+	Lo spazio aggiuntivo richiesto da $M$ é quello per enumerare i run, che é logaritmico sul numero di run possibili:
+	$O(\log(d^{f(n)})) = O(f(n) \cdot \log(d)) = O(f(n))$. \\
+	Spazio: $O(f(n))$.
 \end{proof}
-Vedremo che invece il guadagno in spazio di una macchina non deterministica rispetto a una deterministica é limitato.
 \subsubsection{Corollario: $\NTIME(f(n)) \subseteq \bigcup_{c>1} \TIME(c^{f(n)})$}
+\subsubsection{Corollario: $\NTIME(f(n)) \subseteq \SPACE(f(n))$}
 \subsubsection{Corollario: $\NP \subseteq \EXP$}
 
 

@@ -1,15 +1,14 @@
-\section{Codifiche ragionevoli}
+\section{Codifiche e riduzioni}
+
+\subsection{Codifiche ragionevoli}
 
 Ci interessa misurare la complessità di un problema in funzione del tempo e spazio necessari a risolverlo al crescere della dimensione dell'input. \\
 Ma lo stesso input puó essere codificato in modi diversi, con dimensioni diverse. \\
 
 \textbf{Esempio:} \\
-Se l'input è un array $x = (4, 79, 149)$, la dimensione dell'input è $n = |x| = 3$. \\
-Lo stesso array potrebbe essere codificato come un vettore one-hot di 150 elementi, settati tutti a 0 tranne che per x[4], x[79] e x[149], che sarebbero settati a 1. Questa codifica è estremamente ridondante. L'input $x$ è lo stesso, ma la sua lunghezza é $n = 150$. \\
-
-\textbf{Esempio:} \\
 Se l'input è un grafo $x = (V, E)$ rappresentato tramite liste di adiacenza la dimensione dell'input è $n = |V| + |E|$. \\
 Se invece il grafo viene codificato tramite matrice di adiacenza, la dimensione dell'input è $n = |V|^2$. \\
+In questo caso non cambia molto, perché $|E| \leq |V|^2$. \\
 
 \textbf{Esempio:} \\
 Se l'input é un numero, viene tipicamente codificato in notazione posizionale (di solito binaria, decimale o esadecimale).
@@ -26,8 +25,30 @@ Si potrebbe codificare $x$ in unario: in quel caso avremmo che $x = n$ e il temp
 
 \textbf{Perché la misura che effettuiamo sia corretta, la codifica dell'input deve essere ragionevole.} \\
 
-%Se la codifica dell'input é ragionevole, ogni macchina di Turing deve almeno avere il tempo di scandirlo. Di conseguenza, il tempo $f(n)$ é sempre limitato inferiormente da $n$: \\
-%\boxed{f(n) = \Omega(n)}
 
-%Inoltre, se sappiamo che una macchina di Turing termina in tempo $f(n)$, possiamo esser certi che lo spazio utilizzato $g(n)$ sia limitato superiormente dal tempo. \\
-%\boxed{g(n) = O(f(n))}
+\newpage
+\subsection{Riduzioni}
+Una riduzione traduce un'istanza di un problema in un'istanza di un altro problema. \\
+Poi usa la soluzione del secondo problema per risolvere il primo. \\
+La traduzione deve essere:
+\begin{itemize}
+    \item Corretta: la risposta dell'istanza tradotta deve essere la stessa della risposta dell'istanza originale.
+    \item Efficiente: la traduzione deve essere eseguita in tempo polinomiale rispetto alla dimensione dell'input originale. \\
+    In questo modo, se il secondo problema é risolvibile in tempo polinomiale, anche il primo lo é. \\
+\end{itemize}
+
+\subsubsection{Riduzione di $\BIPARTITEMATCHING$ a $\MAXFLOW$}
+Sia $G = (U, V, E)$ un grafo bipartito. $U, V$ sono due insiemi di vertici con la stessa cardinalitá $|U| = |V|$. \\ 
+Gli archi vanno solo da $U$ a $V$: $E \subseteq U \times V$. \\
+Un \textbf{matching} è un insieme di archi $M \subseteq E$ tale che ogni vertice di $U$ ha un arco in $M$ verso uno e un solo vertice di $V$. \\
+
+Per ridurlo a $\MAXFLOW_D$ possiamo trasformare $G$ in un network, 
+aggiungendo un nodo $s$ e archi $(s, u)$ per ogni $u \in U$ 
+e un nodo $t$ con archi $(v, t)$ per ogni $v \in V$. \\
+Settando $c(u, v) = 1$ per ogni arco $(u, v)$, possiamo concludere che
+$B$ ha un matching se e solo se la rete ha un flusso di valore $|U|$.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{images/bipartite_matching.png}
+\end{figure}

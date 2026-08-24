@@ -72,7 +72,7 @@ Questo linguaggio é simile all'halting problem, ma con un limite di tempo che g
 (in pratica, l'halting problem é l'unione di tutti i linguaggi $H_f$.)
 
 \newpage
-\subsection{Lemma 1: Limite superiore alla complessitá di $H_f$}
+\subsubsection{Lemma 1: Limite superiore alla complessitá di $H_f$}
 \[H_f \in \TIME((f(N))^3)\]
 \begin{proof}
 Utilizziamo la macchina di Turing universale $U$ con input $X = (\underline{M}, x)$, usando un solo nastro per le configurazioni di $M$,
@@ -113,7 +113,7 @@ Il tempo complessivo é:
 \end{proof}
 
 \newpage
-\subsection{Lemma 2: Limite inferiore alla complessitá di $H_f$}
+\subsubsection{Lemma 2: Limite inferiore alla complessitá di $H_f$}
 \[H_f \notin \TIME(f(\lfloor N/2 \rfloor))\]
 \begin{proof}
 Supponiamo che esista una MdT $M_0$ che decide $H_f$ in tempo $f(\lfloor N/2 \rfloor)$. \\
@@ -143,7 +143,7 @@ Consideriamo i due casi possibili \footnote{come nella regola di calcolo dedutti
 Cioé: o $D_f$ rigetta $\underline{D_f}$, o non termina in tempo $f(|\underline{D_f}|)$. \\
 Ma come conseguenza diretta dell'ipotesi, $D_f$ termina in tempo $f(|\underline{D_f}|)$. 
 Quindi, resta solo la possibilitá che $D_f$ rigetti la sua stessa codifica entro quel numero di passi.
-\footnote{tautologia: $(A \lor B ) \land \neg A \rightarrow B$} \\
+\footnote{tautologia: $((A \lor B ) \land \neg A) \rightarrow B$} \\
 \[ D_f(\underline{D_f}) = "yes" \iff D_f(\underline{D_f}) = "no" \]
 Assurdo. \\
 
@@ -161,15 +161,19 @@ non esiste alcuna MdT che decide $H_f$ in tempo $f(\lfloor N/2 \rfloor)$.
 \subsection{Time Hierarchy Theorem}
 Se $f(n) \geq n$ é una funzione propria, allora:
 \[\TIME(f(n)) \subset \TIME((f(2n + 1))^3)\]
-Dove l'inclusione é stretta, cioé esistono linguaggi che possono essere decisi in tempo $O((f(n))^3)$, ma non in tempo $O(f(n))$.
+Dove l'inclusione é \textbf{stretta}, cioé esistono linguaggi che possono essere decisi in tempo $O((f(2n+1))^3)$, ma non in tempo $O(f(n))$.
 \begin{proof}
 L'inclusione é facilmente verificata dal fatto che $f$ é propria, e quindi crescente: 
 \[f(n) \leq f(2n + 1) \leq (f(2n + 1))^3\]
-Da cui $\TIME(f(n)) \subseteq \TIME((f(n))^3)$ \\
+Da cui $\TIME(f(n)) \subseteq \TIME((f(2n+1))^3)$ \\
 
-Per dimostrare che l'inclusione é stretta, cerchiamo una funzione $h$ tale per cui
-\[\TIME(h(\lfloor n/2 \rfloor)) \supseteq \TIME(f(n))\]
-cioé per cui valga che $h(n/2) \geq f(n)$. \\
+Per dimostrare che l'inclusione é stretta, cerchiamo un linguaggio che appartenga a $\TIME((f(2n + 1))^3)$, ma non a $\TIME(f(n))$. \\
+
+Useremo il linguaggio $H_h$, con una funzione $h$ tale che:
+\[
+h(\lfloor n/2 \rfloor) \geq f(n)
+\]
+E quindi $\TIME(h(\lfloor n/2 \rfloor)) \supseteq \TIME(f(n))$. \\
 
 Considerando che:
 \[
@@ -186,21 +190,40 @@ Dato che $h(\lfloor n/2 \rfloor) = f(2 \cdot \lfloor n/2 \rfloor + 1) \geq f(n)$
 
 Provato questo:
 \begin{itemize}
-    \item dal Lemma 1 avremmo che $H_h \in \TIME((h(n))^3) = \TIME((f(2n + 1))^3)$, 
-    \item dal Lemma 2 avremmo che $H_h \notin \TIME(h(\lfloor n/2 \rfloor)) \supseteq \TIME(f(n))$
+    \item dal Lemma 1 avremo che $H_h \in \TIME((h(n))^3) = \TIME((f(2n + 1))^3)$, 
+    \item dal Lemma 2 avremo che $H_h \notin \TIME(h(\lfloor n/2 \rfloor)) \supseteq \TIME(f(n))$
 \end{itemize}    
 \end{proof}
 
-\subsubsection{Raffinamento del Time Hierarchy Theorem}
-\[\TIME(f(n)) \subset \TIME(f(n) \cdot \log^2(f(n)))\]
-
 \subsubsection{Corollario: $\P \subset \EXP$}
 \begin{proof}
-    L'inclusione é facilmente verificata dal fatto che $\P \subseteq \TIME(2^n) \subseteq \EXP$ \\
+    Osserviamo che $\P \subseteq \TIME(2^n) \subseteq \EXP$ \\
     Per dimostrare che l'inclusione é stretta, applichiamo il Time Hierarchy Theorem con $f(n) = 2^n$:
     \[\P \subseteq \TIME(2^n) \subset \TIME({(2^{2n+1})}^3) = \TIME(2^{6n+3}) \subseteq \TIME(2^{(n^2)}) \subseteq \EXP\]
 \end{proof}
+Notiamo che non possiamo applicarlo direttamente a una funzione polinomiale, per la chiusura dei polinomi rispetto alla composizione
+(se $p(n)$ é un polinomio, $(2p(n) + 1)^3$ é un polinomio), 
+quindi dobbiamo applicarlo a una funzione esponenziale.
+Tuttavia é facile vedere che per qualsiasi polinomio, $p(x) = O(2^n)$, e $2^n$ é una funzione esponenziale strettamente contenuta in $\EXP$.
+
+\subsubsection{Raffinamento del Time Hierarchy Theorem}
+\[\TIME(f(n)) \subset \TIME(f(n) \cdot \log^2(f(n)))\]
+Questa versione permette di trovare una gerarchia anche tra funzioni polinomiali.
 
 \subsection{Space Hierarchy Theorem}
 Se $g$ é una funzione propria, allora:
-\[\SPACE(f(n)) \subset \SPACE(f(n) \cdot \log(f(n)))\]
+\[\SPACE(g(n)) \subset \SPACE(g(n) \cdot \log(g(n)))\]
+
+
+\subsection{Gerarchie non deterministiche}
+\[\NTIME(n^c) \subset \NTIME(n^d) \quad \forall d > c \geq 1\] \\
+
+Se $f(n+1) = O(h(n))$ e $f(n) = o(h(n))$, alora \\
+\[\NSPACE(f(n)) \subset \NSPACE(h(n))\]
+Da cui, per ogni $h$ crescente:
+\begin{itemize}
+    \item $\NSPACE(\log(n)) \subset \NSPACE(\log(n) \cdot h(n))$
+    \item $\bigcup_{j>0} \NSPACE(n^j) \subset \bigcup_{j>0} \NSPACE(n^j \cdot h(n))$
+    \item $\NSPACE(2^n) \subset \NSPACE(2^n \cdot h(n))$
+    \item $\NSPACE(2^{2^n}) \subset \NSPACE(2^{2^{n+1}})$
+\end{itemize}
