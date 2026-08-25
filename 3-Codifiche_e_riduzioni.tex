@@ -45,6 +45,10 @@ Se $PL$ é l'insieme di tutte le formule della logica proposizionale, e $AP$ é 
 \[
 \SAT = \{ \phi \in PL \mid \exists M \subseteq AP : M \models \phi \} 
 \]
+\[
+n = |\phi|
+\]
+
 É un problema che richiede di esplorare uno spazio esponenziale di possibili assegnazioni a ogni proporizione atomica in $\phi$. \\
 Un problema affine é quello del \textbf{model checking}: dato un modello $M$, verifica se $M \models \phi$.
 Questo problema é molto piú semplice da risolvere, infatti richiede tempo polinomiale. \\
@@ -59,7 +63,10 @@ Il valore di veritá delle foglie, cioé delle proposizioni atomiche, é scelto 
 \label{problema:reachability}
 Dato un grafo $G = (V, E)$ dove $E \subseteq V \times V$, e due vertici $s, t \in V$:
 \[
-\REACHABILITY = \{ (G, s, t) \mid s \text{ raggiunge } t \text{ in } G \} 
+\REACHABILITY = \{ (V, E, s, t) \mid s \text{ raggiunge } t \text{ in } G \} 
+\]
+\[
+n = |V| + |E| + 2
 \]
 
 Un algoritmo per risolvere $\REACHABILITY(G, s, t)$ consiste nell'iniziare inserendo $s$ in un insieme $S$ e marcarlo. \\
@@ -74,12 +81,16 @@ Nel caso peggiore esplora tutti gli archi del grafo una sola volta, quindi l'alg
 Questo problema é alla base di una importante tecnica dimostrativa, che useremo piú avanti.
 
 
+\newpage
 \subsection{$\MAXFLOW$}
 Sia $N = (V, E, s, t, c)$ un \textbf{network}, cioé:
 \begin{itemize}
 	\item un grafo $(V, E)$, 
 	\item la funzione di \textbf{capacitá} $c: E \rightarrow \mathbb{N}$,
-	\subitem chiamiamo $c_max$ il massimo valore di capacitá tra tutti gli archi, 
+	\begin{itemize}
+        \item chiamiamo $c_{max} = \max_{(u, v) \in E} c(u, v)$
+        \item supponiamo che i valori di $c$ siano rappresentati in binario. $|c| = |E| \cdot \log_2(c_{max})$
+    \end{itemize}
 	\item un vertice sorgente $s \in V$ senza archi entranti 
 	\item un vertice pozzo $t \in V$ senza archi uscenti.
 \end{itemize} 
@@ -95,12 +106,20 @@ O, equivalentemente, come la somma degli archi entranti in $t$: $\sum_{(u, t) \i
 
 $\MAXFLOW$ é il problema di trovare un flusso $f$ in un network $N$ tale che il suo valore sia massimo.
 É un problema di ottimizzazione, rappresentato da una funzione 
-\[\MAXFLOW: (V, E, s, t, c) \in \Sigma^* \rightarrow (f: E \rightarrow \mathbb{N}) \in \mathbb{N}^E\]
+\[
+\MAXFLOW: (V, E, s, t, c) \in \Sigma^* \rightarrow (f: E \rightarrow \mathbb{N}) \in \mathbb{N}^E
+\]
+\[
+n = |V| + |E| + 2 + |c|
+\]
 
 \subsubsection{$\MAXFLOW_D$}
 Consideriamo il problema decisionale che chiede se esiste un flusso di valore almeno $k$ in un network $N$.
 \[
-\MAXFLOW_D = \{ N = (V, E, s, t, c, k) \in \Sigma^* \mid N \text{ ha un flusso di valore} \geq k \}
+\MAXFLOW_D = \{ (V, E, s, t, c, k) \in \Sigma^* \mid (V, E, s, t, c) \text{ ha un flusso di valore} \geq k \}
+\]
+\[
+n = |V| + |E| + 2 + |c| + \log_2(k)
 \]
 
 \subsubsection{Da $\MAXFLOW_D$ a $\MAXFLOW$}
@@ -113,10 +132,8 @@ Eseguiamo una ricerca binaria tra $0$ e $m$, interrogando $\MAXFLOW_D$ per trova
 Eseguiamo quindi $\log_2(m)$ interrogazioni. \\
 $m = O(|E| \cdot c_{max})$. \\
 La codifica dei valori di $c$ é logaritmica, di conseguenza $c_{max}$ é esponenziale rispetto alla dimensione dell'input. \\
-$\log_2(m) = O(\log(|E| \cdot c_{max})) = O(\log(n^2 \cdot 2^n)) = O(\log(2^n)) = O(n)$. \\
+$\log_2(m) = O(\log_2(|E| \cdot c_{max})) = O(\log_2(2^n)) = O(n)$. \\
 Il numero di interrogazioni é polinomiale rispetto alla dimensione dell'input.
-
-
 
 \subsubsection{Riduzione di $\MAXFLOW$ a $\REACHABILITY$}
 
@@ -153,46 +170,16 @@ Possiamo aumentare il flusso lungo quel cammino usando la capacitá minima di un
 Se non troviamo nessun cammino, allora il flusso é ottimo.
 
 
-\subsection{$\TSP$}
-\label{problema:tsp}
-Sia $G = (V, E, w)$ un grafo pesato, dove $w: E \rightarrow \mathbb{N}$ é la funzione di peso degli archi. \\
-
-Un ciclo hamiltoniano é un ciclo che passa per tutti i vertici del grafo una sola volta,
-rappresentato da una funzione biettiva $\pi$ che codifica una permutazione dei vertici del grafo, 
-associando ogni vertice a una posizione nel ciclo hamiltoniano. \\
-
-Il problema del commesso viaggiatore, o Traveling Salesman Problem, consiste nel trovare
-un ciclo hamiltoniano di costo minimo in un grafo pesato.
-Anche questo é un problema di ottimizzazione, rappresentato da una funzione:
-\[\TSP: (G, w) \in \Sigma^* \rightarrow (\pi : V \rightarrow \{1,\dots,|V|\} \in V^{\{1,\dots,|V|\}}) \text{, con } \pi \text{ biettiva}\]
-
-\subsubsection{$\TSP_D$}
-Dati $G = (V, E, w)$ e un numero naturale $B \in \mathbb{N}$ detto \textit{budget}:
-\[
-\TSP_D = \{ (G, w, B) \mid G \text{ ha un ciclo hamiltoniano di costo } \leq B \}
-\]
-
-\subsubsection{Da $\TSP_D$ a $\TSP$}
-Come per $\MAXFLOW$, anche in questo caso possiamo risolvere il problema di ottimizzazione $\TSP$,
-interrogando $\TSP_D$ per trovare un budget minimo per cui la risposta é $"yes"$. \\
-Il budget minimo si cerca tramite una ricerca binaria (logaritmica) su tutti i possibili costi dei cicli hamiltoniani. \\
-
-Secondo il Papadimitriou, questo valore é $2^n$, anche se non sembra giusto, dato che il codominio di $w$ é $\mathbb{N}$ e non c'é limite superiore al costo di qualsiasi arco. \\
-In ogni caso, una ricerca binaria (logaritmica) su $2^n$ possibili valori richiede al piú $n$ interrogazioni. \\
-
-Dopo averlo trovato, fissiamo il budget minimo $B$ e continuiamo a interrogare $\TSP_D$, modificando il grafo: \\ 
-a ogni interrogazione, eliminiamo un arco (per esempio settando il suo costo a $C + 1$). \\
-Se la risposta é sempre $"yes"$, allora l'arco non fa parte del ciclo hamiltoniano ottimo, e possiamo escluderlo anche dalle interrogazioni successive. \\
-Altrimenti l'arco fa parte del ciclo hamiltoniano ottimo, e bisogna ripristinarlo. \\
-Dopo aver interrogato tutti gli archi, in al piú $n^2$ interrogazioni ($|E| \leq |V|^2 \leq n^2$), 
-gli archi che non sono stati eliminati sono quelli che formano il ciclo hamiltoniano ottimo. \\
-
-Quindi, possiamo risolvere $\TSP$ invocando $\TSP_D$ un numero polinomiale di volte ($n + n^2$).
-
+\newpage
 \subsection{$\BIPARTITEMATCHING$}
 Sia $G = (U, V, E)$ un grafo bipartito. $U, V$ sono due insiemi di vertici con la stessa cardinalitá $|U| = |V|$. \\ 
 Gli archi vanno solo da $U$ a $V$: $E \subseteq U \times V$. \\
 Un \textbf{matching} è un insieme di archi $M \subseteq E$ tale che ogni vertice di $U$ ha un arco in $M$ verso uno e un solo vertice di $V$.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{images/bipartite_matching.png}
+\end{figure}
 
 \subsubsection{Riduzione di $\BIPARTITEMATCHING$ a $\MAXFLOW$}
 Per ridurlo a $\MAXFLOW_D$ possiamo trasformare $G$ in un network, 
@@ -201,8 +188,61 @@ e un nodo $t$ con archi $(v, t)$ per ogni $v \in V$. \\
 Settando $c(u, v) = 1$ per ogni arco $(u, v)$, possiamo concludere che
 $B$ ha un matching se e solo se la rete ha un flusso di valore $|U|$.
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{images/bipartite_matching.png}
-\end{figure}
+
+\newpage
+\subsection{$\TSP$}
+\label{problema:tsp}
+Sia $G = (V, E, w)$ un grafo pesato, dove $w: E \rightarrow \mathbb{N}$ é la funzione di peso degli archi. \\
+Supponiamo che i valori di $w$ siano rappresentati in binario: \\
+$|w| = \log_2(w_{max})$ \\
+$w_{max} = \max_{(u, v) \in E} w(u, v)$. \\
+
+Un ciclo hamiltoniano é un ciclo che passa per tutti i vertici del grafo una sola volta,
+rappresentato da una funzione biettiva $\pi$ che codifica una permutazione dei vertici del grafo, 
+associando ogni vertice a una posizione nel ciclo hamiltoniano. \\
+
+Il problema del commesso viaggiatore, o Traveling Salesman Problem, consiste nel trovare
+un ciclo hamiltoniano di costo minimo in un grafo pesato.
+Anche questo é un problema di ottimizzazione, rappresentato da una funzione:
+\[
+\TSP: (V, E, w) \in \Sigma^* \rightarrow (\pi : V \rightarrow \{1,\dots,|V|\}) \in {\{1,\dots,|V|\}}^V \text{, con } \pi \text{ biettiva}
+\]
+\[
+n = |V| + |E| + |w|
+\]
+
+
+\subsubsection{$\TSP_D$}
+Dati $G = (V, E, w)$ e un numero naturale $B \in \mathbb{N}$ detto \textit{budget}:
+\[
+\TSP_D = \{ (V, E, w, B) \mid G \text{ ha un ciclo hamiltoniano di costo } \leq B \}
+\]
+\[
+n = |V| + |E| + |w| + \log_2(B)
+\]
+
+\subsubsection{Da $\TSP_D$ a $\TSP$}
+Come per $\MAXFLOW$, anche in questo caso possiamo risolvere il problema di ottimizzazione $\TSP$,
+interrogando $\TSP_D$ per trovare un budget minimo per cui la risposta é $"yes"$. \\
+Il budget minimo si cerca tramite una ricerca binaria (logaritmica) su tutti i possibili costi dei cicli hamiltoniani. \\
+
+Siccome i valori di $w$ sono rappresentati in notazione posizionale, e $|w| < n$ allora il valore massimo
+del peso di un arco é al piú $2^n$. \\
+Moltiplicandolo per il numero massimo di archi in un ciclo hamiltoniano, che é $|V| \leq n$,
+otteniamo che il costo massimo di un ciclo hamiltoniano é al piú $n \cdot 2^n$. \\
+Una ricerca binaria (logaritmica) su $n \cdot 2^n$ possibili valori richiede al piú $\log(n) + n$ interrogazioni. \\
+
+Dopo averlo trovato, fissiamo il budget $B$ e continuiamo a interrogare $\TSP_D$, modificando il grafo: \\ 
+a ogni interrogazione, eliminiamo un arco (per esempio settando il suo costo a $B + 1$). \\
+Se la risposta é sempre $"yes"$, allora l'arco non fa parte del ciclo hamiltoniano ottimo, e possiamo escluderlo anche dalle interrogazioni successive. \\
+Altrimenti l'arco fa parte del ciclo hamiltoniano ottimo, e bisogna ripristinarlo. \\
+
+Dopo aver interrogato tutti gli archi, in al piú $n^2$ interrogazioni ($|E| \leq |V|^2 \leq n^2$), 
+gli archi che non sono stati eliminati sono quelli che formano il ciclo hamiltoniano ottimo. \\
+Infatti se un arco rimane nell'insieme finale  ma non appartiene al ciclo hamiltoniano, 
+allora nel momento in cui è stato testato per la rimozione, la risposta sarebbe dovuta essere "yes" 
+(perché il ciclo non lo usa ed è ancora disponibile in quel momento), contraddicendo il fatto che 
+sia stato ripristinato. \\
+
+Quindi, possiamo risolvere $\TSP$ invocando $\TSP_D$ un numero polinomiale di volte: $O(n + n^2) = O(n^2)$.
 
