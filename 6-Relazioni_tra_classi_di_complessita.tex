@@ -1,7 +1,7 @@
 \section{Relazioni tra classi di complessità}
 Ora che non siamo piú limitati a MdT precise, con input e output e con un solo nastro, e che possiamo usare la notazione asintotica, possiamo confrontare le classi di complessitá simulando le macchine di Turing tra loro. \\
 
-\subsection{Teorema: terminazione delle MdT a spazio limitato}
+\subsection{Teorema: terminazione delle MdT deterministiche che operano in spazio limitato}
 Se una MdT $M$ opera in spazio $g(n)$, allora esiste una MdT $M'$ che opera in spazio $O(g(n))$ e termina per ogni input entro $O(c^{g(n)})$ passi.
 \begin{proof}
 $M' = (M_1, M_2)$ é la concatenazione di due macchine, e utilizza un nastro aggiuntivo. \\
@@ -41,7 +41,7 @@ Le macchine di Turing deterministiche sono un caso particolare di quelle non det
 \subsubsection{Corollario: $\EXP \subseteq \NEXP$}
 
 
-\subsection{Teorema: simulazione di una MdT non deterministica con una MdT deterministica}
+\subsection{Teorema: simulazione di una MdT non deterministica che opera in tempo limitato con una MdT deterministica}
 \label{theorem:non_deterministic_to_deterministic}
 Data una MdT non deterministica $N$ che decide $L$ e opera in tempo $f(n)$. \\
 Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f(n)})$ e spazio $O(f(n))$.
@@ -80,6 +80,73 @@ Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f
 \subsubsection{Corollario: $\NP \subseteq \EXP$}
 
 
+\subsection{Teorema: simulazione di una MdT non deterministica che opera in spazio limitato con una MdT deterministica}
+Data una MdT non deterministica $N$ con input e output, a $k$ nastri,
+che decide $L$ e opera in spazio $g(n)$. \\
+Allora esiste una MdT deterministica $M$ 
+che decide $L$ e opera in tempo $O(c^{\log(n) + g(n)})$.
+\begin{proof}
+La dimostrazione utilizza l'algoritmo polinomiale per $\REACHABILITY$ (\ref{problema:reachability}). \\
+Possiamo vedere la computazione di $N$ come un grafo. \\
+Ogni configurazione di $N$ é un vertice del grafo, 
+e gli archi sono le transizioni possibili tra configurazioni. \\
+
+Poiché $N$ é con input e output, 
+possiamo semplificare la rappresentazione di una sua configurazione
+conservando, del primo nastro, solo la posizione della testina,
+e ignorando l'ultimo nastro. \\
+Una configurazione di $N$ quindi é del tipo:
+\[
+C = (q, t, w_2, u_2, \dots, w_{k-1}, u_{k-1})
+\]
+Dove $t$ é la posizione della testina sul primo nastro. \\
+
+Allora il grafo $G_N = (V, E)$ é definito da:
+\[
+V = \{C \mid C \text{ é una configurazione di } N\}
+\]
+\[
+E = \{(C_1, C_2) \in V^2 \mid C_1 \xrightarrow{N} C_2\}
+\]
+Chiamiamo $C_s$ la configurazione iniziale e $C_{"yes"}$ la configurazione finale. \\
+
+Per ipotesi, ogni nastro $w_i u_i$ é lungo al piú $g(n)$. \\
+Quindi, il numero di configurazioni diverse (cioé $|V|$) é dato da:
+\begin{itemize}
+	\item $|Q|$ stati.
+	\item $n+2$ possibili posizioni della testina sul primo nastro (contando $\triangleright$ e il primo $\sqcup$ dopo $x$).
+	\item $|\Sigma|^{g(n)}$ simboli per gli altri $k-1$ nastri. \\ 
+	Cioé $|\Sigma|^{(k-1) \cdot g(n)}$ possibili combinazioni. \\
+\end{itemize}
+\[
+|V| = |Q| \cdot (n+2) \cdot |\Sigma|^{(k-1) \cdot g(n)} = O(n \cdot c^{g(n)}) = O(c^{\log(n) + g(n)})
+\]
+
+$M$ decide $L$ in tempo $O(|V|)$. \\
+\[
+x \in L \iff \exists \text{ un run di } N \text{ che accetta } x \iff \exists \text{ un cammino da } C_s \text{ a } C_{"yes"} \text{ in } G_N
+\]
+Ma questo é un problema di $\REACHABILITY$, che sappiamo essere risolvibile in tempo polinomiale rispetto al numero di vertici del grafo. \\
+
+Restano da calcolare il tempo e lo spazio richiesti per costruire $G_N$. \\
+
+Non possiamo costruire esplicitamente la matrice di adiacenza di $G_N$:
+lo spazio richiesto é $|V|^2 = O(c^{2(\log(n) + g(n))})$, cioé esponenziale su $n$.
+Ma se usa spazio esponenziale, anche il tempo per occuparlo é esponenziale. \\
+
+Per risparmiare spazio, possiamo calcolare a ogni passo di $\REACHABILITY$ 
+se esiste un arco tra due configurazioni $C_1$ e $C_2$,
+semplicemente simulando un passo di $N$, in tempo polinomiale.
+\end{proof}
+\subsubsection{Corollario: $\NSPACE(g(n)) \subseteq \TIME(c^{\log(n) + g(n)})$}
+\subsubsection{Corollario: $\text{NPSPACE} \subseteq \EXP$}
+\begin{proof}
+$
+\text{NPSPACE} = \bigcup_{i>0} \NSPACE(n^i) \subseteq \bigcup_{i>0} \TIME(c^{\log(n) + n^i})$ \\
+$\bigcup_{i>0} \TIME(c^{\log(n)} \cdot c^{n^i}) = \bigcup_{i>0} \TIME(n c^{n^i}) = \bigcup_{i>0} \TIME(c^{n^i}) = \EXP
+$
+\end{proof}
+
 \subsection{Proposizione: chiusura delle classi di complessitá deterministiche rispetto al complemento}
 Se $C$ é una classe di complessitá deterministica, allora $\co C = C$
 \begin{proof}
@@ -106,11 +173,6 @@ Invertire $"yes"$ e $"no"$ porta una macchina che accetta $x$ se un solo run di 
 Vedremo che é possibile dimostrare la chiusura delle classi di complessitá di spazio non deterministiche rispetto al complemento. \\
 Per quanto riguarda le classi di complessitá di tempo non deterministiche, invece, il problema è aperto.
 
-
-\subsection{Teorema: $\NSPACE(f(n)) \subseteq \TIME(c^{\log(n) + f(n)})$}
-\begin{proof}
-
-\end{proof}
 
 \subsection{Domande aperte}
 \begin{itemize}

@@ -110,7 +110,7 @@ Il numero di interrogazioni é polinomiale rispetto alla dimensione dell'input.
 Consideriamo un flusso qualsiasi $f$. Ci interessa sapere se é ottimo oppure no. \\
 Supponiamo che $f$ non é ottimo, allora esiste un flusso $f'$ con valore maggiore di $f$. \\
 Consideriamo la differenza $\Delta f = f' - f$. É anch'essa un flusso 
-(la stessa quantitá viene sottratta tra i nodi in ingresso e in uscita di ogni vertice), 
+(la stessa quantitá viene sottratta tra gli archi entranti e uscenti di ogni vertice), 
 ha valore positivo, ma potrebbe associare un flusso negativo a qualche arco $(u,v)$. \\
 Pensiamo agli archi con flusso negativo come archi con flusso positivo in direzione opposta. \\
 Il flusso assegnato da $\Delta f$ all'arco inverso $(v,u)$ é limitato superiormente da $f(u,v)$ 
@@ -182,8 +182,8 @@ Un \textbf{matching} è un insieme di archi $M \subseteq E$ tale che ogni vertic
 
 \subsubsection{Riduzione di $\BIPARTITEMATCHING$ a $\MAXFLOW_D$}
 Per ridurlo a $\MAXFLOW_D$ possiamo trasformare $G$ in un network, 
-aggiungendo un nodo $s$ e archi $(s, u)$ per ogni $u \in U$ 
-e un nodo $t$ con archi $(v, t)$ per ogni $v \in V$. \\
+aggiungendo un vertice $s$ e archi $(s, u)$ per ogni $u \in U$ 
+e un vertice $t$ con archi $(v, t)$ per ogni $v \in V$. \\
 Settando $c(u, v) = 1$ per ogni arco $(u, v)$, possiamo concludere che
 $B$ ha un matching se e solo se la rete ha un flusso di valore $|V|$.
 \begin{figure}[h!]
