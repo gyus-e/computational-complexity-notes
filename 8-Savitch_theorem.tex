@@ -1,0 +1,19 @@
+\section{Teorema di Savitch}
+\[
+\REACHABILITY \in \SPACE(\log^2(n))
+\]
+
+\begin{proof}
+
+\end{proof}
+
+\subsubsection{Corollario: $\NSPACE(g(n)) \subseteq \SPACE(g^2(n))$}
+\begin{proof}
+\end{proof}
+
+\subsubsection{Corollario: $\PSPACE = \NPSPACE$}
+\begin{proof}
+$\PSPACE \subseteq \NPSPACE$ da \ref{theorem:deterministic_to_non_deterministic} \\
+Applicando $\NSPACE(g(n)) \subseteq \SPACE(g^2(n))$ con $g(n) = n^i$: \\
+$\NPSPACE = \bigcup_{i>0} \NSPACE(n^i) \subseteq \bigcup_{i>0} \SPACE(n^{2i}) = \bigcup_{i>0} \SPACE(n^i) = \PSPACE$
+\end{proof}

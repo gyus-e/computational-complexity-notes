@@ -32,6 +32,7 @@ Questo teorema ci mostra come forzare la terminazione di una MdT che opera in sp
 \subsubsection{Corollario: $\PSPACE \subseteq \EXP$}
 
 \subsection{Teorema: simulazione di una MdT deterministica con una MdT non deterministica}
+\label{theorem:deterministic_to_non_deterministic}
 \begin{proof}
 Le macchine di Turing deterministiche sono un caso particolare di quelle non deterministiche, in cui la relazione di transizione $\Delta$ associa a ogni coppia in $Q \times \Sigma$ una sola tripla di $Q \times \Sigma \times \{\leftarrow, \rightarrow, -\}$.
 \end{proof}
@@ -39,7 +40,7 @@ Le macchine di Turing deterministiche sono un caso particolare di quelle non det
 \subsubsection{Corollario: $\SPACE(g(n)) \subseteq \NSPACE(g(n))$}
 \subsubsection{Corollario: $\P \subseteq \NP$}
 \subsubsection{Corollario: $\EXP \subseteq \NEXP$}
-
+\subsubsection{Corollario: $\PSPACE \subseteq \NPSPACE$}
 
 \subsection{Teorema: simulazione di una MdT non deterministica che opera in tempo limitato con una MdT deterministica}
 \label{theorem:non_deterministic_to_deterministic}
@@ -139,10 +140,10 @@ se esiste un arco tra due configurazioni $C_1$ e $C_2$,
 semplicemente simulando un passo di $N$, in tempo polinomiale.
 \end{proof}
 \subsubsection{Corollario: $\NSPACE(g(n)) \subseteq \TIME(c^{\log(n) + g(n)})$}
-\subsubsection{Corollario: $\text{NPSPACE} \subseteq \EXP$}
+\subsubsection{Corollario: $\NPSPACE \subseteq \EXP$}
 \begin{proof}
 $
-\text{NPSPACE} = \bigcup_{i>0} \NSPACE(n^i) \subseteq \bigcup_{i>0} \TIME(c^{\log(n) + n^i})$ \\
+\NPSPACE = \bigcup_{i>0} \NSPACE(n^i) \subseteq \bigcup_{i>0} \TIME(c^{\log(n) + n^i})$ \\
 $\bigcup_{i>0} \TIME(c^{\log(n)} \cdot c^{n^i}) = \bigcup_{i>0} \TIME(n c^{n^i}) = \bigcup_{i>0} \TIME(c^{n^i}) = \EXP
 $
 \end{proof}
