@@ -15,96 +15,11 @@ I problemi di ottimizzazione possono essere trattati come problemi di decisione,
 ci concentreremo su questi ultimi. Se un problema di decisione puó essere risolto in tempo polinomiale,
 anche quello di ottimizzazione puó essere risolto in tempo polinomiale, tramite una ricerca binaria (a tempo logaritmico)
 sul valore della soluzione ottima.
-
-
-\subsection{$\SAT$}
-\label{problema:sat}
-Se $PL$ é l'insieme di tutte le formule della logica proposizionale, e $AP$ é l'insieme di tutte le proposizioni atomiche:
-\[
-\SAT = \{ \phi \in PL \mid \exists M \subseteq AP : M \models \phi \} 
-\]
-É un problema che richiede di esplorare uno spazio esponenziale di possibili assegnazioni a ogni proporizione atomica in $\phi$. \\
-Un problema affine é quello del \textbf{model checking}: dato un modello $M$, verifica se $M \models \phi$.
-Questo problema é molto piú semplice da risolvere, infatti richiede tempo polinomiale. \\
-Un algoritmo non deterministico per $\SAT$ puó essere visto come un algoritmo di model checking, 
-dove il modello $M$ é scelto in maniera non deterministica. \\
-Basterebbe infatti rappresentare $\phi$ tramite l'albero sintattico ed effettuare una visita in post-order,
-calcolando il valore di veritá dei nodi interni e restituendo il valore del nodo radice.
-Il valore di veritá delle foglie, cioé delle proposizioni atomiche, é scelto in maniera non deterministica.
-
-
-\subsection{$\REACHABILITY$}
-\label{problema:reachability}
-Dato un grafo $G = (V, E)$ dove $E \subseteq V \times V$, e due vertici $s, t \in V$:
-\[
-\REACHABILITY = \{ (G, s, t) \mid s \text{ raggiunge } t \text{ in } G \} 
-\]
-
-Un algoritmo per risolvere $\REACHABILITY(G, s, t)$ consiste nell'iniziare inserendo $s$ in un insieme $S$ e marcarlo. \\
-Poi iterare i seguenti passi finché $S$ non é vuoto:
-\begin{enumerate}
-    \item Estrarre un vertice qualsiasi $x$ da $S$,
-    \item Inserire in $S$ tutti i vertici adiacenti a $x$ non marcati, e marcarli.
-\end{enumerate}
-Alla fine, se $t$ é marcato, allora $s$ raggiunge $t$. \\
-Nel caso peggiore esplora tutti gli archi del grafo una sola volta, quindi l'algoritmo é polinomiale: $O(|E|) = O(|V|^2)$. \\
-
-Questo problema é alla base di una importante tecnica dimostrativa, che useremo piú avanti.
-
-
-\subsection{$\MAXFLOW$}
-Sia $G = (V, E, s, t, c)$ un \textbf{network}, cioé un grafo $G = (V, E)$, 
-la funzione di \textbf{capacitá} $c: E \rightarrow \mathbb{N}$, 
-un vertice sorgente $s \in V$ e un vertice pozzo $t \in V$. \\
-Un \textbf{flusso} $f$ in $G$ é una funzione $f: E \rightarrow \mathbb{N}$ tale che:
+\subsubsection*{Esempi}
 \begin{itemize}
-    \item $\forall (u, v) \in E : f(u, v) \leq c(u, v)$. 
-        \subitem Il flusso su un arco non puó superare la sua capacitá.
-    \item $\forall v \in V \setminus \{s, t\} : \sum_{(u, v) \in E} f(u, v) = \sum_{(v, w) \in E} f(v, w)$. 
-        \subitem La quantitá di flusso che entra in un vertice é uguale a quella che esce.
+	\item ${\SAT}$ é il linguaggio di formule della logica proposizionale ben formate e soddisfacibili.
+	\item ${\PALINDROME}$ é il linguaggio di stringhe palindrome.
 \end{itemize}
-Il \textbf{valore} di un flusso é definito come la somma degli archi uscenti da $s$: $\sum_{(s, v) \in E} f(s, v)$. \\
-
-$\MAXFLOW$ é il problema di trovare un flusso $f$ in un network $G$ tale che il suo valore sia massimo.
-É un problema di ottimizzazione, rappresentato da una funzione 
-\[\MAXFLOW: (G, s, t, c) \in \Sigma^* \rightarrow (f: E \rightarrow \mathbb{N}) \in \mathbb{N}^E\]
-
-\subsubsection{$\MAXFLOW_D$}
-Consideriamo il problema decisionale che chiede se esiste un flusso di valore almeno $k$ in un network $G$.
-\[
-\MAXFLOW_D = \{ (G, s, t, c, k) \mid G \text{ ha un flusso di valore } \geq k \}
-\]
-
-\subsubsection{Da $\MAXFLOW_D$ a $\MAXFLOW$}
-
-
-\subsection{$\TSP$}
-\label{problema:tsp}
-Sia $G = (V, E, w)$ un grafo pesato, dove $w: E \rightarrow \mathbb{N}$ é la funzione di peso degli archi. \\
-
-Un ciclo hamiltoniano é un ciclo che passa per tutti i vertici del grafo una sola volta,
-rappresentato da una funzione biettiva $\pi$ che codifica una permutazione dei vertici del grafo, 
-associando ogni vertice a una posizione nel ciclo hamiltoniano. \\
-
-Il problema del commesso viaggiatore, o Traveling Salesman Problem, consiste nel trovare
-un ciclo hamiltoniano di costo minimo in un grafo pesato.
-Anche questo é un problema di ottimizzazione, rappresentato da una funzione:
-\[\TSP: (G, w) \in \Sigma^* \rightarrow (\pi : V \rightarrow \{1,\dots,|V|\} \in V^{\{1,\dots,|V|\}}) \text{, con } \pi \text{ biettiva}\]
-
-\subsubsection{$\TSP_D$}
-Dati $G = (V, E, w)$ e un numero naturale $B \in \mathbb{N}$ detto \textit{budget}:
-\[
-\TSP_D = \{ (G, w, B) \mid G \text{ ha un ciclo hamiltoniano di costo } \leq B \}
-\]
-
-\subsubsection{Da $\TSP_D$ a $\TSP$}
-Come per $\MAXFLOW$, anche in questo caso possiamo risolvere il problema di ottimizzazione $\TSP$ 
-interrogando $\TSP_D$ tramite una ricerca binaria sul budget $B$ nell'intervallo $[0, 2^n]$. \\
-Trovato il costo ottimo, $C$, continuiamo a interrogare $\TSP_D$ fissando il budget $C$ 
-eliminando un arco alla volta (per esempio settando il suo costo a $C + 1$). \\
-Se la risposta é $"yes"$, allora l'arco non fa parte del ciclo hamiltoniano ottimo, e possiamo lasciarlo fuori dalle interrogazioni successive. \\
-Altrimenti l'arco fa parte del ciclo hamiltoniano ottimo, e lo includiamo nella soluzione. \\
-In questo modo, interrogando $\TSP_D$ al massimo $n^2$ volte, possiamo ricostruire il ciclo hamiltoniano ottimo, e quindi risolvere $\TSP$ in tempo polinomiale.
 
 
 \subsection{Linguaggi complementari}
@@ -113,12 +28,9 @@ Il linguaggio complementare di $L \subseteq \Sigma^*$ é definito come:
 Se $L$ codifica le istanze di un problema, allora $\overline{L}$ contiene tutte le stringhe dell'alfabeto che non sono istanze del problema.
 \subsubsection*{Esempi}
 \begin{itemize}
-	\item $\overline{\REACHABILITY}$ é il linguaggio di stringhe che codificano un grafo e due vertici non raggiungibili, ma anche di tutte le stringhe malformate.
-	\item $\overline{\SAT}$ é il linguaggio di formule della logica proposizionale insoddisfacibili e di formule malformate.
+	\item $\overline{\SAT}$ é il linguaggio di formule della logica proposizionale insoddisfacibili, ma anche di formule malformate.
 	\item $\overline{\PALINDROME}$ é il linguaggio di stringhe non palindrome. In questo caso non ci sono stringhe malformate.
 \end{itemize}
-
-\newpage
 
 
 \subsection{Linguaggi ricorsivi}

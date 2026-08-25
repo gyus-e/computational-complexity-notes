@@ -3,7 +3,7 @@
 \subsection{Codifiche ragionevoli}
 
 Ci interessa misurare la complessità di un problema in funzione del tempo e spazio necessari a risolverlo al crescere della dimensione dell'input. \\
-Ma lo stesso input puó essere codificato in modi diversi, con dimensioni diverse. \\
+Ma la stessa istanza di un problema puó essere codificata in modi diversi, con dimensioni diverse. \\
 
 \textbf{Esempio:} \\
 Se l'input è un grafo $x = (V, E)$ rappresentato tramite liste di adiacenza la dimensione dell'input è $n = |V| + |E|$. \\
@@ -26,7 +26,7 @@ Si potrebbe codificare $x$ in unario: in quel caso avremmo che $x = n$ e il temp
 \textbf{Perché la misura che effettuiamo sia corretta, la codifica dell'input deve essere ragionevole.} \\
 
 
-\newpage
+
 \subsection{Riduzioni}
 Una riduzione traduce un'istanza di un problema in un'istanza di un altro problema. \\
 Poi usa la soluzione del secondo problema per risolvere il primo. \\
@@ -34,14 +34,167 @@ La traduzione deve essere:
 \begin{itemize}
     \item Corretta: la risposta dell'istanza tradotta deve essere la stessa della risposta dell'istanza originale.
     \item Efficiente: la traduzione deve essere eseguita in tempo polinomiale rispetto alla dimensione dell'input originale. \\
-    In questo modo, se il secondo problema é risolvibile in tempo polinomiale, anche il primo lo é. \\
+    In questo modo, se il secondo problema é risolvibile in tempo polinomiale, anche il primo lo é.
 \end{itemize}
 
-\subsubsection{Riduzione di $\BIPARTITEMATCHING$ a $\MAXFLOW$}
+
+
+\subsection{$\SAT$}
+\label{problema:sat}
+Se $PL$ é l'insieme di tutte le formule della logica proposizionale, e $AP$ é l'insieme di tutte le proposizioni atomiche:
+\[
+\SAT = \{ \phi \in PL \mid \exists M \subseteq AP : M \models \phi \} 
+\]
+É un problema che richiede di esplorare uno spazio esponenziale di possibili assegnazioni a ogni proporizione atomica in $\phi$. \\
+Un problema affine é quello del \textbf{model checking}: dato un modello $M$, verifica se $M \models \phi$.
+Questo problema é molto piú semplice da risolvere, infatti richiede tempo polinomiale. \\
+Un algoritmo non deterministico per $\SAT$ puó essere visto come un algoritmo di model checking, 
+dove il modello $M$ é scelto in maniera non deterministica. \\
+Basterebbe infatti rappresentare $\phi$ tramite l'albero sintattico ed effettuare una visita in post-order,
+calcolando il valore di veritá dei nodi interni e restituendo il valore del nodo radice.
+Il valore di veritá delle foglie, cioé delle proposizioni atomiche, é scelto in maniera non deterministica.
+
+
+\subsection{$\REACHABILITY$}
+\label{problema:reachability}
+Dato un grafo $G = (V, E)$ dove $E \subseteq V \times V$, e due vertici $s, t \in V$:
+\[
+\REACHABILITY = \{ (G, s, t) \mid s \text{ raggiunge } t \text{ in } G \} 
+\]
+
+Un algoritmo per risolvere $\REACHABILITY(G, s, t)$ consiste nell'iniziare inserendo $s$ in un insieme $S$ e marcarlo. \\
+Poi iterare i seguenti passi finché $S$ non é vuoto:
+\begin{enumerate}
+    \item Estrarre un vertice qualsiasi $v$ da $S$,
+    \item Inserire in $S$ tutti i vertici adiacenti a $v$ non marcati, e marcarli.
+\end{enumerate}
+Alla fine, se $t$ é marcato, allora $s$ raggiunge $t$. \\
+Nel caso peggiore esplora tutti gli archi del grafo una sola volta, quindi l'algoritmo é polinomiale: $O(|E|) = O(|V|^2) = O(n^2)$. \\
+
+Questo problema é alla base di una importante tecnica dimostrativa, che useremo piú avanti.
+
+
+\subsection{$\MAXFLOW$}
+Sia $N = (V, E, s, t, c)$ un \textbf{network}, cioé:
+\begin{itemize}
+	\item un grafo $(V, E)$, 
+	\item la funzione di \textbf{capacitá} $c: E \rightarrow \mathbb{N}$,
+	\subitem chiamiamo $c_max$ il massimo valore di capacitá tra tutti gli archi, 
+	\item un vertice sorgente $s \in V$ senza archi entranti 
+	\item un vertice pozzo $t \in V$ senza archi uscenti.
+\end{itemize} 
+Un \textbf{flusso} $f$ in $N$ é una funzione $f: E \rightarrow \mathbb{N}$ tale che:
+\begin{itemize}
+    \item $\forall (u, v) \in E : f(u, v) \leq c(u, v)$. 
+        \subitem Il flusso su un arco non puó superare la sua capacitá.
+    \item $\forall v \in V \setminus \{s, t\} : \sum_{(u, v) \in E} f(u, v) = \sum_{(v, w) \in E} f(v, w)$. 
+        \subitem La quantitá di flusso che entra in un vertice é uguale a quella che esce.
+\end{itemize}
+Il \textbf{valore} di un flusso é definito come la somma degli archi uscenti da $s$: $\sum_{(s, v) \in E} f(s, v)$. \\
+O, equivalentemente, come la somma degli archi entranti in $t$: $\sum_{(u, t) \in E} f(u, t)$. \\
+
+$\MAXFLOW$ é il problema di trovare un flusso $f$ in un network $N$ tale che il suo valore sia massimo.
+É un problema di ottimizzazione, rappresentato da una funzione 
+\[\MAXFLOW: (V, E, s, t, c) \in \Sigma^* \rightarrow (f: E \rightarrow \mathbb{N}) \in \mathbb{N}^E\]
+
+\subsubsection{$\MAXFLOW_D$}
+Consideriamo il problema decisionale che chiede se esiste un flusso di valore almeno $k$ in un network $N$.
+\[
+\MAXFLOW_D = \{ N = (V, E, s, t, c, k) \in \Sigma^* \mid N \text{ ha un flusso di valore} \geq k \}
+\]
+
+\subsubsection{Da $\MAXFLOW_D$ a $\MAXFLOW$}
+Un algoritmo polinomiale che risolve $\MAXFLOW$ funziona cosí: \\
+Consideriamo il massimo flusso possibile, dato dal minimo tra la somma delle capacitá uscenti da $s$ e la somma delle capacitá entranti in $t$. \\
+\[
+m = \min\left(\sum_{v : (s,v) \in E} c(s, v), \sum_{u : (u, t) \in E} c(u, t)\right)
+\]
+Eseguiamo una ricerca binaria tra $0$ e $m$, interrogando $\MAXFLOW_D$ per trovare il valore massimo del flusso. \\
+Eseguiamo quindi $\log_2(m)$ interrogazioni. \\
+$m = O(|E| \cdot c_{max})$. \\
+La codifica dei valori di $c$ é logaritmica, di conseguenza $c_{max}$ é esponenziale rispetto alla dimensione dell'input. \\
+$\log_2(m) = O(\log(|E| \cdot c_{max})) = O(\log(n^2 \cdot 2^n)) = O(\log(2^n)) = O(n)$. \\
+Il numero di interrogazioni é polinomiale rispetto alla dimensione dell'input.
+
+
+
+\subsubsection{Riduzione di $\MAXFLOW$ a $\REACHABILITY$}
+
+\textbf{Determinare se un flusso é ottimo:} \\
+Consideriamo un flusso qualsiasi $f$. Ci interessa sapere se é ottimo oppure no. \\
+Supponiamo che $f$ non é ottimo, allora esiste un flusso $f'$ con valore maggiore di $f$. \\
+Consideriamo la differenza $\Delta f = f' - f$. É anch'essa un flusso 
+(la stessa quantitá viene sottratta tra i nodi in ingresso e in uscita di ogni vertice), 
+ha valore positivo, ma potrebbe associare un flusso negativo a qualche arco $(u,v)$. \\
+Pensiamo agli archi con flusso negativo come archi con flusso positivo in direzione opposta. \\
+Il flusso assegnato da $\Delta f$ all'arco inverso $(v,u)$ é limitato superiormente da $f(u,v)$ 
+(se $f'(u,v) = 0$) \\
+Il flusso assegnato da $\Delta f$ a un qualsiasi arco positivo $(u', v')$, invece, é al piú $c(u', v') - f(u', v')$
+(perché anche il flusso $f'$ non puó superare $c$) \\
+Quindi costruiamo un nuovo network che contiene anche gli archi inversi e usa i casi limite come capacitá,
+fatto in questo modo\footnote{assumendo che non ci siano archi tra la stessa coppia di vertici in direzioni opposte, per semplicitá.}:
+\begin{itemize}
+	\item contiene gli archi $(u,v) \in E$ con capacitá $c(u,v) - f(u,v)$ se $f(u,v) < c(u,v)$
+	\item non contiene gli archi $(u,v) \in E$ per cui $f(u, v) = c(u, v)$ (la loro capacitá residua é nulla)
+	\item contiene gli archi $(v,u)$ inversi di $(u,v) \in E$ con capacitá $f(u,v)$ se $f(u,v) > 0$
+\end{itemize}
+Allora trovare un qualsiasi flusso in questo network é equivalente a trovare un flusso $\Delta f$ in $N$ che migliori $f$ in $f'$. \\
+Ma per verificare che esista un flusso positivo qualsiasi, basta verificare se esiste un cammino da $s$ a $t$ con capacitá positiva. \\
+Ma tutte le capacitá sono positive. Il problema é ridotto a $\REACHABILITY$.
+La costruzione del network richiede tempo polinomiale, e $\REACHABILITY$ é risolvibile in tempo polinomiale, quindi possiamo determinare se un flusso é ottimo in tempo polinomiale.
+
+\hrulefill
+
+\textbf{Trovare il flusso ottimo:} \\
+Partiamo da $f(u,v) = 0$ per ogni arco $(u,v) \in E$. \\
+Applichiamo l'algoritmo precedente per verificare se $f$ é ottimo. \\
+Se non lo é, l'algoritmo trova un cammino da $s$ a $t$ con capacitá positiva. \\
+Possiamo aumentare il flusso lungo quel cammino usando la capacitá minima di un arco lungo il cammino nel network costruito.
+Se non troviamo nessun cammino, allora il flusso é ottimo.
+
+
+\subsection{$\TSP$}
+\label{problema:tsp}
+Sia $G = (V, E, w)$ un grafo pesato, dove $w: E \rightarrow \mathbb{N}$ é la funzione di peso degli archi. \\
+
+Un ciclo hamiltoniano é un ciclo che passa per tutti i vertici del grafo una sola volta,
+rappresentato da una funzione biettiva $\pi$ che codifica una permutazione dei vertici del grafo, 
+associando ogni vertice a una posizione nel ciclo hamiltoniano. \\
+
+Il problema del commesso viaggiatore, o Traveling Salesman Problem, consiste nel trovare
+un ciclo hamiltoniano di costo minimo in un grafo pesato.
+Anche questo é un problema di ottimizzazione, rappresentato da una funzione:
+\[\TSP: (G, w) \in \Sigma^* \rightarrow (\pi : V \rightarrow \{1,\dots,|V|\} \in V^{\{1,\dots,|V|\}}) \text{, con } \pi \text{ biettiva}\]
+
+\subsubsection{$\TSP_D$}
+Dati $G = (V, E, w)$ e un numero naturale $B \in \mathbb{N}$ detto \textit{budget}:
+\[
+\TSP_D = \{ (G, w, B) \mid G \text{ ha un ciclo hamiltoniano di costo } \leq B \}
+\]
+
+\subsubsection{Da $\TSP_D$ a $\TSP$}
+Come per $\MAXFLOW$, anche in questo caso possiamo risolvere il problema di ottimizzazione $\TSP$,
+interrogando $\TSP_D$ per trovare un budget minimo per cui la risposta é $"yes"$. \\
+Il budget minimo si cerca tramite una ricerca binaria (logaritmica) su tutti i possibili costi dei cicli hamiltoniani. \\
+
+Secondo il Papadimitriou, questo valore é $2^n$, anche se non sembra giusto, dato che il codominio di $w$ é $\mathbb{N}$ e non c'é limite superiore al costo di qualsiasi arco. \\
+In ogni caso, una ricerca binaria (logaritmica) su $2^n$ possibili valori richiede al piú $n$ interrogazioni. \\
+
+Dopo averlo trovato, fissiamo il budget minimo $B$ e continuiamo a interrogare $\TSP_D$, modificando il grafo: \\ 
+a ogni interrogazione, eliminiamo un arco (per esempio settando il suo costo a $C + 1$). \\
+Se la risposta é sempre $"yes"$, allora l'arco non fa parte del ciclo hamiltoniano ottimo, e possiamo escluderlo anche dalle interrogazioni successive. \\
+Altrimenti l'arco fa parte del ciclo hamiltoniano ottimo, e bisogna ripristinarlo. \\
+Dopo aver interrogato tutti gli archi, in al piú $n^2$ interrogazioni ($|E| \leq |V|^2 \leq n^2$), 
+gli archi che non sono stati eliminati sono quelli che formano il ciclo hamiltoniano ottimo. \\
+
+Quindi, possiamo risolvere $\TSP$ invocando $\TSP_D$ un numero polinomiale di volte ($n + n^2$).
+
+\subsection{$\BIPARTITEMATCHING$}
 Sia $G = (U, V, E)$ un grafo bipartito. $U, V$ sono due insiemi di vertici con la stessa cardinalitá $|U| = |V|$. \\ 
 Gli archi vanno solo da $U$ a $V$: $E \subseteq U \times V$. \\
-Un \textbf{matching} è un insieme di archi $M \subseteq E$ tale che ogni vertice di $U$ ha un arco in $M$ verso uno e un solo vertice di $V$. \\
+Un \textbf{matching} è un insieme di archi $M \subseteq E$ tale che ogni vertice di $U$ ha un arco in $M$ verso uno e un solo vertice di $V$.
 
+\subsubsection{Riduzione di $\BIPARTITEMATCHING$ a $\MAXFLOW$}
 Per ridurlo a $\MAXFLOW_D$ possiamo trasformare $G$ in un network, 
 aggiungendo un nodo $s$ e archi $(s, u)$ per ogni $u \in U$ 
 e un nodo $t$ con archi $(v, t)$ per ogni $v \in V$. \\
@@ -52,3 +205,4 @@ $B$ ha un matching se e solo se la rete ha un flusso di valore $|U|$.
     \centering
     \includegraphics[width=\textwidth]{images/bipartite_matching.png}
 \end{figure}
+
