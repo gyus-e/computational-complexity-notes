@@ -82,8 +82,16 @@ Supponiamo che una macchina $M$ a 1 nastro operi in tempo $f(n)$ e che a ogni pa
 Allora, dopo $f(n)$ passi, la testina avrá scritto esattamente $g(n) = f(n)$ simboli sul nastro. \\
 Qualsiasi altra macchina che operi in tempo $f(n)$ avrá eseguito dei passi sovrascrivendo celle giá utilizzate. In questo caso l'utilizzo di spazio é inferiore a quello di $M$.
 \end{proof}
+
 \subsubsection{Corollario: $\TIME(f(n)) \subseteq \SPACE(f(n))$}
-\subsubsection{Corollario: $\P \subseteq \PSPACE$}
-Qualunque linguaggio che puó essere deciso in tempo $f(n)$ puó essere deciso anche in spazio $f(n)$. \\
-Viceversa, non é possibile risolvere un problema in tempo inferiore allo spazio richiesto.
+Un linguaggio che puó essere deciso in tempo $f(n)$ puó essere deciso anche in spazio $f(n)$. \\
+Viceversa, non é possibile risolvere un problema in meno tempo di quanto serve a occupare lo spazio richiesto.
 \footnote{Sappiamo che strutture dati come le hash table o tecniche di programmazione dinamica scaricano sullo spazio la complessitá di tempo. Ma dal punto di vista della teoria della complessitá, queste tecniche cambiano il problema alla radice.}
+
+\subsubsection{Corollario: $\P \subseteq \PSPACE$}
+
+\subsubsection{Raffinamento: $\TIME(f(n)) \subseteq \SPACE{ ( \frac{f(n)}{\log(f(n))} ) }$}
+\label{raffinamento:time_space}
+Vedere appendice (\ref{proof:raffinamento_time_space})
+
+

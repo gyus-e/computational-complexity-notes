@@ -42,4 +42,54 @@ Siccome $d(u)$ cresce di almeno 2 ad ogni "resurrezione" dell'arco,
 quest'ultimo può diventare bottleneck al più
 $O(|V|/2) = O(n)$
 \end{proof}
-(Prova generata da Claude Sonnet 5 (Extra), dato che sul Papadimitriou non é spiegato).
+Prova generata da Claude Sonnet 5 (Extra).
+
+
+\newpage
+\subsection*{Raffinamento della relazione tra tempo e spazio}
+\label{proof:raffinamento_time_space}
+Contesto: limite superiore dello spazio rispetto al tempo (\ref{raffinamento:time_space}). \\
+\[ 
+\TIME(f(n)) \subseteq \SPACE{ ( \frac{f(n)}{\log(f(n))} ) } 
+\]
+\begin{proof}
+The proof standardizes the computation of a 
+$f(n)$ time-bounded Turing machine on input $x$ 
+so that the strings are divided in blocks of size $\sqrt{f(|x|)}$. 
+The machine is \textit{block-respecting}, that is, 
+block boundaries are crossed only in steps 
+that are integer multiples of $\sqrt{f(|x|)}$.
+\begin{enumerate}
+
+\item (a) Show that any $f(n)$ time-bounded $k$-string Turing machine 
+can be made block-respecting with no increase in time complexity.
+\subitem The operation of a block-respecting, $k$-string Thring machine $M$ on input $x$ 
+can becaptured by a graph $G_M(x)$ with $f(|x|)$ nodes each of indegree and outdegree $O(k)$. \\
+The nodes stand for computation segments of length $\sqrt{f(|x|)}$, while edges signify
+"information flow." That is, $(B, B')$ is an edge if and only if information from segment
+$B$ is necessary for carrying out the computation in segment $B'$.
+
+\item (b) Define precisely the graph $G_M(x)$. Argue that it is acyclic.
+\subitem Carrying out the computation of $M$ on $x$ in limited space can n ow be thought of as
+"computing" the graph $G_M(x)$, using "registers" of size $\sqrt{f(|x|)}$. The point is to do
+it with as few registers as possible, perhaps using recomputation.
+
+\item (c) Define precisely what is a computation of a directed acyclic graph by $R$ registers.
+Show that any directed acyclic graph with $n$ nodes and bounded indegree and outdegree 
+can be computed with $O( \frac{n}{\log n} )$ registers. 
+(This is by far the hardest part of the proof, 
+and it involves a sophisticated "divide-and-conquer" technique.)
+
+\item (d) Conclude that $\TIME(f(n)) \subseteq \SPACE{ ( \frac{f(n)}{\log(f(n))} ) }$. 
+(Use the (c) above to guess a computation on $G_M(x)$, and apply Savitch's theorem).
+
+\item (e) Show that for one-string machines M, $G_M(X)$ is always planar. What can you
+conclude about time and space in one-string machines? (Prove first that planar graphs
+can be computed with $O( \sqrt{n} )$ registers.)
+
+\end{enumerate}
+\end{proof}
+Dal problema 7.4.17 del Papadimitriou, a sua volta tratto dall'articolo \\
+J. E. Hopcroft, W. J. Paul, and L. G. Valiant "On time vs.- space and related
+problems," Proc. 16th Annual IEEE Symp. on the Foundations of Computer
+Sdence, pp. 57-64, 1975

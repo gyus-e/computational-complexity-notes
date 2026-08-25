@@ -1,31 +1,12 @@
-\section{Codifiche e riduzioni}
 
-\subsection{Codifiche ragionevoli}
+\section{Problemi e riduzioni}
+I problemi possono essere di decisione, cioé con risposta binaria $"yes"$ o $"no"$, 
+oppure di ottimizzazione, che richiedono una soluzione in output. \\
 
-Ci interessa misurare la complessità di un problema in funzione del tempo e spazio necessari a risolverlo al crescere della dimensione dell'input. \\
-Ma la stessa istanza di un problema puó essere codificata in modi diversi, con dimensioni diverse. \\
-
-\textbf{Esempio:} \\
-Se l'input è un grafo $x = (V, E)$ rappresentato tramite liste di adiacenza la dimensione dell'input è $n = |V| + |E|$. \\
-Se invece il grafo viene codificato tramite matrice di adiacenza, la dimensione dell'input è $n = |V|^2$. \\
-In questo caso non cambia molto, perché $|E| \leq |V|^2$. \\
-
-\textbf{Esempio:} \\
-Se l'input é un numero, viene tipicamente codificato in notazione posizionale (di solito binaria, decimale o esadecimale).
-La lunghezza della rappresentazione posizionale di un numero richiede una quantità logaritmica di cifre. \\
-Di conseguenza, quando l'input $x$ é un numero rappresentato in notazione posizionale, $n = log(x)$. \\
-Se invece $x$ fosse rappresentato in unario, allora la lunghezza della sua codifica sarebbe uguale al numero stesso: $n = x$. \\
-
-\textbf{La codifica dell'input puó alterare l'analisi di complessitá.} \\
-
-\textbf{Esempio:} \\
-Vogliamo calcolare il fattoriale di un numero naturale $x$. Consideriamo una versione naive che itera su tutti i numeri da 1 a x: $f(n) = f(log(x)) = x$. \\
-La soluzione trovata impiega tempo esponenziale su $n$: $f(n) = O(2^n)$. \\
-Si potrebbe codificare $x$ in unario: in quel caso avremmo che $x = n$ e il tempo risulterebbe essere una funzione lineare: $f(n) = O(n)$. \\
-
-\textbf{Perché la misura che effettuiamo sia corretta, la codifica dell'input deve essere ragionevole.} \\
-
-
+I problemi di ottimizzazione possono essere trattati come problemi di decisione, quindi
+ci concentreremo su questi ultimi. Se un problema di decisione puó essere risolto in tempo polinomiale,
+anche quello di ottimizzazione puó essere risolto in tempo polinomiale, tramite una ricerca binaria (a tempo logaritmico)
+sul valore della soluzione ottima.
 
 \subsection{Riduzioni}
 Una riduzione traduce un'istanza di un problema in un'istanza di un altro problema. \\
@@ -36,27 +17,6 @@ La traduzione deve essere:
     \item Efficiente: la traduzione deve essere eseguita in tempo polinomiale rispetto alla dimensione dell'input originale. \\
     In questo modo, se il secondo problema é risolvibile in tempo polinomiale, anche il primo lo é.
 \end{itemize}
-
-
-
-\subsection{$\SAT$}
-\label{problema:sat}
-Se $PL$ é l'insieme di tutte le formule della logica proposizionale, e $AP$ é l'insieme di tutte le proposizioni atomiche:
-\[
-\SAT = \{ \phi \in PL \mid \exists M \subseteq AP : M \models \phi \} 
-\]
-\[
-n = |\phi|
-\]
-
-É un problema che richiede di esplorare uno spazio esponenziale di possibili assegnazioni a ogni proporizione atomica in $\phi$. \\
-Un problema affine é quello del \textbf{model checking}: dato un modello $M$, verifica se $M \models \phi$.
-Questo problema é molto piú semplice da risolvere, infatti richiede tempo polinomiale. \\
-Un algoritmo non deterministico per $\SAT$ puó essere visto come un algoritmo di model checking, 
-dove il modello $M$ é scelto in maniera non deterministica. \\
-Basterebbe infatti rappresentare $\phi$ tramite l'albero sintattico ed effettuare una visita in post-order,
-calcolando il valore di veritá dei nodi interni e restituendo il valore del nodo radice.
-Il valore di veritá delle foglie, cioé delle proposizioni atomiche, é scelto in maniera non deterministica.
 
 
 \subsection{$\REACHABILITY$}
@@ -87,7 +47,7 @@ Nel caso peggiore esplora tutti gli archi del grafo una sola volta, quindi l'alg
 Questo problema é alla base di una importante tecnica dimostrativa, che useremo piú avanti.
 
 
-\newpage
+% \newpage
 \subsection{$\MAXFLOW$}
 Sia $N = (V, E, s, t, c)$ un \textbf{network}, cioé:
 \begin{itemize}
@@ -136,10 +96,10 @@ Consideriamo il massimo flusso possibile, dato dal minimo tra la somma delle cap
 m = \min\left(\sum_{v : (s,v) \in E} c(s, v), \sum_{u : (u, t) \in E} c(u, t)\right)
 \]
 Eseguiamo una ricerca binaria tra $0$ e $m$, interrogando $\MAXFLOW_D$ per trovare il valore massimo del flusso. \\
-Eseguiamo quindi $\log_2(m)$ interrogazioni. \\
-$m = O(|E| \cdot c_{max})$. \\
+Eseguiamo quindi al piú $\log_2(m)$ interrogazioni. \\
+$m \leq |E| \cdot c_{max} = O(2^n)$. \\
 La codifica dei valori di $c$ é logaritmica, di conseguenza $c_{max}$ é esponenziale rispetto alla dimensione dell'input. \\
-$\log_2(m) = O(\log_2(|E| \cdot c_{max})) = O(\log_2(2^n)) = O(n)$. \\
+$O(\log_2(m)) = O(\log_2(|E| \cdot c_{max})) = O(\log_2(2^n)) = O(n)$. \\
 Il numero di interrogazioni é polinomiale rispetto alla dimensione dell'input.
 
 \subsubsection{Riduzione di $\MAXFLOW$ a $\REACHABILITY$}
@@ -192,8 +152,9 @@ un \textit{cammino di miglioramento} da $s$ a $t$ con capacitá positiva. \\
 L'arco meno capiente lungo il cammino di miglioramento é detto \textit{bottleneck}. \\
 Possiamo aumentare il flusso lungo quel cammino sommandogli la capacitá del bottleneck. \\
 Se invece non troviamo nessun cammino, allora il flusso é ottimo. \\
-Al piú $m = O(|E| \cdot c_{max})$ iterazioni, perché ogni iterazione 
-aumenta il flusso di almeno 1 e il flusso non puó superare $m$. \\
+Al piú $m \leq |E| \cdot c_{max}$ iterazioni: nel caso peggiore ogni arco ha capacitá $c_{max}$,
+e ogni iterazione aumenta il flusso di un solo arco di 1 
+(se nessun arco migliora, il flusso é già ottimo e l'algoritmo termina). \\
 Ma $c_{max}$ é esponenziale rispetto alla dimensione dell'input, 
 quindi il numero di iterazioni non é polinomiale!
 
@@ -232,6 +193,26 @@ $B$ ha un matching se e solo se la rete ha un flusso di valore $|V|$.
 
 
 \newpage
+\subsection{$\SAT$}
+\label{problema:sat}
+Se $PL$ é l'insieme di tutte le formule della logica proposizionale, e $AP$ é l'insieme di tutte le proposizioni atomiche:
+\[
+\SAT = \{ \phi \in PL \mid \exists M \subseteq AP : M \models \phi \} 
+\]
+\[
+n = |\phi|
+\]
+
+É un problema che richiede di esplorare uno spazio esponenziale di possibili assegnazioni a ogni proporizione atomica in $\phi$. \\
+Un problema affine é quello del \textbf{model checking}: dato un modello $M$, verifica se $M \models \phi$.
+Questo problema é molto piú semplice da risolvere, infatti richiede tempo polinomiale. \\
+Un algoritmo non deterministico per $\SAT$ puó essere visto come un algoritmo di model checking, 
+dove il modello $M$ é scelto in maniera non deterministica. \\
+Basterebbe infatti rappresentare $\phi$ tramite l'albero sintattico ed effettuare una visita in post-order,
+calcolando il valore di veritá dei nodi interni e restituendo il valore del nodo radice.
+Il valore di veritá delle foglie, cioé delle proposizioni atomiche, é scelto in maniera non deterministica.
+
+
 \subsection{$\TSP$}
 \label{problema:tsp}
 Sia $G = (V, E, w)$ un grafo pesato, dove $w: E \rightarrow \mathbb{N}$ é la funzione di peso degli archi. \\
