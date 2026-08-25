@@ -1,0 +1,45 @@
+\section*{Appendice}
+
+\subsection*{Bottleneck in $\MAXFLOW$ con cammini minimi}
+\label{proof:bottleneck_in_max_flow}
+Contesto: Riduzione di $\MAXFLOW$ a $\REACHABILITY$ (\ref{riduzione:maxflow_reachability})\\
+
+Se scegliamo sempre il cammino di miglioramento piú corto, 
+ogni arco del network residuo puó diventare un bottleneck al massimo $n$ volte.
+
+\begin{proof}
+Sia $d_i(v)$ la distanza (numero di archi) da $s$ a $v$ nel grafo residuo dopo l'$i$-esima iterazione. \\
+Questa distanza non decresce mai nel corso dell'algoritmo:
+$$d_{i+1}(v) \geq d_i(v) \quad \forall v$$
+(Intuizione: un'iterazione satura archi in avanti e ne aggiunge all'indietro; 
+gli archi indietro aggiunti non possono "accorciare" nessun cammino, 
+perché se lo facessero avrebbero già dovuto far parte di un cammino minimo precedente,
+altrimenti $d_i$ non sarebbe stato minimo.) \\
+
+
+Supponiamo che l'arco $(u,v)$ sia bottleneck all'iterazione $i$. \\
+Siccome il cammino usato è un cammino minimo,
+$$d_i(v) = d_i(u) + 1$$
+Essendo bottleneck, $(u,v)$ satura e "scompare" dal grafo residuo (la sua capacità residua diventa 0); 
+contemporaneamente compare (o si rafforza) l'arco inverso $(v,u)$.
+
+Perché $(u,v)$ possa tornare disponibile nel grafo residuo — 
+e quindi possa ridiventare bottleneck una seconda volta, alla iterazione $j > i$ — 
+deve prima essere "riattivato" da un'iterazione che passa per l'arco inverso $(v,u)$. 
+In quel momento $(v,u)$ sta sul cammino minimo, quindi:
+$$d_j(u) = d_j(v) + 1$$
+
+Applicando le disuguaglianze precedenti, otteniamo:
+$$d_j(u) = d_j(v) + 1 \geq d_i(v) + 1 = (d_i(u)+1) + 1 = d_i(u) + 2$$
+
+
+Ogni volta che l'arco $(u,v)$ (o il suo inverso $(v,u)$) diventa bottleneck, 
+la distanza $d(u)$ da $s$ aumenta di almeno 2 rispetto alla volta precedente. \\
+
+Ma $d(u)$ può assumere solo valori tra $0$ e $|V|-1$ 
+(al più $|V|$ valori distinti, essendo $u \neq s$ e $u \neq t$ tipicamente tra $1$ e $|V|-2$). 
+Siccome $d(u)$ cresce di almeno 2 ad ogni "resurrezione" dell'arco, 
+quest'ultimo può diventare bottleneck al più
+$O(|V|/2) = O(n)$
+\end{proof}
+(Prova generata da Claude Sonnet 5 (Extra), dato che sul Papadimitriou non é spiegato).

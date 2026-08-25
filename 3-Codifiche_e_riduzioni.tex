@@ -63,7 +63,7 @@ Il valore di veritá delle foglie, cioé delle proposizioni atomiche, é scelto 
 \label{problema:reachability}
 Dato un grafo $G = (V, E)$ dove $E \subseteq V \times V$, e due vertici $s, t \in V$:
 \[
-\REACHABILITY = \{ (V, E, s, t) \mid s \text{ raggiunge } t \text{ in } G \} 
+\REACHABILITY = \{ (V, E, s, t) \mid s \text{ raggiunge } t \text{ in } (V, E) \} 
 \]
 \[
 n = |V| + |E| + 2
@@ -73,6 +73,12 @@ Un algoritmo per risolvere $\REACHABILITY(G, s, t)$ consiste nell'iniziare inser
 Poi iterare i seguenti passi finché $S$ non é vuoto:
 \begin{enumerate}
     \item Estrarre un vertice qualsiasi $v$ da $S$,
+        \subitem Per la correttezza ed efficienza di \textit{questo} algoritmo, non importa quale vertice estrae. 
+        Vedremo che, per la riduzione di $\MAXFLOW$ a $\REACHABILITY$ 
+        (\ref{riduzione:maxflow_reachability}), 
+        conviene estrarre il vertice piú vicino a $s$,
+        implementando $S$ come una coda (Breadth-First Search).
+        Questo garantisce di trovare sempre il cammino piú corto da $s$ a $t$.
     \item Inserire in $S$ tutti i vertici adiacenti a $v$ non marcati, e marcarli.
 \end{enumerate}
 Alla fine, se $t$ é marcato, allora $s$ raggiunge $t$. \\
@@ -88,8 +94,9 @@ Sia $N = (V, E, s, t, c)$ un \textbf{network}, cioé:
 	\item un grafo $(V, E)$, 
 	\item la funzione di \textbf{capacitá} $c: E \rightarrow \mathbb{N}$,
 	\begin{itemize}
-        \item chiamiamo $c_{max} = \max_{(u, v) \in E} c(u, v)$
-        \item supponiamo che i valori di $c$ siano rappresentati in binario. $|c| = |E| \cdot \log_2(c_{max})$
+        \item $c_{max} = \max_{(u, v) \in E} c(u, v)$
+        \item supponiamo che i valori di $c$ siano rappresentati in binario. \\
+        $|c| = |E| \cdot \log_2(c_{max})$
     \end{itemize}
 	\item un vertice sorgente $s \in V$ senza archi entranti 
 	\item un vertice pozzo $t \in V$ senza archi uscenti.
@@ -136,8 +143,10 @@ $\log_2(m) = O(\log_2(|E| \cdot c_{max})) = O(\log_2(2^n)) = O(n)$. \\
 Il numero di interrogazioni é polinomiale rispetto alla dimensione dell'input.
 
 \subsubsection{Riduzione di $\MAXFLOW$ a $\REACHABILITY$}
+\label{riduzione:maxflow_reachability}
 
-\textbf{Determinare se un flusso é ottimo:} \\
+\textbf{Determinare se un flusso é ottimo:}
+
 Consideriamo un flusso qualsiasi $f$. Ci interessa sapere se é ottimo oppure no. \\
 Supponiamo che $f$ non é ottimo, allora esiste un flusso $f'$ con valore maggiore di $f$. \\
 Consideriamo la differenza $\Delta f = f' - f$. É anch'essa un flusso 
@@ -148,45 +157,78 @@ Il flusso assegnato da $\Delta f$ all'arco inverso $(v,u)$ é limitato superiorm
 (se $f'(u,v) = 0$) \\
 Il flusso assegnato da $\Delta f$ a un qualsiasi arco positivo $(u', v')$, invece, é al piú $c(u', v') - f(u', v')$
 (perché anche il flusso $f'$ non puó superare $c$) \\
-Quindi costruiamo un nuovo network che contiene anche gli archi inversi e usa i casi limite come capacitá,
-fatto in questo modo\footnote{assumendo che non ci siano archi tra la stessa coppia di vertici in direzioni opposte, per semplicitá.}:
+Quindi costruiamo un \textit{network residuo}, 
+che contiene anche gli archi inversi e usa i casi limite come capacitá,
+fatto in questo modo
+\footnote{assumendo per semplicitá che non ci siano archi 
+tra la stessa coppia di vertici in direzioni opposte.}:
 \begin{itemize}
-	\item contiene gli archi $(u,v) \in E$ con capacitá $c(u,v) - f(u,v)$ se $f(u,v) < c(u,v)$
-	\item non contiene gli archi $(u,v) \in E$ per cui $f(u, v) = c(u, v)$ (la loro capacitá residua é nulla)
-	\item contiene gli archi $(v,u)$ inversi di $(u,v) \in E$ con capacitá $f(u,v)$ se $f(u,v) > 0$
+	\item contiene gli archi $(u,v) \in E$ \\ 
+    con capacitá $c(u,v) - f(u,v)$ \\
+    se $f(u,v) < c(u,v)$
+	\item non contiene gli archi $(u,v) \in E$ \\
+    se $f(u, v) = c(u, v)$ \\
+    (la loro capacitá residua é nulla)
+	\item contiene gli archi $(v,u)$ inversi di $(u,v) \in E$ \\
+    con capacitá $f(u,v)$ \\
+    se $f(u,v) > 0$
 \end{itemize}
-Allora trovare un qualsiasi flusso in questo network é equivalente a trovare un flusso $\Delta f$ in $N$ che migliori $f$ in $f'$. \\
-Ma per verificare che esista un flusso positivo qualsiasi, basta verificare se esiste un cammino da $s$ a $t$ con capacitá positiva. \\
+Allora trovare un qualsiasi flusso in questo network é equivalente a trovare 
+un flusso $\Delta f$ in $N$ che migliori $f$ in $f'$. \\
+Ma per verificare che esista un flusso positivo qualsiasi, basta verificare 
+che esiste un cammino da $s$ a $t$ con capacitá positiva. \\
 Ma tutte le capacitá sono positive. Il problema é ridotto a $\REACHABILITY$.
-La costruzione del network richiede tempo polinomiale, e $\REACHABILITY$ é risolvibile in tempo polinomiale, quindi possiamo determinare se un flusso é ottimo in tempo polinomiale.
+La costruzione del network residuo richiede tempo polinomiale
+(perché basta iterare su tutti gli archi del network originale), 
+e $\REACHABILITY$ é risolvibile in tempo polinomiale, 
+quindi tutto in tempo polinomiale.
 
-\hrulefill
+\textbf{Trovare il flusso ottimo:}
 
-\textbf{Trovare il flusso ottimo:} \\
 Partiamo da $f(u,v) = 0$ per ogni arco $(u,v) \in E$. \\
-Applichiamo l'algoritmo precedente per verificare se $f$ é ottimo. \\
-Se non lo é, l'algoritmo trova un cammino da $s$ a $t$ con capacitá positiva. \\
-Possiamo aumentare il flusso lungo quel cammino usando la capacitá minima di un arco lungo il cammino nel network costruito.
-Se non troviamo nessun cammino, allora il flusso é ottimo.
+Applichiamo l'algoritmo precedente per verificare se $f$ é ottimo, costruendo il network residuo. \\
+Se non lo é, l'algoritmo trova nel network residuo
+un \textit{cammino di miglioramento} da $s$ a $t$ con capacitá positiva. \\
+L'arco meno capiente lungo il cammino di miglioramento é detto \textit{bottleneck}. \\
+Possiamo aumentare il flusso lungo quel cammino sommandogli la capacitá del bottleneck. \\
+Se invece non troviamo nessun cammino, allora il flusso é ottimo. \\
+Al piú $m = O(|E| \cdot c_{max})$ iterazioni, perché ogni iterazione 
+aumenta il flusso di almeno 1 e il flusso non puó superare $m$. \\
+Ma $c_{max}$ é esponenziale rispetto alla dimensione dell'input, 
+quindi il numero di iterazioni non é polinomiale!
+
+\textbf{Trovare il flusso ottimo in tempo polinomiale:}
+
+Per superare questo problema, possiamo fare in modo da scegliere sempre il 
+cammino di miglioramento piú corto, cioé quello con il minor numero di archi. \\
+Facilmente implementabile se $\REACHABILITY$ usa una coda per l'insieme $S$. \\
+Se scegliamo sempre il cammino di miglioramento piú corto, 
+ogni arco del network residuo puó diventare un bottleneck al massimo $n$ volte (vedere appendice \ref{proof:bottleneck_in_max_flow}). \\
+
+Nel caso peggiore, ognuno dei $n^2$ archi del network originale 
+puó diventare un bottleneck al piú $n$ volte.
+Quindi il numero di iterazioni é al piú $n^3$, cioé polinomiale.
 
 
-\newpage
+% \newpage
 \subsection{$\BIPARTITEMATCHING$}
 Sia $G = (U, V, E)$ un grafo bipartito. $U, V$ sono due insiemi di vertici con la stessa cardinalitá $|U| = |V|$. \\ 
 Gli archi vanno solo da $U$ a $V$: $E \subseteq U \times V$. \\
 Un \textbf{matching} è un insieme di archi $M \subseteq E$ tale che ogni vertice di $U$ ha un arco in $M$ verso uno e un solo vertice di $V$.
+\[
+\BIPARTITEMATCHING = \{ (U, V, E) \mid (U, V, E) \text{ ha un matching} \}
+\]
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{images/bipartite_matching.png}
-\end{figure}
-
-\subsubsection{Riduzione di $\BIPARTITEMATCHING$ a $\MAXFLOW$}
+\subsubsection{Riduzione di $\BIPARTITEMATCHING$ a $\MAXFLOW_D$}
 Per ridurlo a $\MAXFLOW_D$ possiamo trasformare $G$ in un network, 
 aggiungendo un nodo $s$ e archi $(s, u)$ per ogni $u \in U$ 
 e un nodo $t$ con archi $(v, t)$ per ogni $v \in V$. \\
 Settando $c(u, v) = 1$ per ogni arco $(u, v)$, possiamo concludere che
-$B$ ha un matching se e solo se la rete ha un flusso di valore $|U|$.
+$B$ ha un matching se e solo se la rete ha un flusso di valore $|V|$.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{images/bipartite_matching.png}
+\end{figure}
 
 
 \newpage
