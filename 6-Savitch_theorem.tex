@@ -1,0 +1,68 @@
+\section{Teorema di Savitch}
+\label{theorem:savitch}
+\[
+\REACHABILITY \in \SPACE(\log^2(n))
+\]
+
+\begin{proof}
+Dato un grafo $G = (V, E)$, codificando i vertici come numeri interi da 1 a $n$, definiamo il predicato: \\
+
+$\PATH(s, t, i)$ sse esiste un cammino da $s$ a $t$ di lunghezza al più $2^i$ \\
+
+Possiamo descriverlo ricorsivamente come segue:
+\[
+\PATH(s, t, i) =
+\begin{cases}
+    i = 0 \implies (s, t) \in E \\
+    i > 0 \implies \exists z \in V : \PATH(s, z, i-1) \land \PATH(z, t, i-1)
+\end{cases}
+\]
+\begin{itemize}
+    \item Se $i = 0$ esiste un cammino di lunghezza $2^0 = 1$, cioé un arco $(s,t)$
+    \item Se $i > 0$ esiste un vertice $z$ tale che il cammino da $s$ a $z$ é lungo la metá di quello da $s$ a $t$, cioé $2^{i-1}$.
+        E analogamente per il cammino da $z$ a $t$. Quindi $z$ sta a metá strada tra $s$ a $t$. \\
+\end{itemize} 
+
+Poiché i vertici sono $n$, la lunghezza massima di un cammino é $n$, quindi $i \leq \lceil \log(n) \rceil$. \\
+
+Risolvere $\REACHABILITY$ equivale a calcolare 
+$\PATH(s, t, \lceil \log(n) \rceil)$ per qualsiasi coppia di vertici $s$ e $t$.
+Useremo quest'idea per costruire una MdT con input e output che dato un grafo in input,
+calcoli proprio questo, in spazio $O(\log^2(n))$. \\ 
+
+Dalla definizione ricorsiva di $\PATH$ costruiamo un algoritmo ricorsivo,
+gestendo manualmente lo stack di attivazione sul secondo nastro.
+
+Sia $M$ una MdT con input e output. \\
+Sul primo nastro $M$ ha come input la matrice di adiacenza del grafo.\\
+
+Sul secondo nastro teniamo $s, t, i$, codificati in binario.
+quindi lo spazio occupato dal secondo nastro é logaritmico su $(s, t, i)$.
+Ma ovviamente $s, t \leq n$ e come abbiamo detto $i \leq \lceil \log(n) \rceil$.
+Quindi lo spazio occupato dal secondo nastro é inizialmente $O(\log(n))$. \\
+
+Usiamo anche un terzo nastro come contatore per enumerare i vertici $z$ da 1 a $n$, con spazio logaritmico. \\
+
+A ogni passo ricorsivo:
+\begin{enumerate}
+    \item consideriamo un vertice $z$ e aggiungiamo $(s, z, i-1)$ al secondo nastro
+    \item risolviamo ricorsivamente $\PATH(s, z, i-1)$
+    \begin{enumerate}
+    \item se la risposta é negativa, proviamo il vertice $z' = z+1$ sovrascrivendo $(s, z, i-1)$ con $(s, z', i-1)$ e riproviamo. 
+    \subitem Se $z = n-1$, allora rispondiamo negativamente.
+    \item se la risposta é positiva, sovrascriviamo $(s, z, i-1)$ con $(z, t, i-1)$ sul secondo nastro e andiamo al passo successivo
+    \end{enumerate}
+    \item risolviamo ricorsivamente $\PATH(z, t, i-1)$
+    \begin{enumerate}
+    \item se la risposta é negativa, proviamo il vertice $z'= z+1$ sovrascrivendo $(z, t, i-1)$ con $(z', t, i-1)$ e riproviamo
+    \subitem Se $z = n-1$, allora rispondiamo negativamente.
+    \item se la risposta é positiva, allora abbiamo trovato un cammino da $s$ a $t$ di lunghezza al più $2^i$, quindi rispondiamo positivamente \\
+    \end{enumerate}
+\end{enumerate}
+
+\begin{itemize}
+    \item Siccome $i \leq \lceil \log(n) \rceil$, i passi ricorsivi sono al più $\lceil \log(n) \rceil$. 
+    \item In ogni passo ricorsivo, si aggiunge al secondo nastro una nuova terna, di dimensione $O(\log(n))$. 
+\end{itemize}
+Allora lo spazio totale occupato dal secondo nastro é $O(\log^2(n))$. \\
+\end{proof}

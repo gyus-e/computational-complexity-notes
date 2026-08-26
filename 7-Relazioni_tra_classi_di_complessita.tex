@@ -82,12 +82,13 @@ Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f
 
 
 \subsection{Teorema: simulazione di una MdT non deterministica che opera in spazio limitato con una MdT deterministica}
+\label{theorem:non_deterministic_space_to_deterministic_time}
 Data una MdT non deterministica $N$ con input e output, a $k$ nastri,
 che decide $L$ e opera in spazio $g(n)$. \\
 Allora esiste una MdT deterministica $M$ 
-che decide $L$ e opera in tempo $O(c^{\log(n) + g(n)})$.
+che decide $L$ e opera in tempo $O(c^{\log(n) + g(n)})$ e spazio $O(g^2(n))$.
 \begin{proof}
-La dimostrazione utilizza l'algoritmo polinomiale per $\REACHABILITY$ (\ref{problema:reachability}). \\
+La dimostrazione utilizza l'algoritmo per $\REACHABILITY$ mostrato nel teorema di Savitch (\ref{theorem:savitch}). \\
 Possiamo vedere la computazione di $N$ come un grafo. \\
 Ogni configurazione di $N$ é un vertice del grafo, 
 e gli archi sono le transizioni possibili tra configurazioni. \\
@@ -127,7 +128,8 @@ $M$ decide $L$ in tempo $O(|V|)$. \\
 \[
 x \in L \iff \exists \text{ un run di } N \text{ che accetta } x \iff \exists \text{ un cammino da } C_s \text{ a } C_{"yes"} \text{ in } G_N
 \]
-Ma questo é un problema di $\REACHABILITY$, che sappiamo essere risolvibile in tempo polinomiale rispetto al numero di vertici del grafo. \\
+Ma questo é un problema di $\REACHABILITY$, che sappiamo essere risolvibile in tempo polinomiale rispetto al numero di vertici del grafo (da \ref{problema:reachability}) 
+e spazio $O(\log^2(|V|)) = O(\log^2 (c^{g(n)})) = O(g^2(n))$ (da \ref{theorem:savitch}). \\
 
 Restano da calcolare il tempo e lo spazio richiesti per costruire $G_N$. \\
 
@@ -140,12 +142,19 @@ se esiste un arco tra due configurazioni $C_1$ e $C_2$,
 semplicemente simulando un passo di $N$, in tempo polinomiale.
 \end{proof}
 \subsubsection{Corollario: $\NSPACE(g(n)) \subseteq \TIME(c^{\log(n) + g(n)})$}
+\subsubsection{Corollario: $\NPSPACE(g(n) \subseteq \SPACE(g^2(n))$}
 \subsubsection{Corollario: $\NPSPACE \subseteq \EXP$}
 \begin{proof}
 $
 \NPSPACE = \bigcup_{i>0} \NSPACE(n^i) \subseteq \bigcup_{i>0} \TIME(c^{\log(n) + n^i})$ \\
 $\bigcup_{i>0} \TIME(c^{\log(n)} \cdot c^{n^i}) = \bigcup_{i>0} \TIME(n c^{n^i}) = \bigcup_{i>0} \TIME(c^{n^i}) = \EXP
 $
+\end{proof}
+\subsubsection{Corollario: $\PSPACE = \NPSPACE$}
+\begin{proof}
+$\PSPACE \subseteq \NPSPACE$ da \ref{theorem:deterministic_to_non_deterministic} \\
+Applicando $\NSPACE(g(n)) \subseteq \SPACE(g^2(n))$ con $g(n) = n^i$: \\
+$\NPSPACE = \bigcup_{i>0} \NSPACE(n^i) \subseteq \bigcup_{i>0} \SPACE(n^{2i}) = \bigcup_{i>0} \SPACE(n^i) = \PSPACE$
 \end{proof}
 
 \subsection{Proposizione: chiusura delle classi di complessitá deterministiche rispetto al complemento}
@@ -159,7 +168,7 @@ Allora possiamo costruire una macchina $M'$ che decide $\overline{L}$ e opera in
 \subsubsection{Corollario: $\co \P = \P$}
 \subsubsection{Corollario: $\co \EXP = \EXP$}
 \subsubsection{Corollario: $\co \L = \L$}
-\subsubsection{Corollario: $\co \PSPACE = \PSPACE$}
+\subsubsection{Corollario: $\co \PSPACE = \PSPACE = \NPSPACE = \co \NPSPACE$}
 \subsubsection{Perché non é possibile fare lo stesso ragionamento per le classi non deterministiche}
 Con una macchina non deterministica $N$ non basta invertire gli stati terminali. \\
 Quello che vorremmo é una macchina $N'$ che accetta $\overline{L}$ perché:
@@ -171,7 +180,8 @@ Invertendo gli stati $"yes$ e $"no"$ di $N$ non si otterrebbe una macchina che a
 Invertire $"yes"$ e $"no"$ porta una macchina che accetta $x$ se un solo run di $N$ lo rifiutava. 
 \textbf{Un input accettato da una macchina non deterministica puó essere rifiutato da un run}, e quindi accettato anche dalla nuova macchina. \\
 
-Vedremo che é possibile dimostrare la chiusura delle classi di complessitá di spazio non deterministiche rispetto al complemento. \\
+Vedremo che é possibile dimostrare la chiusura delle classi di complessitá di spazio non deterministiche rispetto al complemento
+(e lo abbiamo giá fatto per $\NPSPACE$). \\
 Per quanto riguarda le classi di complessitá di tempo non deterministiche, invece, il problema è aperto.
 
 
