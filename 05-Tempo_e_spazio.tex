@@ -66,14 +66,24 @@ Per ogni classe di complessitá $C$ definiamo la classe complementare $\co C$ co
 $\co C = \{ \overline{L} : L \in C \}$
 
 
-\subsection{Teorema: il tempo é limitato inferiormente dall'input}
+\subsection{Il tempo é limitato inferiormente dall'input}
 \label{teorema:tempo_limitato_inferiormente_dall_input}
 {$f(n) = \Omega(n)$} \\
 O, equivalentemente: \\
 {$n = O(f(n))$}
-\begin{proof}
-Se la codifica dell'input é \textit{ragionevole}, allora la macchina di Turing deve leggere tutto l'input prima di poter decidere se accettarlo o rifiutarlo.
-\end{proof}
+
+Una macchina di Turing deve leggere tutto l'input prima di poter decidere se accettarlo o rifiutarlo.
+\footnote{Possiamo imporre che l'input deve essere codificato in modo "ragionevole", 
+cioé senza sprechi di spazio che alterino la misura della complessitá di tempo 
+(ad esempio la codifica in unario dei numeri). 
+Possiamo anche affermare che i problemi che effettivamente si risolvono
+senza scandire tutto l'input (almeno nel caso peggiore) non sono particolarmente interessanti. 
+In ogni caso questa idea, che sembra ragionevole, stona con quello che sappiamo, 
+cioé che esistono strutture dati fatte apposta per evitare di scandire tutto l'input 
+(pensiamo agli alberi bilanciati). 
+Potremmo, forzando un po' la mano, affermare che il tempo richiesto per caricare una struttura dati in memoria
+sia necessariamente proporzionale alla dimensione della struttura dati, e che vada contato nella complessitá di tempo.\\
+}
 
 
 \subsection{Teorema: lo spazio é limitato superiormente dal tempo}
@@ -88,7 +98,11 @@ Qualsiasi altra macchina che operi in tempo $f(n)$ avrá eseguito dei passi sovr
 \subsubsection{Corollario: $\TIME(f(n)) \subseteq \SPACE(f(n))$}
 Un linguaggio che puó essere deciso in tempo $f(n)$ puó essere deciso anche in spazio $f(n)$. \\
 Viceversa, non é possibile risolvere un problema in meno tempo di quanto serve a occupare lo spazio richiesto.
-\footnote{Sappiamo che strutture dati come le hash table o tecniche di programmazione dinamica scaricano sullo spazio la complessitá di tempo. Ma dal punto di vista della teoria della complessitá, queste tecniche cambiano il problema alla radice.}
+\footnote{Sappiamo che strutture dati come le hash table o tecniche di programmazione dinamica 
+scaricano sullo spazio la complessitá di tempo.
+Ma qual é il tempo necessario per allocare tutta la memoria richiesta da queste tecniche?
+Potremmo vederle come esempi di riduzione che usa spazio piú che logaritmico,
+dove quindi é proprio la riduzione a fare il grosso del lavoro.}
 
 \subsubsection{Corollario: $\P \subseteq \PSPACE$}
 

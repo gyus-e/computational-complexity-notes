@@ -46,7 +46,7 @@ Le macchine di Turing deterministiche sono un caso particolare di quelle non det
 \label{theorem:non_deterministic_to_deterministic}
 Data una MdT non deterministica $N$ che decide $L$ e opera in tempo $f(n)$. \\
 Allora esiste una MdT deterministica $M$ che decide $L$ e opera in tempo $O(c^{f(n)})$ e spazio $O(f(n))$.
-\begin{figure}[h!]
+\begin{figure}[h]
 	\caption{\small Albero di computazione di una MdT non deterministica.}
 	\centering
 	\label{fig:albero_computazione}
@@ -168,7 +168,8 @@ Allora possiamo costruire una macchina $M'$ che decide $\overline{L}$ e opera in
 \subsubsection{Corollario: $\co \P = \P$}
 \subsubsection{Corollario: $\co \EXP = \EXP$}
 \subsubsection{Corollario: $\co \L = \L$}
-\subsubsection{Corollario: $\co \PSPACE = \PSPACE = \NPSPACE = \co \NPSPACE$}
+\subsubsection{Corollario: $\co \PSPACE = \PSPACE$}
+\subsubsection{Corollario: $\co \NPSPACE = \NPSPACE$}
 \subsubsection{Perché non é possibile fare lo stesso ragionamento per le classi non deterministiche}
 Con una macchina non deterministica $N$ non basta invertire gli stati terminali. \\
 Quello che vorremmo é una macchina $N'$ che accetta $\overline{L}$ perché:

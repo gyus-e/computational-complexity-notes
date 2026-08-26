@@ -1,0 +1,90 @@
+\section{Riduzioni}
+Una riduzione traduce un'istanza di un problema in un'istanza di un altro problema. \\
+Poi usa la soluzione del secondo problema per risolvere il primo. \\
+La traduzione deve essere:
+\begin{itemize}
+    \item Corretta: la risposta dell'istanza tradotta deve essere la stessa della risposta dell'istanza originale.
+    \item Efficiente: la traduzione deve essere eseguita in tempo polinomiale rispetto alla dimensione dell'input originale. \\
+    In questo modo, se il secondo problema é risolvibile in tempo polinomiale, anche il primo lo é.
+\end{itemize}
+
+
+\subsection{Riduzione di $\MAXFLOW$ a $\REACHABILITY$}
+\label{riduzione:maxflow_reachability}
+
+\textbf{Determinare se un flusso é ottimo:}
+
+Consideriamo un flusso qualsiasi $f$. Ci interessa sapere se é ottimo oppure no. \\
+Supponiamo che $f$ non é ottimo, allora esiste un flusso $f'$ con valore maggiore di $f$. \\
+Consideriamo la differenza $\Delta f = f' - f$. É anch'essa un flusso 
+(la stessa quantitá viene sottratta tra gli archi entranti e uscenti di ogni vertice), 
+ha valore positivo, ma potrebbe associare un flusso negativo a qualche arco $(u,v)$. \\
+Pensiamo agli archi con flusso negativo come archi con flusso positivo in direzione opposta. \\
+Il flusso assegnato da $\Delta f$ all'arco inverso $(v,u)$ é limitato superiormente da $f(u,v)$ 
+(se $f'(u,v) = 0$) \\
+Il flusso assegnato da $\Delta f$ a un qualsiasi arco positivo $(u', v')$, invece, é al piú $c(u', v') - f(u', v')$
+(perché anche il flusso $f'$ non puó superare $c$) \\
+Quindi costruiamo un \textit{network residuo}, 
+che contiene anche gli archi inversi e usa i casi limite come capacitá,
+fatto in questo modo
+\footnote{assumendo per semplicitá che non ci siano archi 
+tra la stessa coppia di vertici in direzioni opposte.}:
+\begin{itemize}
+	\item contiene gli archi $(u,v) \in E$ \\ 
+    con capacitá $c(u,v) - f(u,v)$ \\
+    se $f(u,v) < c(u,v)$
+	\item non contiene gli archi $(u,v) \in E$ \\
+    se $f(u, v) = c(u, v)$ \\
+    (la loro capacitá residua é nulla)
+	\item contiene gli archi $(v,u)$ inversi di $(u,v) \in E$ \\
+    con capacitá $f(u,v)$ \\
+    se $f(u,v) > 0$
+\end{itemize}
+Allora trovare un qualsiasi flusso in questo network é equivalente a trovare 
+un flusso $\Delta f$ in $N$ che migliori $f$ in $f'$. \\
+Ma per verificare che esista un flusso positivo qualsiasi, basta verificare 
+che esiste un cammino da $s$ a $t$ con capacitá positiva. \\
+Ma tutte le capacitá sono positive. Il problema é ridotto a $\REACHABILITY$.
+La costruzione del network residuo richiede tempo polinomiale
+(perché basta iterare su tutti gli archi del network originale), 
+e $\REACHABILITY$ é risolvibile in tempo polinomiale, 
+quindi tutto in tempo polinomiale.
+
+\textbf{Trovare il flusso ottimo:}
+
+Partiamo da $f(u,v) = 0$ per ogni arco $(u,v) \in E$. \\
+Applichiamo l'algoritmo precedente per verificare se $f$ é ottimo, costruendo il network residuo. \\
+Se non lo é, l'algoritmo trova nel network residuo
+un \textit{cammino di miglioramento} da $s$ a $t$ con capacitá positiva. \\
+L'arco meno capiente lungo il cammino di miglioramento é detto \textit{bottleneck}. \\
+Possiamo aumentare il flusso lungo quel cammino sommandogli la capacitá del bottleneck. \\
+Se invece non troviamo nessun cammino, allora il flusso é ottimo. \\
+Al piú $m \leq |E| \cdot c_{max}$ iterazioni: nel caso peggiore ogni arco ha capacitá $c_{max}$,
+e ogni iterazione aumenta il flusso di un solo arco di 1 
+(se nessun arco migliora, il flusso é già ottimo e l'algoritmo termina). \\
+Ma $c_{max}$ é esponenziale rispetto alla dimensione dell'input, 
+quindi il numero di iterazioni non é polinomiale!
+
+\textbf{Trovare il flusso ottimo in tempo polinomiale:}
+
+Per superare questo problema, possiamo fare in modo da scegliere sempre il 
+cammino di miglioramento piú corto, cioé quello con il minor numero di archi. \\
+Facilmente implementabile se $\REACHABILITY$ usa una coda per l'insieme $S$. \\
+Se scegliamo sempre il cammino di miglioramento piú corto, 
+ogni arco del network residuo puó diventare un bottleneck al massimo $n$ volte (vedere appendice \ref{proof:bottleneck_in_max_flow}). \\
+
+Nel caso peggiore, ognuno dei $n^2$ archi del network originale 
+puó diventare un bottleneck al piú $n$ volte.
+Quindi il numero di iterazioni é al piú $n^3$, cioé polinomiale.
+
+
+\subsection{Riduzione di $\BIPARTITEMATCHING$ a $\MAXFLOW_D$}
+Per ridurlo a $\MAXFLOW_D$ possiamo trasformare $G$ in un network, 
+aggiungendo un vertice $s$ e archi $(s, u)$ per ogni $u \in U$ 
+e un vertice $t$ con archi $(v, t)$ per ogni $v \in V$. \\
+Settando $c(u, v) = 1$ per ogni arco $(u, v)$, possiamo concludere che
+$B$ ha un matching se e solo se la rete ha un flusso di valore $|V|$.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{images/bipartite_matching.png}
+\end{figure}
