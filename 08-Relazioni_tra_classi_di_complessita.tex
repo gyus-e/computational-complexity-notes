@@ -2,6 +2,7 @@
 Ora che non siamo piú limitati a MdT precise, con input e output e con un solo nastro, e che possiamo usare la notazione asintotica, possiamo confrontare le classi di complessitá simulando le macchine di Turing tra loro. \\
 
 \subsection{Teorema: terminazione delle MdT deterministiche che operano in spazio limitato}
+\label{teorema:terminazione_mdt_spazio_limitato}
 Se una MdT $M$ opera in spazio $g(n)$, allora esiste una MdT $M'$ che opera in spazio $O(g(n))$ e termina per ogni input entro $O(c^{g(n)})$ passi.
 \begin{proof}
 $M' = (M_1, M_2)$ é la concatenazione di due macchine, e utilizza un nastro aggiuntivo. \\
@@ -158,6 +159,7 @@ $\NPSPACE = \bigcup_{i>0} \NSPACE(n^i) \subseteq \bigcup_{i>0} \SPACE(n^{2i}) = 
 \end{proof}
 
 \subsection{Proposizione: chiusura delle classi di complessitá deterministiche rispetto al complemento}
+\label{proposizione:chiusura_classi_deterministiche_complemento}
 Se $C$ é una classe di complessitá deterministica, allora $\co C = C$
 \begin{proof}
 Sia $L \in C$ e sia $M$ una macchina di Turing che decide $L$ e opera in tempo $f(n)$ e spazio $g(n)$. \\

@@ -1,13 +1,49 @@
-\section{Prerequisiti}
+\section*{Prerequisiti e obiettivi}
 
-Algebra: calcolo combinatorio, teoria degli insiemi, relazioni e funzioni, chiusura dell'anello dei polinomi rispetto alla composizione (che rende particolarmente interessanti gli algoritmi polinomiali).\\
+\subsection{Prerequisiti}
+\subsubsection*{Algebra} 
+Calcolo combinatorio, teoria degli insiemi, relazioni e funzioni, chiusura dell'anello dei polinomi rispetto alla composizione (che rende particolarmente interessanti gli algoritmi polinomiali).
 
-Elementi di informatica teorica: macchine di Turing, linguaggi ricorsivi e ricorsivamente enumerabili.\\
+\subsubsection*{Elementi di informatica teorica} 
+Macchine di Turing, linguaggi ricorsivi e ricorsivamente enumerabili.\\
 Puó aiutare ricordare il funzionamento degli automi a stati finiti non deterministici per comprendere le Macchine di Turing non deterministiche.\\
-Puó aiutare ricordare il problema della fermata per la dimostrazione dell'Hierarchy Theorem (\ref{sec:hierarchy_theorem}).\\
+Puó aiutare ricordare il problema della fermata per la dimostrazione dell'Hierarchy Theorem (\ref{sec:hierarchy_theorem}).
 
-Algoritmi e strutture dati: notazione asintotica, dimostrazioni di correttezza, analisi di complessitá degli algoritmi, teoria dei grafi.\\
+\subsubsection*{Algoritmi e strutture dati} 
+Notazione asintotica, dimostrazioni di correttezza, analisi di complessitá degli algoritmi, teoria dei grafi.
 
-Logica: sintassi e semantica della logica proposizionale e del primo ordine, in particolare la definizione di soddisfacibilitá, fondamentale per $\SAT$ (\ref{problema:sat}). \\
-Puó essere utile confrontare la descrizione di un circuito hamiltoniano in logica proposizionale con la riduzione di $\HAMILTONPATH$ a $\SAT$ (\ref{riduzione:hamiltonpath_sat}).\\
-Puó aiutare ricordare le regole del calcolo deduttivo e alcune tautologie per seguire meglio alcune dimostrazioni.\\
+\subsubsection*{Logica}
+Sintassi e semantica della logica proposizionale e del primo ordine, in particolare la definizione di soddisfacibilitá, fondamentale per $\SAT$ (\ref{problema:sat}). \\
+Puó essere utile confrontare la descrizione di un circuito hamiltoniano in logica proposizionale (nella lezione "PL Applications") con la riduzione di $\HAMILTONPATH$ a $\SAT$ (\ref{riduzione:hamiltonpath_sat}).\\
+Puó aiutare ricordare le regole del calcolo deduttivo e alcune tautologie per seguire meglio alcune dimostrazioni.
+
+\newpage
+\subsection{Obiettivi}
+Bisogna conoscere tutte le definizioni formali e tutti gli enunciati dei teoremi.\\
+% A volte il libro contiene piu' dettagli, a volte se ne trovano di piu' nelle slides. 
+% Bisogna conoscere l'unione di tutti i dettagli.\\
+Il professore si aspetta che siano conosciute tutte le dimostrazioni banali,
+anche se non indicate qui sotto.
+Ad esempio:
+\begin{itemize}
+\item l'inclusione dei linguaggi ricorsivi tra quelli ricorsivamente enumerabili (\ref{proposizione:linguaggi_ricorsivi_ricorsivamente_enumerabili}),
+\item il contenimento di una classe deterministica nella corrispondente classe nondeterministica (\ref{theorem:deterministic_to_non_deterministic}),
+\item la chiusura delle classi deterministiche rispetto al complemento (\ref{proposizione:chiusura_classi_deterministiche_complemento}).
+\end{itemize}
+
+\subsubsection{Dimostrazioni da conoscere assolutamente}
+\begin{itemize}
+\item Teorema dello speedup multinastro (\ref{teorema:speedup_multinastro})
+\item Terminazione delle MdT space-bounded  (\ref{teorema:terminazione_mdt_spazio_limitato})
+\item Dimostrazione che $\NTIME(f(n))$ e' contenuta in $\TIME(c^{f(n)})$  (\ref{theorem:non_deterministic_to_deterministic})
+\item Teorema di Savitch (\ref{theorem:savitch}) e i suoi corollari (\ref{theorem:non_deterministic_space_to_deterministic_time})
+\item Teorema di Cook-Levin: $\NP$-completezza di $\SAT$ (\ref{theorem:cook_levin})
+\item %
+\item Lez 7 - Prop. 9.1 [slide 8 e segg.]
+\item Lez 8 - Proposizioni A-\{$\leftarrow$, $\rightarrow$, -\}, [slide 7 e segg.]
+\item Lez 9 - Teorema 17.11 + Corollario, 82, 85
+\item Lez 10 - Proposizione su relazioni tra FSAT e SAT, [slides 11-12]
+\item Lez 10 - Thm 10.2, [slide 13]
+\item Lez Q - Le due Proposizioni nella slide 20
+\item Lez X - Teorema 20.1 [slides 6 e segg.]
+\end{itemize}
