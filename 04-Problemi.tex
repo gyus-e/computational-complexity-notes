@@ -10,7 +10,7 @@ oppure di ottimizzazione, che richiedono una soluzione in output. \\
 I problemi di ottimizzazione possono essere trattati come problemi di decisione, quindi
 ci concentreremo su questi ultimi. Se un problema di decisione puó essere risolto in tempo polinomiale,
 anche quello di ottimizzazione puó essere risolto in tempo polinomiale, tramite una ricerca binaria (a tempo logaritmico)
-sul valore della soluzione ottima. \\
+sul valore della soluzione ottima (vedremo esempi per $\MAXFLOW$ e $\TSP$). \\
 
 Un problema di decisione puó essere codificato come un linguaggio $L \in \Sigma^*$ 
 tale che una macchina di Turing risponde $"yes"$ a una istanza di un problema decisionale 
@@ -160,8 +160,15 @@ Questo problema é molto piú semplice da risolvere, infatti richiede tempo poli
 Un algoritmo non deterministico per $\SAT$ puó essere visto come un algoritmo di model checking, 
 dove il modello $M$ é scelto in maniera non deterministica. \\
 Basterebbe infatti rappresentare $\phi$ tramite l'albero sintattico ed effettuare una visita in post-order,
-calcolando il valore di veritá dei nodi interni e restituendo il valore del nodo radice.
-Il valore di veritá delle foglie, cioé delle proposizioni atomiche, é scelto in maniera non deterministica.
+calcolando il valore di veritá dei nodi interni e restituendo il valore del nodo radice. \\
+Il valore di veritá delle foglie, cioé delle proposizioni atomiche, é scelto in maniera non deterministica. 
+Questo vuol dire che l'algoritmo controlla in maniera simultanea tutti i modelli possibili. \\
+
+\subsubsection{$\CNFSAT$}
+Soddisfaciilibtá di una formula in forma normale congiuntiva (CNF), cioé congiunzione di clausole disgiuntive (forma $\bigwedge(\bigvee(...))$). \\
+
+\subsubsection{$\kSAT$}
+Soddisfaciilibtá di una formula in forma normale congiuntiva (CNF), dove ogni clausola ha esattamente $k$ letterali. \\
 
 
 \subsection{$\HAMILTONPATH$}

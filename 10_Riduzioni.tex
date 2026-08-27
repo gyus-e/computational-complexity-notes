@@ -1,23 +1,76 @@
 \section{Riduzioni}
 Una riduzione traduce un'istanza di un problema in un'istanza di un altro problema. \\
 Poi usa la soluzione del secondo problema per risolvere il primo. \\
-La traduzione deve essere:
+
+Formalmente, una riduzione é una funzione $R$ che traduce un'istanza $x$ di un problema $L_1$ in una istanza $R(x)$ di un problema $L_2$
+preservando le risposte e senza aumentare la complessità computazionale. \\
+
+Un linguaggio $L_1$ é riducibile a un linguaggio $L_2$ sse esiste una funzione:
+\[
+R : x \in \Sigma^* \to R(x) \in \Sigma'^*
+\]
 \begin{itemize}
-    \item Corretta: la risposta dell'istanza tradotta deve essere la stessa della risposta dell'istanza originale.
-    \item Efficiente: la traduzione deve essere eseguita in tempo polinomiale e spazio logaritmico rispetto alla dimensione dell'input originale. \\
+    \item \textbf{Corretta}: la risposta dell'istanza tradotta deve essere la stessa della risposta dell'istanza originale.
+        \begin{itemize}
+        \item $\forall x \in \Sigma^* \quad x \in L_1 \iff R(x) \in L_2$;
+        \end{itemize}
+    \item \textbf{Efficiente}: la traduzione deve essere calcolabile da una MdT deterministica in:
+        \begin{itemize}
+        \item \textbf{tempo polinomiale} rispetto alla lunghezza di $x$;
+        \item \textbf{spazio logaritmico} rispetto alla lunghezza di $x$.
+    \end{itemize}
+
     In questo modo, se il secondo problema é risolvibile in tempo polinomiale, anche il primo lo é.
 \end{itemize}
 
-Formalmente: \\
-Una riduzione é una funzione $R$ che traduce un'istanza $x$ di un problema $L_1$ in una istanza $R(x)$ di un problema $L_2$
-preservando le risposte. \\
 
-Un linguaggio $L_1$ é riducibile a un linguaggio $L_2$ se esiste una funzione $R$ calcolabile da una MdT deterministica:
-\begin{itemize}
-\item tale che per ogni stringa $x$, $x \in L_1 \iff R(x) \in L_2$;
-\item calcolabile in tempo polinomiale rispetto alla lunghezza di $x$;
-\item calcolabile in spazio logaritmico rispetto alla lunghezza di $x$.
-\end{itemize}
+\subsection{Teorema: Composizione di riduzioni}
+Se $R$ é una riduzione da $L_1$ a $L_2$ e $R'$ é una riduzione da $L_2$ a $L_3$, 
+allora $R \circ R'$ é una riduzione da $L_1$ a $L_3$. \\
+\begin{proof}
+    \textbf{Correttezza:} \\
+    Dalla correttezza di $R$ e $R'$ segue che:
+    \[
+    x \in L_1 \iff R(x) \in L_2 \iff R'(R(x)) = (R \circ R')(x) \in L_3
+    \]
+    Allora $R \circ R'$ é corretta. \\
+
+    \textbf{Efficienza:} \\
+    Dall'efficienza di $R$ e $R'$ segue che
+    esistono $M_R$ e $M_{R'}$, che le calcolano 
+    in tempo polinomiale e spazio logaritmico. \\
+
+    \textbf{Bisogna fare attenzione al nastro di output di $M_R$:
+    puó essere piú che logaritmico, perché non viene contato 
+    nell'analisi della complessitá di spazio.}
+    Anzi, ci aspetteremmo che sia almeno lineare rispetto all'input,
+    perché una riduzione non dovrebbe ridurre la quantitá di informazione. \\
+
+    L'idea é ottenere gli output di $M_R$ on demand durante la simulazione di $M_{R'}$. \\
+    \begin{itemize}
+        \item La simulazione comincia da $M_{R'}$, la \textbf{seconda} riduzione da applicare.
+        \item Un apposito nastro mantiene un indice $i$ della posizione della testina sull'output di $M_R$ (cioé il proprio input).
+        \subitem Spazio logaritmico. 
+        \item Un nastro conserva solo il simbolo sotto la testina $\sigma$ dell'output di $M_R$.
+        \subitem Chiaramente, all'inizio $i=1$ e $\sigma = \triangleright$
+        \subitem Spazio costante.
+        \item Quando $i$ viene incrementato, si simula $M_R$ 
+        fino a che non viene scritto il simbolo $i$-esimo sul nastro di output, 
+        sovrascrivendo $\sigma$.
+    \end{itemize}
+    Tutti gli altri nastri ausiliari di $M_R$ e $M_{R'}$ usano giá spazio logaritmico per ipotesi. \\
+    Spazio totale logaritmico. \\
+
+    Notare che \textbf{il nastro di output di $M_R$ é write-only.} \\
+    Questo ci permette di concludere che, se viene scritto un simbolo, fará parte dell'output finale.
+    Quindi finché $i$ aumenta, la macchina $M_R$ puó riprendere la simulazione da dove era stata interrotta. \\
+    Ma \textbf{le cose si complicano se $M_{R'}$ vuole leggere un simbolo giá scritto}. \\
+    In quest'ultimo caso, bisogna resettare $M_R$ e simulare di nuovo tutto dall'inizio
+    fino a che non si raggiunge la posizione desiderata. \\
+
+    $M_R$ e $M_{R'}$ operano in tempo polinomiale per ipotesi. Quindi nel caso peggiore, $M_R$ viene simulata un numero polinomiale di volte. \\
+    Ma la composizione di due polinomi é ancora un polinomio, quindi la composizione é ancora in tempo polinomiale. \\
+\end{proof}
 
 
 \subsection{Riduzione di $\MAXFLOW$ a $\REACHABILITY$}
@@ -112,7 +165,7 @@ Per chiarezza, anche se sono sufficienti le prime due, scriviamo comunque tutte 
 
 Nota: per semplificare la lettura possiamo immaginare $\bigwedge$ come $\forall$, e $\bigvee$ come $\exists$.
 Non possiamo usare direttamente i quantificatori perché $\SAT$ é per la logica proposizionale 
-(la soddisfacibilitá della logica del primo ordine é solo parzialmente calcolabile). \\ 
+(la soddisfacibilitá delle formule in logica del primo ordine é solo parzialmente calcolabile). \\ 
 
 Inoltre, si puó usare De Morgan per convertire l'OR di negazioni (necessario per descrivere in CNF le clausole che impongono l'unicitá di qualcosa) nella negazione di un AND, che puó essere piú intuitiva.\\
 
