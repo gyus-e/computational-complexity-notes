@@ -94,7 +94,7 @@ Un \textbf{flusso} $f$ in $N$ é una funzione $f: E \rightarrow \mathbb{N}$ tale
 \begin{itemize}
     \item $\forall (u, v) \in E : f(u, v) \leq c(u, v)$. 
         \subitem Il flusso su un arco non puó superare la sua capacitá.
-    \item $\forall v \in V \setminus \{s, t\} : \sum_{(u, v) \in E} f(u, v) = \sum_{(v, w) \in E} f(v, w)$. 
+    \item $\forall v \in V \smallsetminus \{s, t\} : \sum_{(u, v) \in E} f(u, v) = \sum_{(v, w) \in E} f(v, w)$. 
         \subitem La quantitá di flusso che entra in un vertice é uguale a quella che esce.
 \end{itemize}
 Il \textbf{valore} di un flusso é definito come la somma degli archi uscenti da $s$: $\sum_{(s, v) \in E} f(s, v)$. \\
@@ -146,29 +146,36 @@ Un \textbf{matching} è un insieme di archi $M \subseteq E$ tale che ogni vertic
 % \newpage
 \subsection{$\SAT$}
 \label{problema:sat}
-Se $PL$ é l'insieme di tutte le formule della logica proposizionale, e $AP$ é l'insieme di tutte le proposizioni atomiche:
+Se $PL$ é l'insieme di tutte le formule della logica proposizionale, 
+e $AP(\varphi)$ é l'insieme di tutte le proposizioni atomiche contenute 
+in una formula $\varphi \in PL$:
 \[
-\SAT = \{ \phi \in PL \mid \exists M \subseteq AP : M \models \phi \} 
+\SAT = \{ \varphi \in PL \mid \exists M \subseteq AP(\varphi) : M \models \varphi \} 
 \]
 \[
-n = |\phi|
+n = |\varphi|
 \]
 
-É un problema che richiede di esplorare uno spazio esponenziale di possibili assegnazioni a ogni proporizione atomica in $\phi$. \\
-Un problema affine é quello del \textbf{model checking}: dato un modello $M$, verifica se $M \models \phi$.
+É un problema che richiede di esplorare uno spazio esponenziale di possibili assegnazioni a ogni proporizione atomica in $\varphi$
+(che é esattamente $2^{|\varphi|}$)\\
+Un problema affine é quello del \textbf{model checking}: dato un modello $M$, verifica se $M \models \varphi$.
 Questo problema é molto piú semplice da risolvere, infatti richiede tempo polinomiale. \\
 Un algoritmo non deterministico per $\SAT$ puó essere visto come un algoritmo di model checking, 
 dove il modello $M$ é scelto in maniera non deterministica. \\
-Basterebbe infatti rappresentare $\phi$ tramite l'albero sintattico ed effettuare una visita in post-order,
+Basterebbe infatti rappresentare $\varphi$ tramite l'albero sintattico ed effettuare una visita in post-order,
 calcolando il valore di veritá dei nodi interni e restituendo il valore del nodo radice. \\
 Il valore di veritá delle foglie, cioé delle proposizioni atomiche, é scelto in maniera non deterministica. 
-Questo vuol dire che l'algoritmo controlla in maniera simultanea tutti i modelli possibili. \\
+Questo vuol dire che l'algoritmo controlla in maniera simultanea tutti i modelli possibili,
+senza preoccuparsi di cercarne uno.
 
 \subsubsection{$\CNFSAT$}
 Soddisfaciilibtá di una formula in forma normale congiuntiva (CNF), cioé congiunzione di clausole disgiuntive (forma $\bigwedge(\bigvee(...))$). \\
+Questo problema puó essere risolto con l'algoritmo di risoluzione, eliminando proposizioni in clausole diverse che vanno in 
+\textit{clash} tra loro. \\
+Lo spazio da esplorare é comunque esponenziale sul numero di clausole (bisogna esplorare tutte le possibili combinazioni di proposizioni da eliminare). \\
 
 \subsubsection{$\kSAT$}
-Soddisfaciilibtá di una formula in forma normale congiuntiva (CNF), dove ogni clausola ha esattamente $k$ letterali. \\
+Soddisfaciilibtá di una formula in forma normale congiuntiva (CNF), dove ogni clausola ha esattamente $k$ letterali.
 
 
 \subsection{$\HAMILTONPATH$}

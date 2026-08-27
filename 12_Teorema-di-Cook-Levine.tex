@@ -1,0 +1,190 @@
+\section{Teorema di Cook-Levin}
+\[\CNFSAT \text{ é } \NP\text{-completo}.\]
+
+\subsection{$\CNFSAT \in \NP$}
+\begin{proof}
+Ricordiamo che abbiamo descritto un possibile algoritmo non deterministico
+per $\SAT$ giá in \ref{problema:sat}. L'idea era di usare un semplice algoritmo
+di model checking su un modello scelto non deterministicamente. \\
+
+In sostanza: \begin{enumerate}
+\item Si genera non deterministicamente un modello $M$ con \textbf{choose}.
+\item Si verifica se $M \models x$ con un algoritmo di model checking in tempo polinomiale.\\
+\end{enumerate}
+
+Descriviamo piú formalmente la MdT, sfruttando il fatto che $x$ sia in CNF. \\
+In una CNF ogni clausola deve essere vera, e una clausola é vera se almeno uno dei suoi letterali é vero.
+\begin{enumerate}
+\item Scansione di $x$ per trovare tutte le proposizioni atomiche $p_1, \ldots, p_n \in AP(x)$.
+\item Per ogni proposizione atomica $p_i$, si genera non deterministicamente un suo valore di verità. 
+Se la scelta non deterministica porta a $p_i$ vero, allora si scrive $p_i$ sul nastro, altrimenti non si scrive nulla.
+\item Si scandisce di nuovo $x$, scansionando $M$ a ogni passo per verificare se soddisfa $p_i$, il letterale sotto la testina. \\
+    Essendo $x$ in CNF, se $p_i$ é vero si passa direttamente alla prossima clausola, altrimenti si passa al prossimo letterale.
+\item Se si arriva alla fine di una clausola senza trovare un letterale vero, allora la clausola é falsa e si rifiuta.
+\item Se si arriva alla fine di tutta la formula (quindi tutte le clausole erano vere), si accetta.
+\end{enumerate}
+
+
+Con il non determinismo, la prima parte ha costo pari a $|M|$, 
+perché non bisogna fare altro che scrivere il modello sul nastro.
+Il modello viene rappresentato scrivendo solo le proposizioni atomiche che sono vere in $M$, 
+e $M \subseteq AP(x)$ implica che $|M| \leq |x|$, quindi il costo di spazio e tempo della prima parte é lineare in $|x|$. \\
+
+La seconda parte ha costo quadratico: scansione di due nastri di dimensione $|x|$.\\
+
+Quindi l'intero algoritmo é polinomiale.
+\end{proof}
+
+
+\newpage
+\subsection{$\CNFSAT$ é $\NP$-hard}
+$\forall L \in \NP$, $L$ puó essere ridotto a $\CNFSAT$.
+\begin{proof}
+Sia $N$ una qualsiasi MdT non deterministica a un nastro, che accetta $x \in L$ e opera in tempo polinomiale $f(n)$.\\
+Dobbiamo programmare una MdT deterministica che opera in tempo polinomiale e spazio logaritmico,
+sullo stesso input $x$, e che riduce la computazione di $N$ a una formula in CNF, $R(x)$,
+tale che $R(x)$ é soddisfacibile se e solo se $N$ accetta $x$.\\
+
+Usiamo ancora un altro tipo di rappresentazione della computazione di $N$: 
+dopo un albero nel teorema \ref{theorem:non_deterministic_to_deterministic} 
+e un grafo nel teorema \ref{theorem:non_deterministic_space_to_deterministic_time},
+ora usiamo una tabella, detta \textbf{computation table}.\\
+
+La computation table é una tabella quadrata di lato $T = f(n)$.\\
+
+La riga $t$ rappresenta lo stato della MdT al passo $t$ della computazione,
+e la colonna $s$ rappresenta il contenuto della cella $s$ del nastro.\\
+
+Poiché lo spazio é limitato superiormente dal tempo, i caratteri su una riga non
+saranno piú di $T$. Se sono di meno, riempiamo la riga con ${\sqcup}$. \\
+
+Rappresentiamo contemporaneamente lo stato e la posizione della testina,
+segnando lo stato a pedice della cella in cui si trova la testina.\\
+
+\[
+\begin{array}{lllllll}
+{\triangleright}_s  & 0    & 1          & 0          & {\sqcup}    & {\sqcup} & {\sqcup} \\
+{\triangleright}    & 0_s  & 1          & 0          & {\sqcup}    & {\sqcup} & {\sqcup} \\
+{\triangleright}    & 0    & 1_s        & 0          & {\sqcup}    & {\sqcup} & {\sqcup} \\
+{\triangleright}    & 0    & 1          & 0_s        & {\sqcup}    & {\sqcup} & {\sqcup} \\
+{\triangleright}    & 0    & 1          & 0          & {\sqcup}_s  & {\sqcup} & {\sqcup} \\
+{\triangleright}    & 0    & 1          & 0_q        & 1           & {\sqcup} & {\sqcup} \\
+{\triangleright}    & 0    & 1          & 1_{"yes"}  & 1           & {\sqcup} & {\sqcup}
+\end{array}
+\]
+\text{ }\\
+$R(X)$ descriverá la computation table di $N$.\\
+
+Definiamo le seguenti variabili proposizionali, dove $s$ indica la riga e $t$ la colonna della computation table
+($s, t$ vanno da $1$ a $T$):
+\begin{itemize}
+    \item $Q_t^q \iff $ al passo $t$ lo stato é $q \in Q$
+    \item $H_{s,t} \iff $ la testina é sulla cella $s$ al passo $t$
+    \item $C_{s,t}^\sigma \iff $ la cella $s$ al passo $t$ contiene il simbolo $\sigma \in \Gamma$
+\end{itemize}
+\newpage
+$R(x)$ sará la congiunzione delle seguenti formule:
+\begin{itemize}
+    \item Ogni passo puó avere uno e un solo stato
+    \[
+    \bigwedge_{t=1}^{T} \left( \left( \bigvee_{q \in Q} Q_t^q \right) \land \left( \bigwedge_{q \in Q} \bigwedge_{q' \neq q} (\neg Q_t^q \lor \neg Q_t^{q'}) \right) \right)
+    \]
+    $T$ clausole sulla presenza di uno stato ($\bigvee$ forma un'unica clausola) e $T \cdot |Q|^2$ clausole per la sua unicitá.\\
+    
+    \item Ad ogni passo, la testina é su una e una sola cella
+    \[
+    \bigwedge_{t=1}^{T} \left( \left(\bigvee_{s=1}^{T} H_{s,t}\right) \land \left( \bigwedge_{s=1}^{T} \bigwedge_{s' \neq s} (\neg H_{s,t} \lor \neg H_{s', t}) \right) \right)
+    \]
+    $T$ clausole sulla posizione della testina e $T^3$ clausole per la sua unicitá in ogni passo.\\
+    
+    \item Ad ogni passo, ogni cella contiene uno e un solo simbolo
+    \[
+    \bigwedge_{t=1}^{T} \bigwedge_{s=1}^{T} \left( \left( \bigvee_{\sigma \in \Gamma} C_{s,t}^\sigma \right) \land \left( \bigwedge_{\sigma \in \Gamma} \bigwedge_{\sigma' \neq \sigma} (\neg C_{s,t}^\sigma \lor \neg C_{s,t}^{\sigma'}) \right) \right)
+    \]
+    $T^2$ clausole per la presenza di un simbolo in ogni cella e $T^2 \cdot |\Gamma|^2$ clausole per l'unicitá del simbolo in ogni cella.\\
+    
+    \item Ad ogni passo, la cella 1 contiene sempre il simbolo $\triangleright$
+    \[
+    \bigwedge_{t=1}^{T} C_{1,t}^{\triangleright}
+    \]
+    $T$ clausole.\\
+    
+    \item Per ogni passo $t$ tranne l'ultimo, l'unica cella che puó cambiare nel passo successivo $t+1$ é quella su cui si trova la testina al passo $t$.\\
+    Cioé, se la testina non si trova in $s$, e su $s$ c'é scritto $\sigma$, allora al prossimo passo ci sará ancora scritto $\sigma$.
+    $(\neg H_{s,t} \land C_{s,t}^\sigma) \rightarrow C_{s,t+1}^\sigma$. 
+    Per trasformarla in CNF, neghiamo l'antecedente, usando De Morgan, e trasformiamo l'implicazione in OR:
+    \[
+    \bigwedge_{t=1}^{T-1} \bigwedge_{s=1}^{T} \bigwedge_{\sigma \in \Gamma} \left( H_{s,t} \lor \neg C_{s,t}^\sigma \lor C_{s,t+1}^\sigma \right)
+    \]
+    É abbastanza intuitivo anche cosí: o la testina si trova su $s$ (e quindi puó cambiare), o su $s$ non é scritto $\sigma$, oppure ci sará scritto $\sigma$ anche dopo.\\
+    $T^2 \cdot |\Gamma|$ clausole.\\
+
+    \item Al primo passo, la macchina inizia allo stato $s$, con la testina sulla cella $1$, e il nastro contiene l'input $x = (\sigma_2, \dots, \sigma_{n+1})$ seguito da ${\sqcup}$.
+    \[
+    Q_1^s \land H_{1,1} \land \bigwedge_{s=2}^{n+1} C_{s, 1}^{\sigma_{s}} \land \bigwedge_{s=n+2}^{T} C_{s, 1}^{\sqcup}
+    \]
+    Questa formula é particolarmente importante, perché ci dice qual é l'input.\\
+    $2 + T$ clausole.\\
+    
+    \item Le configurazioni \textbf{non} cambiano se non come specificato dalla relazione di transizione $\Delta$.
+    Intuitivamente, per ogni quintupla $(q, \sigma, q', \sigma', dir) \notin \Delta$, fissati $s, t$, sia 
+    $s' = \begin{cases}
+        s-1 & \text{se } dir = \leftarrow \\
+        s+1 & \text{se } dir = \rightarrow\\
+        s & \text{se } dir = -
+    \end{cases}$\\
+    $Q_t^q \land H_{s,t} \land C_{s,t}^\sigma \rightarrow \neg (Q_{t+1}^{q'} \land H_{s',t+1} \land  C_{s,t+1}^{\sigma'})$
+    che trasformiamo in CNF come prima:
+    \[
+    \bigwedge_{t=1}^{T-1} \bigwedge_{s=1}^{T} \bigwedge_{(q, \sigma, q', \sigma', dir) \notin \Delta} \left( \neg Q_t^q \lor \neg H_{s,t} \lor \neg C_{s,t}^\sigma \lor \neg Q_{t+1}^{q'} \lor \neg C_{s,t+1}^{\sigma'} \lor \neg H_{s',t+1} \right)
+    \]
+    Questa formula descrive la computazione di $N$, quindi é cruciale, insieme a quella precedente, per la correttezza della riduzione.\\
+    Attenzione solo al fatto che abbiamo "barato" con $s'$, in realtá ci vorrebbero tre formule di questo tipo,
+    considerando tutte e tre le possibili direzioni e sostituendo ogni volta $s'$ con la cella indicata.
+    Ma asintoticamente non cambia nulla.\\
+    $O(T^2 \cdot |Q|^2 \cdot |\Gamma|^2 \cdot 9)$ clausole.\\
+
+    \item Al passo $T$, la macchina deve essere in uno stato di accettazione. 
+    Senza questa formula, sarebbero soddisfacibili anche computazioni che terminano in $"no"$.\\
+    \[
+    Q_T^{"yes"}
+    \]
+    Il conteggio delle clausole in questa formula é lasciato al lettore per esercizio.\\
+\end{itemize}
+
+In totale, ricordando che $|Q|$ e $|\Gamma|$ sono costanti,
+il numero di clausole é polinomiale in $T=f(n)$, 
+dove $f(n)$ per ipotesi é polinomiale su $n$, 
+e quindi lo é anche $|R(x)|$ 
+per la chiusura dei polinomi rispetto alla composizione.\\
+
+\textbf{Correttezza}\\
+Dobbiamo dimostrare che $N$ accetta $x$ se e solo se $R(x)$ é soddisfacibile.\\
+\begin{itemize}
+    \item $\Rightarrow$ Se $N$ accetta $x$, allora costruiamo la formula $R(x)$ che riduce la sua computation table.
+    Le condizioni sono tutte soddisfatte: la MdT si comporta come dovrebbe, 
+    le configurazioni seguono la sua relazione di transizione, l'input é corretto
+    e la computazione accetta l'input.\\
+    Viceversa, se $N$ non accetta $x$, la condizione finale non puó essere soddisfatta, quindi $R(x)$ non é soddisfacibile.\\
+    \item $\Leftarrow$ Se $R(x)$ é soddisfacibile, allora esiste un modello $M$ che soddisfa tutte le condizioni.\\
+    In particolare, il modello soddisfa il comportamento corretto della macchina,
+    la sua relazione di transizione, l'input corretto e il fatto che la computazione viene accettata.\\
+    Viceversa, se non é soddisfacibile, deve esserci una contraddizione in una di queste condizioni,
+    ma questo vorrebbe dire che qualsiasi macchina che si comporta come dovrebbe, dato l'input e la relazione di transizione,
+    non accetta l'input, e che quelle che accettano alla fine o hanno un diverso input, o una diversa relazione di transizione,
+    oppure sono mal formate.\\
+\end{itemize}
+
+\textbf{Efficienza}\\
+La formula é generata come nella riduzione di Hamilton Path a $\CNFSAT$ (\ref{riduzione:hamiltonpath_sat}).
+Si itera su tutte le variabili in gioco: gli stati e l'alfabeto di $N$, 
+le celle, i passi e le posizioni della testina nella sua computazione.\\
+Il numero di iterazioni é polinomiale.\\
+
+Si usano contatori per generare una clausola alla volta, 
+copiandola sul nastro di output se vogliamo che sia inclusa nella formula $R(x)$, 
+e poi sovrascrivendola con la successiva.\\
+La lunghezza dei contatori é logaritmica rispetto al numero di iterazioni,
+e per un polinomio di grado $d$ vale che $O(\log(n^d)) = O(d \log(n)) = O(\log(n))$
+quindi lo spazio é logaritmico rispetto alla lunghezza dell'input.\\
+\end{proof}

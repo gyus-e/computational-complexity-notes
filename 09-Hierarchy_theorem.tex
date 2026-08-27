@@ -1,4 +1,5 @@
 \section{Hierarchy theorem}
+\label{sec:hierarchy_theorem}
 
 \subsection{Codifica di una macchina di Turing}
 $\underline{M}$ é una stringa binaria che codifica una macchina di Turing $M$. \\
@@ -138,7 +139,7 @@ e calcola:
 e viceversa, in tempo $f(|\underline{M}|)$. \\
 
 Applichiamo di nuovo la diagonalizzazione, questa volta a $D_f$.
-Consideriamo i due casi possibili \footnote{come nella regola di calcolo deduttivo naturale $\lor_e$}:
+Consideriamo i due casi possibili:
 \[ D_f(\underline{D_f}) = "yes" \iff M_0(\underline{D_f}, \underline{D_f}) = "no" \]
 Cioé: o $D_f$ rigetta $\underline{D_f}$, o non termina in tempo $f(|\underline{D_f}|)$. \\
 Ma come conseguenza diretta dell'ipotesi, $D_f$ termina in tempo $f(|\underline{D_f}|)$. 
@@ -153,8 +154,7 @@ Ma allora, proprio per come abbiamo definito $M_0$, $D_f$ \textbf{accetta} la su
 \[D_f(\underline{D_f}) = "no" \iff D_f(\underline{D_f}) = "yes"\]
 Assurdo. \\
 
-Poiché entrambi i casi portano a $\bot$, possiamo scaricare l'ipotesi iniziale e concludere il contrario
-\footnote{come nella regola di calcolo deduttivo naturale $\neg_i$}: 
+Poiché entrambi i casi portano a $\bot$, possiamo scaricare l'ipotesi iniziale e concludere il contrario: 
 non esiste alcuna MdT che decide $H_f$ in tempo $f(\lfloor N/2 \rfloor)$.
 \end{proof}
 
@@ -206,9 +206,8 @@ Notiamo che non possiamo applicarlo direttamente a una funzione polinomiale, per
 quindi dobbiamo applicarlo a una funzione esponenziale.
 Tuttavia é facile vedere che per qualsiasi polinomio, $p(x) = O(2^n)$, e $2^n$ é una funzione esponenziale strettamente contenuta in $\EXP$.
 
-\subsubsection{Raffinamento del Time Hierarchy Theorem}
+\subsubsection*{Raffinamento del Time Hierarchy Theorem}
 \[\TIME(f(n)) \subset \TIME(f(n) \cdot \log^2(f(n)))\]
-Questa versione permette di trovare una gerarchia anche tra funzioni polinomiali.
 
 \subsection{Space Hierarchy Theorem}
 Se $g$ é una funzione propria, allora:

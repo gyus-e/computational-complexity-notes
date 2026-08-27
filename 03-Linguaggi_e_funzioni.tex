@@ -13,7 +13,7 @@ L \subseteq \Sigma^*
 
 \subsection{Linguaggi complementari}
 Il linguaggio complementare di $L \subseteq \Sigma^*$ é definito come:
-\[\overline{L} = \Sigma^* \setminus L\]
+\[\overline{L} = \Sigma^* \smallsetminus L\]
 Se $L$ codifica le istanze di un problema, allora $\overline{L}$ contiene tutte le stringhe dell'alfabeto che non sono istanze del problema.
 \subsubsection*{Esempi}
 \begin{itemize}
@@ -62,7 +62,7 @@ Costruiamo $M' = (Q', \Sigma, \delta', s)$ aggiungendo un nuovo stato $q'$ che, 
 \begin{itemize}
 	\item $Q' = Q \cup \{q'\}$ \quad dove \quad $q' \notin Q$
 	\item $\delta(q, \sigma) = ("no",  \tau, \textit{dir}) \implies \delta'(q, \sigma) = (q', \tau, \textit{dir})  \qquad \forall q \in Q;  \forall \sigma, \tau \in \Gamma;  \forall \textit{dir} \in \{\leftarrow, \rightarrow, -\}$
-	\item $\delta(q, \sigma) = (p,  \tau, \textit{dir}) \implies \delta'(q, \sigma) = (p, \tau, \textit{dir})  \quad \forall q, p \in Q \setminus \{"no"\};  \forall \sigma, \tau \in \Gamma;  \forall \textit{dir} \in \{\leftarrow, \rightarrow, -\}$
+	\item $\delta(q, \sigma) = (p,  \tau, \textit{dir}) \implies \delta'(q, \sigma) = (p, \tau, \textit{dir})  \quad \forall q, p \in Q \smallsetminus \{"no"\};  \forall \sigma, \tau \in \Gamma;  \forall \textit{dir} \in \{\leftarrow, \rightarrow, -\}$
 	\item $\delta'(q', \sigma) = (q', \sigma, \rightarrow) \qquad \forall \sigma \in \Sigma \cup \{\sqcup\}$
 \end{itemize}
 \[M'(x) =

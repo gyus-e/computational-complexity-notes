@@ -20,13 +20,16 @@ R : x \in \Sigma^* \to R(x) \in \Sigma'^*
         \item \textbf{spazio logaritmico} rispetto alla lunghezza di $x$.
     \end{itemize}
 
-    In questo modo, se il secondo problema é risolvibile in tempo polinomiale, anche il primo lo é.
+    In questo modo, se il secondo problema é risolvibile in tempo $f(n)$ e spazio $g(n)$, anche il primo lo é.
+    Se cosí non fosse, la riduzione starebbe facendo il grosso del lavoro, falsando l'analisi di complessitá
+    (pensiamo ad esempio a una hash table che rende costanti le operazioni di ricerca, usando spazio esponenziale).
 \end{itemize}
 
 
 \subsection{Teorema: Composizione di riduzioni}
+\label{teorema:composizione_riduzioni}
 Se $R$ é una riduzione da $L_1$ a $L_2$ e $R'$ é una riduzione da $L_2$ a $L_3$, 
-allora $R \circ R'$ é una riduzione da $L_1$ a $L_3$. \\
+allora $R \circ R'$ é una riduzione da $L_1$ a $L_3$.
 \begin{proof}
     \textbf{Correttezza:} \\
     Dalla correttezza di $R$ e $R'$ segue che:
@@ -45,8 +48,9 @@ allora $R \circ R'$ é una riduzione da $L_1$ a $L_3$. \\
     nell'analisi della complessitá di spazio.}
     Anzi, ci aspetteremmo che sia almeno lineare rispetto all'input,
     perché una riduzione non dovrebbe ridurre la quantitá di informazione. \\
+    \textbf{Nella composizione, diventa un nastro ausiliario e bisogna contarlo.}\\
 
-    L'idea é ottenere gli output di $M_R$ on demand durante la simulazione di $M_{R'}$. \\
+    L'idea é ottenere i simboli dell'output di $M_R$ in tempo reale durante la simulazione di $M_{R'}$. \\
     \begin{itemize}
         \item La simulazione comincia da $M_{R'}$, la \textbf{seconda} riduzione da applicare.
         \item Un apposito nastro mantiene un indice $i$ della posizione della testina sull'output di $M_R$ (cioé il proprio input).
@@ -76,7 +80,7 @@ allora $R \circ R'$ é una riduzione da $L_1$ a $L_3$. \\
 \subsection{Riduzione di $\MAXFLOW$ a $\REACHABILITY$}
 \label{riduzione:maxflow_reachability}
 
-\subsubsection{Determinare se un flusso é ottimo}
+\subsubsection*{Determinare se un flusso é ottimo}
 Consideriamo un flusso qualsiasi $f$. Ci interessa sapere se é ottimo oppure no. \\
 Supponiamo che $f$ non é ottimo, allora esiste un flusso $f'$ con valore maggiore di $f$. \\
 Consideriamo la differenza $\Delta f = f' - f$. É anch'essa un flusso 
@@ -113,7 +117,7 @@ La costruzione del network residuo richiede tempo polinomiale
 e $\REACHABILITY$ é risolvibile in tempo polinomiale, 
 quindi tutto in tempo polinomiale.
 
-\subsubsection{Trovare il flusso ottimo}
+\subsubsection*{Trovare il flusso ottimo}
 Partiamo da $f(u,v) = 0$ per ogni arco $(u,v) \in E$. \\
 Applichiamo l'algoritmo precedente per verificare se $f$ é ottimo, costruendo il network residuo. \\
 Se non lo é, l'algoritmo trova nel network residuo
@@ -127,7 +131,7 @@ e ogni iterazione aumenta il flusso di un solo arco di 1
 Ma $c_{max}$ é esponenziale rispetto alla dimensione dell'input, 
 quindi il numero di iterazioni non é polinomiale!
 
-\subsubsection{Trovare il flusso ottimo in tempo polinomiale}
+\subsubsection*{Trovare il flusso ottimo in tempo polinomiale}
 Per superare questo problema, possiamo fare in modo da scegliere sempre il 
 cammino di miglioramento piú corto, cioé quello con il minor numero di archi. \\
 Facilmente implementabile se $\REACHABILITY$ usa una coda per l'insieme $S$. \\
@@ -152,7 +156,7 @@ $B$ ha un matching se e solo se la rete ha un flusso di valore $|V|$.
 \end{figure}
 
 
-\subsection{Riduzione di $\HAMILTONPATH$ a $\SAT$}
+\subsection{Riduzione di $\HAMILTONPATH$ a $\CNFSAT$}
 \label{riduzione:hamiltonpath_sat}
 Codifichiamo il problema in una formula di logica proposizionale in CNF (congiunzione di clausole, ogni clausola ha solo disgiunzioni).
 Usiamo $|V|^2$ variabili booleane vere sse il vertice $v$ è nella $i$-esima posizione del cammino
@@ -176,7 +180,7 @@ Inoltre, si puó usare De Morgan per convertire l'OR di negazioni (necessario pe
     \[\bigwedge_{i=1}^{|V|} \left( \bigwedge_{v \in V} \bigwedge_{u \neq v} (\neg x_{vi} \lor \neg x_{ui}) \right)\] \\
 \item $\pi$ é suriettiva: ogni vertice deve apparire nel ciclo almeno una volta:\\
     \[\bigwedge_{v \in V} \left( \bigvee_{i=1}^{|V|} x_{vi} \right)\]
-    \item $\pi^{-1}$ é iniettiva: ogni vertice deve apparire nel ciclo una sola volta:\\
+    \item $\pi^{-1}$ é iniettiva\footnote{youdontsay.png}: ogni vertice deve apparire nel ciclo una sola volta:\\
     \[\bigwedge_{v \in V} \left( \bigwedge_{i=1}^{|V|} \bigwedge_{j \neq i} (\neg x_{vi} \lor \neg x_{vj}) \right)\]
 \end{enumerate}
 
@@ -187,7 +191,7 @@ Per codificare che vertici consecutivi nel cammino devono essere collegati da un
 
 Sia $R$ la congiunzione di tutte queste formule. \\
 Bisogna verificare la correttezza e l'efficienza della riduzione.
-\subsubsection{Correttezza}
+\subsubsection*{Correttezza}
 $R$ é soddisfacibile se e solo se esiste un cammino hamiltoniano in $G$.
 \begin{proof}
 Essendo una doppia implicazione, dobbiamo dimostrare entrambe le direzioni.
@@ -221,7 +225,7 @@ Le prime formule sono soddisfatte dal fatto che $\pi$ é una permutazione:
 E questo soddisfa la formula $R$. \\
 \end{proof}
 
-\subsubsection{Efficienza}
+\subsubsection*{Efficienza}
 $R$ puó essere calcolata da una MdT deterministica in tempo polinomiale e spazio logaritmico.
 \begin{proof}
 La MdT funziona cosí:

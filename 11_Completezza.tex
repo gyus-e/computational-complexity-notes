@@ -1,0 +1,60 @@
+\section{Hardness e completezza}
+
+
+\subsection{Hardness}
+Data una classe di complessitá $\mathcal{C}$ e un linguaggio $L$, 
+diciamo che $L$ é $\mathcal{C}$-hard sse:
+$\forall L' \in \mathcal{C}: L' \text{ puó essere ridotto a } L$ \\
+
+Risolvere un problema $\mathcal{C}$-hard richiede \textit{almeno} tante risorse quanto risolvere qualsiasi altro problema in $\mathcal{C}$. \\
+
+\textbf{Esempio:} tutti i problemi in $\NP$ sono $\P$-hard.
+
+
+\subsection{Completezza}
+Data una classe di complessitá $\mathcal{C}$ e un linguaggio $L$, 
+diciamo che $L$ é $\mathcal{C}$-completo sse:
+\begin{itemize}
+    \item $L \in \mathcal{C}$
+    \item $\forall L' \in \mathcal{C}: L' \text{ puó essere ridotto a } L$
+\end{itemize}
+O in altre parole, se $L$ é $\mathcal{C}$-hard e $L \in \mathcal{C}$.\\
+
+La completezza ci permette di identificare i problemi piú difficili all'interno di una classe di complessitá.
+Un problema $\mathcal{C}$-completo é \textit{almeno} difficile quanto tutti gli altri problemi della classe $\mathcal{C}$.\\
+Risolvere un problema $\mathcal{C}$-completo in tempo $f(n)$ implica che $\mathcal{C} \subseteq \TIME(f(n))$.\\
+
+Non é detto che ogni classe contenga problemi completi. \\
+
+
+\subsection{Chiusura di una classe rispetto alle riduzioni}
+Una classe di complessitá $\mathcal{C}$ é chiusa rispetto alle riduzioni se
+contiene tutti i problemi riducibili a un problema in $\mathcal{C}$.
+
+\subsubsection{Proposizione: $\L$, $\NL$, $\P$, $\NP$, $\co\NP$, $\PSPACE$, $\EXP$ sono chiuse rispetto alle riduzioni}
+
+\subsubsection{Proposizione: Se due classi $\mathcal{C}_1$ e $\mathcal{C}_2$ sono chiuse rispetto alle riduzioni, ed esiste un problema $L$ completo per entrambe, allora $\mathcal{C}_1 = \mathcal{C}_2$}
+\begin{proof}
+Caso 1: supponiamo per assurdo che $L' \in \mathcal{C}_1 \smallsetminus \mathcal{C}_2$. \\
+Per ipotesi, $L'$ é riducibile a $L$. \\
+Ma $L \in \mathcal{C}_2$.\\
+Quindi $L' \in \mathcal{C}_2$ per chiusura di $\mathcal{C}_2$.\\
+
+Caso 2: supponiamo per assurdo che $L' \in \mathcal{C}_2 \smallsetminus \mathcal{C}_1$. \\
+Per ipotesi, $L'$ é riducibile a $L$. \\
+Ma $L \in \mathcal{C}_1$.\\
+Quindi $L' \in \mathcal{C}_1$ per chiusura di $\mathcal{C}_1$.\\
+
+Entrambi i casi portano a una contraddizione, quindi $\mathcal{C}_1 = \mathcal{C}_2$.
+\end{proof}
+
+\subsubsection{Corollario: Se una classe $\mathcal{C}_1 \subseteq \mathcal{C}_2$ é chiusa rispetto alle riduzioni, ed esiste un problema $L \in \mathcal{C}_1$ che é $\mathcal{C}_2$-completo, allora $\mathcal{C}_1 = \mathcal{C}_2$}
+\begin{proof}
+Supponiamo per assurdo che $L' \in \mathcal{C}_2 \smallsetminus \mathcal{C}_1$. \\
+Per ipotesi, $L'$ é riducibile a $L$. \\
+Ma $L \in \mathcal{C}_1$.\\
+Quindi $L' \in \mathcal{C}_1$ per chiusura di $\mathcal{C}_1$.\\
+Questa é una contraddizione, quindi $\mathcal{C}_1 = \mathcal{C}_2$.
+\end{proof}
+Una conseguenza, ad esempio, é che, siccome $\P \subseteq \NP$, se troviamo un problema $\NP$-completo in $\P$ (cioé se troviamo una soluzione polinomiale che ci dice che un problema $\NP$-completo é in $\P$), allora $\P = \NP$. \\
+Finora, nessuno ci é mai riuscito.
